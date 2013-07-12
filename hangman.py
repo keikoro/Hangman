@@ -1,17 +1,25 @@
-# A simple hangman game in Python
-
-# Additional features
+# A simple hangman game programmed in Python
 #
-# DONE
-# - warning if there's non-letter input
-# - warning if letter was already previously guessed
-# - only list incorrect letters in separate list (correct ones are displayed anyway)
-# - letter matching should ignore upper/lowercase
+# The game prompts the user to enter a letter to start guessing a word.
+# 11 incorrect guesses are allowed, after the 11th, hangman is hanged.
+# 
+# Features/checks already implemented
+# - only letters are allowed (no digits, no special characters)
+# - a letter can't be guessed more than once (i.e. only counts toward incorrect guesses once)
+# - incorrectly guessed letters are continuously displayed (correct guesses are part of word anyway)
+# - words can contain uppercase and lowercase letters
 #
 # TODO
-# 
-# - get words-to-be-guessed from a file
-# - hangman (graphics)
+# - retrieve words-to-be-guessed from a file (with minimum length of e.g. 5 letters/word)
+# - build hangman (ASCII graphics)
+# - differentiate between plural & singular form for tries left (5 tries vs. 1 try)
+# - adjust countdown of incorrect guesses (currently counts down from 10 to 0)
+# - rearrange print statements (reduce lines)
+# - output everything with say (= sound)
+# - add more comments!
+#
+# Ideas for additional/advanced Nice To Have's
+# - let user guess the entire word
 
 
 import random
