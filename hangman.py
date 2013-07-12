@@ -16,7 +16,7 @@
 # - retrieve words-to-be-guessedletters from a file (with minimum length of e.g. 5 letters/word)
 # - build hangman (ASCII graphics)
 # - differentiate between plural & singular form for tries left (5 tries vs. 1 try)
-# - adjust countdown of incorrect guesses (currently counts down from 10 to 0)
+# - adjust *displayed* countdown of incorrect guesses (currently counts down from 9 to 0/-1)
 # - rearrange print statements (reduce lines)
 # - output everything with say (= sound)
 # - add more comments!
