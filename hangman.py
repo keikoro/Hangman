@@ -6,12 +6,13 @@
 # - warning if there's non-letter input
 # - warning if letter was already previously guessed
 # - only list incorrect letters in separate list (correct ones are displayed anyway)
+# - letter matching should ignore upper/lowercase
 #
 # TODO
 # 
 # - get words-to-be-guessed from a file
 # - hangman (graphics)
-# - letter matching should ignore upper/lowercase
+
 
 import random
 
@@ -22,8 +23,8 @@ def stringtogether(mylist):
 	print()
 
 
-mywords = ["Marmelade", "Testwort", "Schal", "Sommer", "müsli", "butterbrot", 
-				"startrek", "lampe"]
+mywords = ["Marmelade", "Testwort", "Schal", "Sommer", "Müsli", "Butterbrot", 
+				"Startrek", "Lampe"]
 
 print("Let's play hangman: guess the word!")
 myword = random.choice(mywords)
@@ -51,12 +52,12 @@ while wrongguesses <= maxwrongguesses:
 		# lowercase all input
 		pickletter = pickletter.lower()
 
-		if pickletter in myword:
+		if pickletter in myword.lower():
 			print("That guess was correct!")
 			
 			position = 0
 
-			for letterexists in myword:
+			for letterexists in myword.lower():
 				if letterexists == pickletter:
 					# replace blank spots in word-to-guess with guessed letters
 					blankword[position] = myword[position]
@@ -78,4 +79,4 @@ else:
 	print("Game over. :( ")
 
 print("Thanks for playing!")
-setzezusammen(blankword)
+stringtogether(blankword)
