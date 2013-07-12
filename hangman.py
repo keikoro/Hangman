@@ -5,12 +5,12 @@
 # DONE
 # - warning if there's non-letter input
 # - warning if letter was already previously guessed
+# - only list incorrect letters in separate list (correct ones are displayed anyway)
 #
 # TODO
 # 
 # - get words-to-be-guessed from a file
 # - hangman (graphics)
-# - correct guesses needn't be in list of all guesses
 # - letter matching should ignore upper/lowercase
 
 import random
@@ -51,9 +51,6 @@ while wrongguesses <= maxwrongguesses:
 		# lowercase all input
 		pickletter = pickletter.lower()
 
-		# add letter to guessed letters string
-		guessed += pickletter
-
 		if pickletter in myword:
 			print("That guess was correct!")
 			
@@ -66,10 +63,12 @@ while wrongguesses <= maxwrongguesses:
 				position += 1
 
 		else:
+			# add wrong letter to string with incorrect guesses
+			guessed += pickletter			
 			wrongguesses += 1
 			print("Sorry, that was a wrong guess!")
 
-		print("Letters guessed so far: " +guessed+ ".\nYou have {} tries left".format(maxwrongguesses-wrongguesses))
+		print("Incorrectly guessed letters so far: " +guessed+ ".\nYou have {} tries left".format(maxwrongguesses-wrongguesses))
 
 		if not "-" in blankword:
 			print("We have a winner!")
