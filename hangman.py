@@ -8,12 +8,12 @@
 # 
 # Features/checks already implemented
 # - only letters are allowed (no digits, no special characters)
-# - a letter can't be guessed more than once (i.e. only counts toward incorrect guesses once)
-# - incorrectly guessed letters are continuously displayed (correct guesses are part of word anyway)
+# - a letter can't be guessedletters more than once (i.e. only counts toward incorrect guesses once)
+# - incorrectly guessedletters letters are continuously displayed (correct guesses are part of word anyway)
 # - words can contain uppercase and lowercase letters
 #
 # TODO
-# - retrieve words-to-be-guessed from a file (with minimum length of e.g. 5 letters/word)
+# - retrieve words-to-be-guessedletters from a file (with minimum length of e.g. 5 letters/word)
 # - build hangman (ASCII graphics)
 # - differentiate between plural & singular form for tries left (5 tries vs. 1 try)
 # - adjust countdown of incorrect guesses (currently counts down from 10 to 0)
@@ -23,14 +23,15 @@
 #
 # Ideas for additional/advanced Nice To Have's
 # - let user guess the entire word
+# - allow phrases and words with hyphens
+
+import random # module for randomisation
 
 
-import random
-
-def stringtogether(mylist):
-	for letter in mylist:
-		# string together list elements
-		print(letter,end='')
+def stringtogether(thislist):
+	for element in thislist:
+		# string together all elements in a list (using no separator between elements) 
+		print(element,end='')
 	print()
 
 
@@ -38,56 +39,56 @@ mywords = ["Marmelade", "Testwort", "Schal", "Sommer", "Müsli", "Butterbrot",
 				"Startrek", "Lampe"]
 
 print("Let's play hangman: guess the word!")
-myword = random.choice(mywords)
+# randomly pick one of the words from my list of words
+theword = random.choice(mywords)
 
-wrongguesses = 0
-maxwrongguesses = 11
-blankword = list("-"*len(myword))
-guessed = ''
+no_incorrectguesses = 0 # in the beginning, the count of wrong guesses is zero
+maxno_incorrectguesses = 10 # only 11 incorrect guesses are allowed
+blankword = list("-"*len(theword)) # create a "blank" word with the length of theword
+guessedletters = '' # all (incorrectly) guessed letters
 
-while wrongguesses <= maxwrongguesses:
+while no_incorrectguesses <= maxno_incorrectguesses:
 	stringtogether(blankword)
 
 	# let user pick a letter
-	pickletter = input("Please pick a letter : ")
+	pickedletter = input("Please pick a letter : ")
 
 	# warn if input is a digit, special character etc.
-	if not pickletter.isalpha() :
-		print("Sorry, but {} is not a letter!".format(pickletter))
+	if not pickedletter.isalpha() :
+		print("Sorry, but {} is not a letter! Try again.".format(pickedletter))
 
-	elif pickletter in guessed:
-		print("You already guessed the letter {}!".format(pickletter))
+	elif pickedletter in guessedletters:
+		print("You already guessed the letter {}!".format(pickedletter))
 
 	else:
 
 		# lowercase all input
-		pickletter = pickletter.lower()
+		pickedletter = pickedletter.lower()
 
-		if pickletter in myword.lower():
-			print("That guess was correct!")
+		if pickedletter in theword.lower():
+			print("You guessed correctly - well done!")
 			
-			position = 0
+			letterposition = 0
 
-			for letterexists in myword.lower():
-				if letterexists == pickletter:
-					# replace blank spots in word-to-guess with guessed letters
-					blankword[position] = myword[position]
-				position += 1
+			for letterexists in theword.lower():
+				if letterexists == pickedletter:
+					# replace blank spots in word-to-guess with guessedletters letters
+					blankword[letterposition] = theword[letterposition]
+				letterposition += 1
 
 		else:
 			# add wrong letter to string with incorrect guesses
-			guessed += pickletter			
-			wrongguesses += 1
-			print("Sorry, that was a wrong guess!")
+			guessedletters += pickedletter			
+			no_incorrectguesses += 1
+			print("Sorry, that guess was wrong! Try again.")
 
-		print("Incorrectly guessed letters so far: " +guessed+ ".\nYou have {} tries left".format(maxwrongguesses-wrongguesses))
+		print("Incorrectly guessed letters so far: " +guessedletters+ ".\nYou have {} tries left".format(maxno_incorrectguesses-no_incorrectguesses))
 
 		if not "-" in blankword:
-			print("We have a winner!")
+			print("We have a winner! Thanks for playing.")
 			break
 
 else:
 	print("Game over. :( ")
 
-print("Thanks for playing!")
-stringtogether(blankword)
+print("The word we you were looking for was: " +theword+ ".")
