@@ -1,7 +1,10 @@
-# A simple hangman game programmed in Python
+# A simple hangman game programmed in Python 3
+#
+# You need to have Python 3 installed on your system to be able to run this game.
+# Tested on Python 3.3.2.
 #
 # The game prompts the user to enter a letter to start guessing a word.
-# 11 incorrect guesses are allowed, after the 11th, hangman is hanged.
+# 11 incorrect guesses are allowed, after the 11th, hangman is hanged and the game is over.
 # 
 # Features/checks already implemented
 # - only letters are allowed (no digits, no special characters)
