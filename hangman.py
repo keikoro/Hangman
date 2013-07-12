@@ -10,7 +10,6 @@
 # - get words-to-be-guessed from a file
 # - hangman (graphics)
 # - correct guesses needn't be in list of all guesses
-# - letter matching should ignore upper/lowercase
 
 import random
 
@@ -21,7 +20,7 @@ def stringtogether(mylist):
 	print()
 
 
-mywords = ["Marmelade", "Testwort", "Schal", "Sommer", "müsli", "butterbrot", 
+mywords = ["marmelade", "testwort", "schal", "sommer", "müsli", "butterbrot", 
 				"startrek", "lampe"]
 
 print("Let's play hangman: guess the word!")
@@ -35,16 +34,14 @@ guessed = ''
 while wrongguesses <= maxwrongguesses:
 	stringtogether(blankword)
 
-	# let user pick a letter
-	pickletter = input("Please guess a letter : ")
+	# 
+	pickletter = input("Please enter a letter : ")
 
-	# warn if input is a digit, special character etc.
 	if not pickletter.isalpha() :
 		print("Sorry, but {} is not a letter!".format(pickletter))
 
-	else:
+	else:	
 
-		# 
 		pickletter = pickletter.lower()
 
 		guessed += pickletter
