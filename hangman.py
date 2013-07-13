@@ -11,7 +11,7 @@
 # - build hangman (ASCII graphics)
 # - output everything with say (= sound)
 #
-# Ideas for additional/advanced Nice To Have's
+# Further ideas:
 # - let user guess the entire word
 # - allow phrases and words with hyphens
 
