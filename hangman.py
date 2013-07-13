@@ -77,7 +77,8 @@ while no_incorrectguesses <= maxno_incorrectguesses:
 			no_incorrectguesses += 1
 			print("Sorry, that guess was wrong! Try again.")
 
-		print("Incorrectly guessed letters so far: " +guessedletters+ ".\nYou have {} tries left".format(maxno_incorrectguesses-no_incorrectguesses))
+		if not '' in guessedletters:
+			print("Incorrectly guessed letters so far: " +guessedletters+ ".\nYou have {} tries left".format(maxno_incorrectguesses-no_incorrectguesses))
 
 		if not "-" in placeholder:
 			print("We have a winner! Thanks for playing.")
