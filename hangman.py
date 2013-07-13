@@ -9,13 +9,11 @@
 # TODO
 # - retrieve words-to-be-guessed from a file (with minimum length of e.g. 5 letters/word)
 # - build hangman (ASCII graphics)
-# - rearrange print statements (reduce lines)
 # - output everything with say (= sound)
 #
 # Ideas for additional/advanced Nice To Have's
 # - let user guess the entire word
 # - allow phrases and words with hyphens
-
 
 import random # module for randomisation
 
@@ -27,7 +25,7 @@ def stringtogether(thislist): # function to string together elements in a list
 mywords = ["cherry", "summer", "winter", "programming", "hydrogen", "Saturday",
 			"unicorn", "magic", "artichoke", "juice", "hacker", "python", "Neverland",
 			"baking", "sherlock", "troll", "batman", "japan", "pastries", "Cairo",
-			"Vienna", "raindrop", "waves", "diving", "Malta"]
+			"Vienna", "raindrop", "waves", "diving", "Malta", "cupcake", "ukulele"]
 
 print("Let's play hangman: guess the word!")
 theword = random.choice(mywords)
@@ -75,8 +73,7 @@ while possibletries > 0:
 				if possibletries == 1:
 					tryword = 'try' 
 
-				print("You have {} {} left.".format(possibletries,tryword))
-				print("Incorrectly guessed letters so far: " +guessedletters+ ".")
+				print("You have {} {} left.\nIncorrectly guessed letters so far: ".format(possibletries,tryword) +guessedletters+ ".")
 				stringtogether(placeholder)
 
 		if not "-" in placeholder:
