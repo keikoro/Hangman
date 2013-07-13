@@ -5,12 +5,6 @@
 #
 # The game prompts the user to enter a letter to start guessing a word.
 # 11 incorrect guesses are allowed, after the 11th, hangman is hanged and the game is over.
-# 
-# Features/checks already implemented
-# - only letters are allowed (no digits, no special characters)
-# - a letter can't be guessed more than once (i.e. only counts toward incorrect guesses once)
-# - incorrectly guessed letters are continuously displayed (correct guesses are part of word anyway)
-# - words can contain uppercase and lowercase letters
 #
 # TODO
 # - retrieve words-to-be-guessed from a file (with minimum length of e.g. 5 letters/word)
