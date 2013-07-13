@@ -35,15 +35,15 @@ mywords = ["cherry", "summer", "winter", "programming", "hydrogen", "Saturday",
 print("Let's play hangman: guess the word!")
 theword = random.choice(mywords)
 
-no_incorrectguesses = 0
-maxno_incorrectguesses = 10 # 11 incorrect guesses are allowed
+possibletries = 11 # 11 incorrect guesses are allowed
 placeholder = list("-"*len(theword)) # a list consisting of placeholder characters
 guessedletters = '' # string for incorrectly guessed letters
+mytry = 'tries'
 
-while no_incorrectguesses <= maxno_incorrectguesses:
+while possibletries > 0:
 	stringtogether(placeholder) # create placeholder word
 
-	pickedletter = input("Please pick a letter : ")
+	pickedletter = input("Please pick a letter: ")
 
 	if not pickedletter.isalpha() : # don't allow digits, special characters
 		print("Sorry, but {} is not a letter! Try again.".format(pickedletter))
@@ -68,11 +68,14 @@ while no_incorrectguesses <= maxno_incorrectguesses:
 		else:
 			# add incorrect letters to guessedletters
 			guessedletters += pickedletter			
-			no_incorrectguesses += 1
+			possibletries -= 1
 			print("Sorry, that guess was wrong! Try again.")
 
-		if not '' in guessedletters:
-			print("Incorrectly guessed letters so far: " +guessedletters+ ".\nYou have {} tries left".format(maxno_incorrectguesses-no_incorrectguesses))
+		if (guessedletters != '') and (possibletries > 0):
+			if possibletries == 1:
+				mytry = 'try' 
+
+			print("Incorrectly guessed letters so far: " +guessedletters+ ".\nYou have {} {} left".format(possibletries,mytry))
 
 		if not "-" in placeholder:
 			print("We have a winner! Thanks for playing.")
