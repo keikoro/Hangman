@@ -9,11 +9,8 @@
 # TODO
 # - retrieve words-to-be-guessed from a file (with minimum length of e.g. 5 letters/word)
 # - build hangman (ASCII graphics)
-# - differentiate between plural & singular form for tries left (5 tries vs. 1 try)
-# - adjust *displayed* countdown of incorrect guesses (currently counts down from 9 to 0/-1)
 # - rearrange print statements (reduce lines)
 # - output everything with say (= sound)
-# - add more comments!
 #
 # Ideas for additional/advanced Nice To Have's
 # - let user guess the entire word
@@ -38,10 +35,11 @@ theword = random.choice(mywords)
 possibletries = 11 # 11 incorrect guesses are allowed
 placeholder = list("-"*len(theword)) # a list consisting of placeholder characters
 guessedletters = '' # string for incorrectly guessed letters
-mytry = 'tries'
+tryword = 'tries'
+
+stringtogether(placeholder) # show blank word
 
 while possibletries > 0:
-	stringtogether(placeholder) # create placeholder word
 
 	pickedletter = input("Please pick a letter: ")
 
@@ -52,11 +50,9 @@ while possibletries > 0:
 		print("You already guessed the letter {}!".format(pickedletter))
 
 	else:
-
 		pickedletter = pickedletter.lower() # lowercase all input
 
 		if pickedletter in theword.lower():
-			print("You guessed correctly - well done!")
 			
 			# replace placeholder letters with correctly guessed ones
 			letterposition = 0
@@ -65,23 +61,29 @@ while possibletries > 0:
 					placeholder[letterposition] = theword[letterposition]
 				letterposition += 1
 
+			stringtogether(placeholder)	
+			print("You guessed correctly, well done!")
+
 		else:
 			# add incorrect letters to guessedletters
 			guessedletters += pickedletter			
 			possibletries -= 1
-			print("Sorry, that guess was wrong! Try again.")
 
-		if (guessedletters != '') and (possibletries > 0):
-			if possibletries == 1:
-				mytry = 'try' 
+			print("Sorry, that guess was wrong!", end=' ')
 
-			print("Incorrectly guessed letters so far: " +guessedletters+ ".\nYou have {} {} left".format(possibletries,mytry))
+			if (guessedletters != '') and (possibletries > 0):
+				if possibletries == 1:
+					tryword = 'try' 
+
+				print("You have {} {} left.".format(possibletries,tryword))
+				print("Incorrectly guessed letters so far: " +guessedletters+ ".")
+				stringtogether(placeholder)
 
 		if not "-" in placeholder:
-			print("We have a winner! Thanks for playing.")
+			print("We have a winner! Thanks for playing. :)")
 			break
 
 else:
-	print("Game over. :( ")
+	print("\nGame over. :( ")
 
 print("The word we you were looking for was: " +theword+ ".")
