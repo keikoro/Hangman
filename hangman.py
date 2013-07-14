@@ -11,7 +11,8 @@
 # - retrieve words-to-be-guessed from a file (with minimum length of e.g. 5 letters/word)
 # - build hangman (ASCII graphics)
 # - check for multiple submissions of correct (!) guesses
-# - voice output for placeholder word
+# - voice output for placeholder word (problem with placeholder characters)
+# - fix voice problem with apostrophes
 #
 # Further ideas:
 # - let user guess the entire word
@@ -79,7 +80,6 @@ while possibletries > 0:
 
 			text = "You guessed correctly, well done!"
 			output(text)
-
 
 		else:
 			# add incorrect letters to guessedletters
