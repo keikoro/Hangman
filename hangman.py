@@ -5,6 +5,7 @@
 #
 # The game prompts the user to enter a letter to start guessing a word.
 # 11 incorrect guesses are allowed, after the 11th, hangman is hanged and the game is over.
+# You can enable/disable audio output (see output function)
 #
 # TODO
 # - retrieve words-to-be-guessed from a file (with minimum length of e.g. 5 letters/word)
@@ -25,13 +26,11 @@ def stringtogether(thislist): # function to string together elements in a list
 	print()
 
 def output(text,voice='true',printit='true'):
+	# set voice to 'false' to suppress audio output
 	if printit == 'true':
 		print(text)
 	if voice == 'true':
 		system('say %s' % (text))		
-
-	# system('say %s' % (text)) # comment this out if you don't want voice output!
-
 
 mywords = ["cherry", "summer", "winter", "programming", "hydrogen", "Saturday",
 			"unicorn", "magic", "artichoke", "juice", "hacker", "python", "Neverland",
