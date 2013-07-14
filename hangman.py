@@ -23,15 +23,24 @@ def stringtogether(thislist): # function to string together elements in a list
 		print(element,end='')
 	print()
 
+def output(text,voice='true',printit='true'):
+	if printit == 'true':
+		print(text)
+	if voice == 'true':
+		system('say %s' % (text))		
+
+	# system('say %s' % (text)) # comment this out if you don't want voice output!
+
+
 mywords = ["cherry", "summer", "winter", "programming", "hydrogen", "Saturday",
 			"unicorn", "magic", "artichoke", "juice", "hacker", "python", "Neverland",
 			"baking", "sherlock", "troll", "batman", "japan", "pastries", "Cairo",
 			"Vienna", "raindrop", "waves", "diving", "Malta", "cupcake", "ukulele"]
 
 text = "Let us play hangman: guess the word!"
-system('say %s' % (text))
+output(text)
 
-theword = random.choice(mywords)
+theword = random.choice(mywords).upper()
 
 possibletries = 11 # 11 incorrect guesses are allowed
 placeholder = list("-"*len(theword)) # a list consisting of placeholder characters
@@ -43,67 +52,62 @@ stringtogether(placeholder) # show blank word
 while possibletries > 0:
 
 	text = "Please pick a letter: "
-	system('say %s' % (text))
+	output(text,printit='false')
 	pickedletter = input(text)
 
 	if not pickedletter.isalpha() : # don't allow digits, special characters
 		text = "Sorry, but that was not a letter! Try again.".format(pickedletter)
-		print(text)
-		system('say %s' % (text))
+		output(text)
 
-
-	elif pickedletter in guessedletters: # no multiple guesses of same letter
-		text = "You already guessed the letter '{}'!".format(pickedletter)
-		print(text)
-		system('say %s' % (text))
+	elif pickedletter.upper() in guessedletters: # no multiple guesses of same letter
+		text = "You already guessed the letter '{}'!".format(pickedletter.upper())
+		output(text)
 
 	else:
-		pickedletter = pickedletter.lower() # lowercase all input
+		pickedletter = pickedletter.upper() # uppercase all input (better for say)
 
-		if pickedletter in theword.lower():
+		if pickedletter in theword.upper():
 			
 			# replace placeholder letters with correctly guessed ones
 			letterposition = 0
-			for letterexists in theword.lower():
+			for letterexists in theword.upper():
 				if letterexists == pickedletter:
 					placeholder[letterposition] = theword[letterposition]
 				letterposition += 1
 
-			stringtogether(placeholder)	
+			stringtogether(placeholder)
+
 			text = "You guessed correctly, well done!"
-			system('say %s' % (text))
+			output(text)
+
 
 		else:
 			# add incorrect letters to guessedletters
 			guessedletters += pickedletter			
 			possibletries -= 1
 
-			text="Sorry, '{}' was an incorrect guess!".format(pickedletter)
-			print(text, end=' ')
-			system('say %s' % (text))
+			text="Sorry, '{}' is an incorrect guess!".format(pickedletter.upper())
+			output(text)
 
 			if (guessedletters != '') and (possibletries > 0):
 				if possibletries == 1:
 					tryword = 'try' 
 
 				text = "You have {} {} left.".format(possibletries,tryword)
-				text2 = "Incorrectly guessed letters so far: " +guessedletters+ "."
-				print(text+ "\n" +text2)
-				system('say %s' % (text))
-				system('say %s' % (text2))
+				output(text)
+				text = "Incorrectly guessed letters so far: " +guessedletters+ "."
+				output(text)
+
 				stringtogether(placeholder)
 
 		if not "-" in placeholder:
 			text = "We have a winner! Thanks for playing. :)"
-			print(text)
-			system('say %s' % (text))
+			output(text)
 			break
 
 else:
 	text = "\nGame over. :( "
-	print(text)
-	system('say %s' % (text))
+	output(text)
 
 text = "The word we you were looking for was: " +theword+ "."
-print(text)
-system('say %s' % (text))
+output(text)
