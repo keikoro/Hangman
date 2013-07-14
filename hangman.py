@@ -10,7 +10,6 @@
 # TODO
 # - retrieve words-to-be-guessed from a file (with minimum length of e.g. 5 letters/word)
 # - build hangman (ASCII graphics)
-# - check for multiple submissions of correct (!) guesses
 # - voice output for placeholder word (problem with placeholder characters)
 # - fix voice problem with apostrophes
 #
@@ -26,8 +25,8 @@ def stringtogether(thislist): # function to string together elements in a list
 		print(element,end='')
 	print()
 
-def output(text,voice='true',printit='true'):
-	# set voice to 'false' to suppress audio output
+def output(text,voice='false',printit='true'):
+	# set voice to 'true' to enable audio output
 	if printit == 'true':
 		print(text)
 	if voice == 'true':
@@ -45,7 +44,8 @@ theword = random.choice(mywords).upper()
 
 possibletries = 11 # 11 incorrect guesses are allowed
 placeholder = list("-"*len(theword)) # a list consisting of placeholder characters
-guessedletters = '' # string for incorrectly guessed letters
+incorrectguesses = '' # string for incorrectly guessed letters
+correctguesses = ''
 tryword = 'tries'
 
 stringtogether(placeholder) # show blank word
@@ -60,14 +60,14 @@ while possibletries > 0:
 		text = "Sorry, but that was not a letter! Try again.".format(pickedletter)
 		output(text)
 
-	elif pickedletter.upper() in guessedletters: # no multiple guesses of same letter
+	elif pickedletter.upper() in incorrectguesses: # no multiple guesses of same letter
 		text = "You already guessed the letter '{}'!".format(pickedletter.upper())
 		output(text)
 
 	else:
 		pickedletter = pickedletter.upper() # uppercase all input (better for say)
 
-		if pickedletter in theword.upper():
+		if (pickedletter in theword.upper()) and (pickedletter not in correctguesses):
 			
 			# replace placeholder letters with correctly guessed ones
 			letterposition = 0
@@ -77,25 +77,30 @@ while possibletries > 0:
 				letterposition += 1
 
 			stringtogether(placeholder)
+			correctguesses += pickedletter
 
 			text = "You guessed correctly, well done!"
 			output(text)
 
+		elif pickedletter in correctguesses:
+			text = "You already picked {}!".format(pickedletter.upper())
+			output(text)
+
 		else:
-			# add incorrect letters to guessedletters
-			guessedletters += pickedletter			
+			# add incorrect letters to incorrectguesses
+			incorrectguesses += pickedletter			
 			possibletries -= 1
 
 			text="Sorry, '{}' is an incorrect guess!".format(pickedletter.upper())
 			output(text)
 
-			if (guessedletters != '') and (possibletries > 0):
+			if (incorrectguesses != '') and (possibletries > 0):
 				if possibletries == 1:
 					tryword = 'try' 
 
 				text = "You have {} {} left.".format(possibletries,tryword)
 				output(text)
-				text = "Incorrectly guessed letters so far: " +guessedletters+ "."
+				text = "Incorrectly guessed letters so far: " +incorrectguesses+ "."
 				output(text)
 
 				stringtogether(placeholder)
