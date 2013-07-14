@@ -16,6 +16,7 @@
 # - allow phrases and words with hyphens
 
 import random # module for randomisation
+from os import system
 
 def stringtogether(thislist): # function to string together elements in a list
 	for element in thislist:
@@ -27,7 +28,9 @@ mywords = ["cherry", "summer", "winter", "programming", "hydrogen", "Saturday",
 			"baking", "sherlock", "troll", "batman", "japan", "pastries", "Cairo",
 			"Vienna", "raindrop", "waves", "diving", "Malta", "cupcake", "ukulele"]
 
-print("Let's play hangman: guess the word!")
+text = "Let us play hangman: guess the word!"
+system('say %s' % (text))
+
 theword = random.choice(mywords)
 
 possibletries = 11 # 11 incorrect guesses are allowed
@@ -39,13 +42,20 @@ stringtogether(placeholder) # show blank word
 
 while possibletries > 0:
 
-	pickedletter = input("Please pick a letter: ")
+	text = "Please pick a letter: "
+	system('say %s' % (text))
+	pickedletter = input(text)
 
 	if not pickedletter.isalpha() : # don't allow digits, special characters
-		print("Sorry, but {} is not a letter! Try again.".format(pickedletter))
+		text = "Sorry, but that was not a letter! Try again.".format(pickedletter)
+		print(text)
+		system('say %s' % (text))
+
 
 	elif pickedletter in guessedletters: # no multiple guesses of same letter
-		print("You already guessed the letter {}!".format(pickedletter))
+		text = "You already guessed the letter '{}'!".format(pickedletter)
+		print(text)
+		system('say %s' % (text))
 
 	else:
 		pickedletter = pickedletter.lower() # lowercase all input
@@ -60,27 +70,40 @@ while possibletries > 0:
 				letterposition += 1
 
 			stringtogether(placeholder)	
-			print("You guessed correctly, well done!")
+			text = "You guessed correctly, well done!"
+			system('say %s' % (text))
 
 		else:
 			# add incorrect letters to guessedletters
 			guessedletters += pickedletter			
 			possibletries -= 1
 
-			print("Sorry, that guess was wrong!", end=' ')
+			text="Sorry, '{}' was an incorrect guess!".format(pickedletter)
+			print(text, end=' ')
+			system('say %s' % (text))
 
 			if (guessedletters != '') and (possibletries > 0):
 				if possibletries == 1:
 					tryword = 'try' 
 
-				print("You have {} {} left.\nIncorrectly guessed letters so far: ".format(possibletries,tryword) +guessedletters+ ".")
+				text = "You have {} {} left.".format(possibletries,tryword)
+				text2 = "Incorrectly guessed letters so far: " +guessedletters+ "."
+				print(text+ "\n" +text2)
+				system('say %s' % (text))
+				system('say %s' % (text2))
 				stringtogether(placeholder)
 
 		if not "-" in placeholder:
-			print("We have a winner! Thanks for playing. :)")
+			text = "We have a winner! Thanks for playing. :)"
+			print(text)
+			system('say %s' % (text))
 			break
 
 else:
-	print("\nGame over. :( ")
+	text = "\nGame over. :( "
+	print(text)
+	system('say %s' % (text))
 
-print("The word we you were looking for was: " +theword+ ".")
+text = "The word we you were looking for was: " +theword+ "."
+print(text)
+system('say %s' % (text))
