@@ -18,7 +18,7 @@
 # - allow phrases and words with hyphens
 
 import random # module for randomisation
-from os import system
+from os import system # enable command line functions
 
 def stringtogether(thislist): # function to string together elements in a list
 	for element in thislist:
@@ -30,7 +30,7 @@ def output(text,voice='true',printit='true'):
 	if printit == 'true':
 		print(text)
 	if voice == 'true':
-		system('say %s' % (text))		
+		system('say -r 160 %s' % (text))		
 
 mywords = ["cherry", "summer", "winter", "programming", "hydrogen", "Saturday",
 			"unicorn", "magic", "artichoke", "juice", "hacker", "python", "Neverland",
