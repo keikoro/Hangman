@@ -9,7 +9,8 @@
 # TODO
 # - retrieve words-to-be-guessed from a file (with minimum length of e.g. 5 letters/word)
 # - build hangman (ASCII graphics)
-# - output everything with say (= sound)
+# - check for multiple submissions of correct (!) guesses
+# - voice output for placeholder word
 #
 # Further ideas:
 # - let user guess the entire word
