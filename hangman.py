@@ -10,8 +10,6 @@
 # TODO
 # - retrieve words-to-be-guessed from a file (with minimum length of e.g. 5 letters/word)
 # - build hangman (ASCII graphics)
-# - voice output for placeholder word (problem with placeholder characters)
-# - fix voice problem with apostrophes
 # - umlauts are two letters!
 #
 # Further ideas:
@@ -33,7 +31,7 @@ def output(text,voice=True,ending='\n',spell=False):
 	print(text,end=ending)
 	if voice:
 		if spell:
-			# say cannot say a single underscore/dash/... :(
+			# say cannot say a single underscore/dash/... :( -> needs to be spelled out
 			for char in list(text):
 				if char == ".":
 					subprocess.call(["say", "dot"])
@@ -47,8 +45,7 @@ mywords = ["cherry", "summer", "winter", "programming", "hydrogen", "Saturday",
 			"baking", "sherlock", "troll", "batman", "japan", "pastries", "Cairo",
 			"Vienna", "raindrop", "waves", "diving", "Malta", "cupcake", "ukulele"]
 
-greeting = "Let's play hangman: guess the word!"
-output(greeting)
+output("Let's play hangman: guess the word!")
 
 theword = random.choice(mywords).upper()
 
