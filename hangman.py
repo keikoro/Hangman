@@ -30,11 +30,15 @@ def stringtogether(thislist):
 
 def output(text,voice=True,ending='\n',spell=False):
 	"""print out text and if voice is true, say text"""
-	# say cannot say a single underscore/dash/... :(
 	print(text,end=ending)
 	if voice:
 		if spell:
-			pass
+			# say cannot say a single underscore/dash/... :(
+			for char in list(text):
+				if char == ".":
+					subprocess.call(["say", "dot"])
+				else:
+					subprocess.call(["say", char])
 		else:
 			subprocess.call(["say", text])
 
@@ -49,12 +53,13 @@ output(greeting)
 theword = random.choice(mywords).upper()
 
 possibletries = 11 # 11 incorrect guesses are allowed
-placeholder = list("_"*len(theword)) # a list consisting of placeholder characters
+placeholder = list("."*len(theword)) # a list consisting of placeholder characters
 incorrectguesses = '' # string for incorrectly guessed letters
 correctguesses = ''
 tryword = 'tries'
 
-output(stringtogether(placeholder), voice=False, ending="\n") # show blank word
+output(stringtogether(placeholder), voice=False) # show blank word
+subprocess.call(["say", "The word you're looking for has {} letters".format(len(theword))])
 
 while possibletries > 0:
 
@@ -82,10 +87,8 @@ while possibletries > 0:
 				placeholder[letterposition] = theword[letterposition]
 			letterposition += 1
 
-		output(stringtogether(placeholder))
-		correctguesses += pickedletter
-
 		output("You guessed correctly, well done!")
+		correctguesses += pickedletter
 
 	else: # guess was incorrect
 		incorrectguesses += pickedletter			
@@ -98,15 +101,22 @@ while possibletries > 0:
 				tryword = 'try' 
 
 			output("You have {} {} left.".format(possibletries,tryword))
-			output("Incorrectly guessed letters so far: " +incorrectguesses+ ".")
-
-			output(stringtogether(placeholder))
-
-	if not "_" in placeholder:
+			output("Incorrectly guessed letters so far: ", ending='')
+			output(incorrectguesses, ending='', spell=True)
+			print(".")
+			
+	if not "." in placeholder:
 		output("We have a winner! Thanks for playing. :)")
 		break
+
+	if placeholder == list("."*len(theword)):
+		output(stringtogether(placeholder), voice=False) # show blank word
+		subprocess.call(["say", "The word you're looking for has {} letters".format(len(theword))])
+	else:
+		output("The word is: ", ending='')
+		output(stringtogether(placeholder),spell=True)
 
 else:
 	output("\nGame over. :( ")
 
-output("The word we you were looking for was: " +theword+ ".")
+output("The word you were looking for was: " +theword+ ".")
