@@ -18,19 +18,18 @@
 # - allow phrases and words with hyphens
 
 import random # module for randomisation
-from os import system # enable command line functions
+import subprocess # enable command line functions
 
 def stringtogether(thislist): # function to string together elements in a list
 	for element in thislist:
 		print(element,end='')
 	print()
 
-def output(text,voice='false',printit='true'):
+def output(text,voice=True):
 	# set voice to 'true' to enable audio output
-	if printit == 'true':
-		print(text)
-	if voice == 'true':
-		system('say -r 160 %s' % (text))		
+	if voice:
+		subprocess.call(["say", text])
+		#system('say -r 160 %s' % (text))		
 
 mywords = ["cherry", "summer", "winter", "programming", "hydrogen", "Saturday",
 			"unicorn", "magic", "artichoke", "juice", "hacker", "python", "Neverland",
@@ -43,7 +42,7 @@ output(text)
 theword = random.choice(mywords).upper()
 
 possibletries = 11 # 11 incorrect guesses are allowed
-placeholder = list("-"*len(theword)) # a list consisting of placeholder characters
+placeholder = list("_"*len(theword)) # a list consisting of placeholder characters
 incorrectguesses = '' # string for incorrectly guessed letters
 correctguesses = ''
 tryword = 'tries'
@@ -53,8 +52,8 @@ stringtogether(placeholder) # show blank word
 while possibletries > 0:
 
 	text = "Please pick a letter: "
-	output(text,printit='false')
-	pickedletter = input(text)
+	output(text)
+	pickedletter = input()
 
 	if not pickedletter.isalpha() : # don't allow digits, special characters
 		text = "Sorry, but that was not a letter! Try again.".format(pickedletter)
