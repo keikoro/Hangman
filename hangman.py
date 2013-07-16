@@ -41,11 +41,29 @@ def output(text,voice=True,ending='\n',spell=False):
 		else:
 			subprocess.call(["say", text])
 
-mywords = ["cherry", "summer", "winter", "programming", "hydrogen", "Saturday",
+alphabet = "abcdefghijklmnopqrstuvwxyz"
+mywords = [] # empty list
+
+try:
+	myfile = open("de-en.txt")
+	for line in myfile:
+		myword = line.split()[0]
+		for letter in myword.lower():
+			if len(myword) < 5:
+				break
+			if not letter in alphabet:
+				break
+		else:
+			mywords.append(myword)
+
+	myfile.close()
+except:
+	mywords = ["cherry", "summer", "winter", "programming", "hydrogen", "Saturday",
 			"unicorn", "magic", "artichoke", "juice", "hacker", "python", "Neverland",
 			"baking", "sherlock", "troll", "batman", "japan", "pastries", "Cairo",
 			"Vienna", "raindrop", "waves", "diving", "Malta", "cupcake", "ukulele"]
 
+print(len(mywords))
 sound = False
 
 print("Starting sound check:")
@@ -60,7 +78,7 @@ else:
 	print("It seems you have 'say' installed which makes audio output possible.")
 	print("Could you hear your computer say 'soundcheck, testing, 1, 2, 3'?")
 	answer = input("Please type yes or no (and press enter): ")
-	if answer.lower()[0] == 'y':
+	if len(answer) > 0 and answer.lower()[0] == 'y':
 		sound = True
 finally:
 	print("Soundcheck completed, you're ready to go!")
@@ -68,7 +86,7 @@ finally:
 
 output("Let's play hangman: guess the word!", voice=sound)
 
-theword = random.choice(mywords).upper()
+theword = random.choice(mywords)
 
 possibletries = 11 # 11 incorrect guesses are allowed
 placeholder = list("."*len(theword)) # a list consisting of placeholder characters
@@ -103,7 +121,7 @@ while possibletries > 0:
 		letterposition = 0
 		for letterexists in theword.upper():
 			if letterexists == pickedletter:
-				placeholder[letterposition] = theword[letterposition]
+				placeholder[letterposition] = theword.upper()[letterposition]
 			letterposition += 1
 
 		output("You guessed correctly, well done!", voice=sound)
