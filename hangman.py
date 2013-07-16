@@ -45,7 +45,7 @@ alphabet = "abcdefghijklmnopqrstuvwxyz"
 mywords = [] # empty list
 
 try:
-	myfile = open("de-en.txt")
+	myfile = open("de-en.dict")
 	for line in myfile:
 		myword = line.split()[0]
 		for letter in myword.lower():
