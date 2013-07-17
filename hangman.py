@@ -15,7 +15,6 @@
 # - switch between EN and DE words (dict file)
 # - hint system (which letter is likely to be part of the word)
 # - alternatives for say for other platforms (linux, windows)
-# - if there are more than 3 blank characters: let say say so
 # - AI
 # - put licence into comments (check underscore blahfoo)
 #
