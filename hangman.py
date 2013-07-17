@@ -137,7 +137,7 @@ if sound:
 	print("Starting sound check:")
 	# using try to test existence of say subprocess
 	try:
-		subprocess.call(["say", "soundcheck, testing, 1, 2, 3"])
+		subprocess.call(["say", "soundcheck"])
 		subprocess.call(["say", "If you hear the voice, please press yes and the enter key."])
 	except:
 		print("Please install the programm 'say' to use audio output (or contact your system administrator).")
