@@ -8,14 +8,19 @@
 # You can enable/disable audio output (see output function)
 #
 # TODO
-# - retrieve words-to-be-guessed from a file (with minimum length of e.g. 5 letters/word)
+# - retrieve words from a Wikipedia page
 # - build hangman (ASCII graphics)
-# - umlauts are two letters!
+# - transform umlauts (ü -> ue)
 # - delay for say? (so as to display text earlier)
+# - switch between EN and DE words (dict file) ... parameters!
+# - hint system (which letter is likely to be part of the word)
+# - alternatives for say for other platforms (linux, windows)
+# - AI 
 #
 # Further ideas:
 # - let user guess the entire word
 # - allow phrases and words with hyphens
+# - multiplayer hangman
 
 import random # module for randomisation
 import subprocess # enable command line functions
@@ -102,6 +107,9 @@ while possibletries > 0:
 
 	output("Please pick a letter: ", ending='', voice=sound)
 	pickedletter = input().upper()
+
+	if len(pickedletter) > 0:
+		pickedletter = pickedletter[0]
 
 	if not pickedletter.isalpha() : # don't allow digits, special characters
 		output("Sorry, but that was not a letter! Try again.".format(pickedletter), voice=sound)
