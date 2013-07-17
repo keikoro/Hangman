@@ -15,15 +15,23 @@
 # - switch between EN and DE words (dict file) ... parameters!
 # - hint system (which letter is likely to be part of the word)
 # - alternatives for say for other platforms (linux, windows)
-# - AI 
+# - AI
+# - put licence into comments (check underscore blahfoo)
 #
 # Further ideas:
 # - let user guess the entire word
 # - allow phrases and words with hyphens
 # - multiplayer hangman
 
+'''Hangman - a word-guessing game.
+
+parameters:
+-nosound ... play the game without sound
+-en|de ... play the game with English/German words'''
+
 import random # module for randomisation
 import subprocess # enable command line functions
+import sys # module for parameters
 
 def stringtogether(thislist):
 	"""return elements in a list as string"""
@@ -45,6 +53,33 @@ def output(text,voice=True,ending='\n',spell=False):
 					subprocess.call(["say", char])
 		else:
 			subprocess.call(["say", text])
+
+# start of the program
+
+sound = True
+wordlanguage = ""
+# are there any parameters?
+if len(sys.argv) > 1:
+	# begin loop
+	argumentlist = sys.argv[1:] # list includes all arguments but not the filename
+	for argument.lower() in argumentlist:
+		if (argument == "-nosound") or (argument == "nosound"):
+			sound = False
+			continue
+		if (argument == "en") or (argument == "-en") or (argument == "de") or (argument == "-de"):
+			if "en" in argument:
+				if wordlanguage != '':
+					print("You entered more than one parameters for language - this is not possible!")
+					print("The Hangman program will now default to English.")
+				wordlanguage = "en"
+			else:
+				if wordlanguage != '':
+					print("You entered more than one parameters for language - this is not possible!")
+					print("The Hangman program will now default to German.")
+				wordlanguage = "de"				
+
+if wordlanguage == '':
+	wordlanguage = 'en'
 
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 mywords = [] # empty list
@@ -69,24 +104,27 @@ except:
 			"Vienna", "raindrop", "waves", "diving", "Malta", "cupcake", "ukulele"]
 
 print(len(mywords))
-sound = False
 
-print("Starting sound check:")
-# using try to test existence of say subprocess
-try:
-	subprocess.call(["say", "soundcheck, testing, 1, 2, 3"])
-	subprocess.call(["say", "If you hear the voice, please press yes and the enter key."])
-except:
-	print("Please install the programm 'say' to use audio output (or contact your system administrator).")
-	print("Using this program will still work by the way, only without sound.")
-else:
-	print("It seems you have 'say' installed which makes audio output possible.")
-	print("Could you hear your computer say 'soundcheck, testing, 1, 2, 3'?")
-	answer = input("Please type yes or no (and press enter): ")
-	if len(answer) > 0 and answer.lower()[0] == 'y':
-		sound = True
-finally:
-	print("Soundcheck completed, you're ready to go!")
+if sound:
+	print("Starting sound check:")
+	# using try to test existence of say subprocess
+	try:
+		subprocess.call(["say", "soundcheck, testing, 1, 2, 3"])
+		subprocess.call(["say", "If you hear the voice, please press yes and the enter key."])
+	except:
+		print("Please install the programm 'say' to use audio output (or contact your system administrator).")
+		print("Using this program will still work by the way, only without sound.")
+		sound = False
+	else:
+		print("It seems you have 'say' installed which makes audio output possible.")
+		print("Could you hear your computer say 'soundcheck, testing, 1, 2, 3'?")
+		answer = input("Please type yes or no (and press enter): ")
+		if len(answer) > 0 and answer.lower()[0] == 'y':
+			sound = True
+		else:
+			sound = False
+	finally:
+		print("Soundcheck completed, you're ready to go!")
 
 
 output("Let's play hangman: guess the word!", voice=sound)
