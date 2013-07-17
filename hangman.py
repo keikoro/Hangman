@@ -12,9 +12,10 @@
 # - build hangman (ASCII graphics)
 # - transform umlauts (ü -> ue)
 # - delay for say? (so as to display text earlier)
-# - switch between EN and DE words (dict file) ... parameters!
+# - switch between EN and DE words (dict file)
 # - hint system (which letter is likely to be part of the word)
 # - alternatives for say for other platforms (linux, windows)
+# - if there are more than 3 blank characters: let say say so
 # - AI
 # - put licence into comments (check underscore blahfoo)
 #
@@ -45,12 +46,36 @@ def output(text,voice=True,ending='\n',spell=False):
 	print(text,end=ending)
 	if voice:
 		if spell:
-			# say cannot say a single underscore/dash/... :( -> needs to be spelled out
-			for char in list(text):
+			# if there are more than maxdots dots, don't spell them out (but say "n blank characters")
+			#if "."*(maxdots+1) in text:
+			speaklist = []
+			dotstreak = 0
+			for char in text:
 				if char == ".":
-					subprocess.call(["say", "dot"])
+					dotstreak += 1
 				else:
-					subprocess.call(["say", char])
+					if dotstreak > 0:
+						# we must append x times dot
+						if dotstreak > maxdots:
+							speaklist.append("{} dots ".format(dotstreak))
+						else:
+							for x in range(dotstreak):
+								speaklist.append("dot")
+					speaklist.append(char)
+					dotstreak = 0
+
+			if char == ".": # needed for if last character is a dot
+				if dotstreak > maxdots:
+					speaklist.append("{} dots ".format(dotstreak))
+				else:
+					for x in range(dotstreak):
+						speaklist.append("dot")
+
+			for element in speaklist:
+				subprocess.call(["say", element])
+
+			# say cannot say a single underscore/dash/... :( -> needs to be spelled out
+
 		else:
 			subprocess.call(["say", text])
 
@@ -84,6 +109,7 @@ if wordlanguage == '':
 
 print("wordlanguage = {}".format(wordlanguage))
 
+maxdots = 2
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 mywords = [] # empty list
 
