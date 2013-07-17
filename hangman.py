@@ -57,29 +57,32 @@ def output(text,voice=True,ending='\n',spell=False):
 # start of the program
 
 sound = True
-wordlanguage = ""
+wordlanguage = ''
 # are there any parameters?
 if len(sys.argv) > 1:
 	# begin loop
-	argumentlist = sys.argv[1:] # list includes all arguments but not the filename
-	for argument.lower() in argumentlist:
-		if (argument == "-nosound") or (argument == "nosound"):
+	argumentlist = sys.argv[1:] # list includes all argumentls but not the filename
+	for argument in argumentlist:
+		argumentl = argument.lower()
+		if (argumentl == "-nosound") or (argumentl == "nosound"):
 			sound = False
 			continue
-		if (argument == "en") or (argument == "-en") or (argument == "de") or (argument == "-de"):
-			if "en" in argument:
+		if (argumentl == "en") or (argumentl == "-en") or (argumentl == "de") or (argumentl == "-de"):
+			if "en" in argumentl:
 				if wordlanguage != '':
-					print("You entered more than one parameters for language - this is not possible!")
+					print("You entered more than one parameter for language - this is not possible!")
 					print("The Hangman program will now default to English.")
 				wordlanguage = "en"
 			else:
 				if wordlanguage != '':
-					print("You entered more than one parameters for language - this is not possible!")
+					print("You entered more than one parameter for language - this is not possible!")
 					print("The Hangman program will now default to German.")
 				wordlanguage = "de"				
 
 if wordlanguage == '':
 	wordlanguage = 'en'
+
+print("wordlanguage = {}".format(wordlanguage))
 
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 mywords = [] # empty list
