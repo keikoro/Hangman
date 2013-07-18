@@ -19,9 +19,8 @@ import subprocess # enable command line functions
 import sys # module for parameters
 
 if sys.version_info[0] < 3:
-    print("This program need python version 3.x, you are using python2.x")
-    print("please start this program using python3 or install python3")
-    print("from http://www.python.org")
+    print("You are currently using Python 2.x but need to use Python 3.x to be able to run this game.")
+    print("Please start this program by starting your command with python3 or install Python 3 from http://www.python.org if you don't have it installed on your system.")
 
 def stringtogether(thislist):
 	"""return elements in a list as a string"""
@@ -216,7 +215,7 @@ while possibletries > 0:
 		continue
 
 	if pickedletter in correctguesses:
-		output("You already picked {}!".format(pickedletter.upper()), voice=sound)
+		output("You already successfully picked '{}'!".format(pickedletter.upper()), voice=sound)
 		continue
 
 	if pickedletter in theword.upper(): # guess was correct
