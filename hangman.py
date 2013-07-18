@@ -70,9 +70,7 @@ maxdots = 2
 voicesoftware = ''
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 mywords = [] # empty list
-theword = random.choice(mywords)
 possibletries = 11 # 11 incorrect guesses are allowed
-placeholder = list("."*len(theword)) # a list consisting of placeholder characters
 incorrectguesses = '' # string for incorrectly guessed letters
 correctguesses = ''
 tryword = 'tries'
@@ -130,7 +128,8 @@ except:
 			"baking", "sherlock", "troll", "batman", "japan", "pastries", "Cairo",
 			"Vienna", "raindrop", "waves", "diving", "Malta", "cupcake", "ukulele"]
 
-print(len(mywords))
+theword = random.choice(mywords)
+placeholder = list("."*len(theword)) # a list consisting of placeholder characters
 
 if sound:
 	print("Starting sound check:")
