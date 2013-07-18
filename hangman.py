@@ -19,19 +19,18 @@ import subprocess # enable command line functions
 import sys # module for parameters
 
 def stringtogether(thislist):
-	"""return elements in a list as string"""
+	"""return elements in a list as a string"""
 	returnstring = ""
 	for element in thislist:
 		returnstring += element
 	return returnstring
 
 def output(text,voice=True,ending='\n',spell=False):
-	"""print out text and if voice is true, say text"""
+	"""print out text and, if voice is true, say text"""
 	print(text,end=ending)
 	if voice:
 		if spell:
 			# if there are more than maxdots dots, don't spell them out (but say "n blank characters")
-			#if "."*(maxdots+1) in text:
 			speaklist = []
 			dotstreak = 0
 			for char in text:
@@ -48,25 +47,23 @@ def output(text,voice=True,ending='\n',spell=False):
 					speaklist.append(char)
 					dotstreak = 0
 
-			if char == ".": # needed for if last character is a dot
+			if char == ".": # needed for when last character is a dot
 				if dotstreak > maxdots:
 					speaklist.append("{} dots ".format(dotstreak))
 				else:
 					for x in range(dotstreak):
-						speaklist.append("dot")
+						speaklist.append("dot") # say cannot spell single dots/dashes etc. :(
 
 			for element in speaklist:
 				subprocess.call([voicesoftware, element])
-
-			# say cannot say a single underscore/dash/... :( -> needs to be spelled out
 
 		else:
 			subprocess.call([voicesoftware, text])
 
 
 def analysewords(mywords):
-	'''analyse mywords and return a sorted list of chars (sorted by occurence)'''
-	# occurence of letters in all words
+	'''analyse mywords and return a list of all used characters (sorted by occurence)'''
+	# create dictionary with occurence of letters in all words
 	mydict = {}
 	for word in mywords:
 		for letter in word.lower():
@@ -75,8 +72,8 @@ def analysewords(mywords):
 			else:
 				mydict[letter] = 1
 
-	# list of pairs (in the dictionary) sorted by occurence descending
-	# see http://stackoverflow.com/questions/613183/python-sort-a-dictionary-by-value
+	# list of pairs (in the dictionary) sorted by occurence (descending)
+	# adapted from http://stackoverflow.com/questions/613183/python-sort-a-dictionary-by-value
 	pairlist = sorted(mydict.items(), key=lambda x: x[1], reverse=True)
 
 	# pairlist looks like this: [('e', 167410), ('n', 100164),...]
@@ -104,7 +101,7 @@ tryword = 'tries'
 sound = True
 wordlanguage = ''
 
-# check for os/voice software
+# check which os the user's on to choose corresponding audio/voice software
 if sys.platform == 'darwin':
 	voicesoftware = 'say'
 elif (sys.platform == 'linux') or (sys.platform == 'win32'):
@@ -117,20 +114,18 @@ if len(sys.argv) > 1:
 	# begin loop
 	argumentlist = sys.argv[1:] # list includes all argumentls but not the filename
 	for argument in argumentlist:
-		argumentl = argument.lower()
-		if (argumentl == "-nosound") or (argumentl == "nosound"):
+		thisargument = argument.lower()
+		if (thisargument == "-nosound") or (thisargument == "nosound"):
 			sound = False
 			continue
-		if (argumentl == "en") or (argumentl == "-en") or (argumentl == "de") or (argumentl == "-de"):
+		if (thisargument == "en") or (thisargument == "-en") or (thisargument == "de") or (thisargument == "-de"):
 			if "en" in argumentl:
 				if wordlanguage != '':
-					print("You entered more than one parameter for language - this is not possible!")
-					print("The Hangman program will now default to English.")
+					print("You entered more than one parameter for language - Hangman will now default to English.")
 				wordlanguage = "en"
 			else:
 				if wordlanguage != '':
-					print("You entered more than one parameter for language - this is not possible!")
-					print("The Hangman program will now default to German.")
+					print("You entered more than one parameter for language - Hangman will now default to German.")
 				wordlanguage = "de"				
 
 if wordlanguage == '':
