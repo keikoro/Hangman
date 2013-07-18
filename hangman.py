@@ -27,32 +27,33 @@ def stringtogether(thislist):
 
 def output(text,voice=True,ending='\n',spell=False):
 	"""print out text and, if voice is true, say text"""
+	# say cannot spell single dots/dashes etc. :(	
 	print(text,end=ending)
 	if voice:
 		if spell:
-			# if there are more than maxdots dots, don't spell them out (but say "n blank characters")
+			# if there are more than maxvoicedblanks blanks, don't spell them out (but say "n blank characters")
 			speaklist = []
-			dotstreak = 0
+			howmanyblanks = 0
 			for char in text:
-				if char == ".":
-					dotstreak += 1
+				if char == placeholderchar:
+					howmanyblanks += 1
 				else:
-					if dotstreak > 0:
-						# we must append x times dot
-						if dotstreak > maxdots:
-							speaklist.append("{} dots ".format(dotstreak))
+					if howmanyblanks > 0:
+						# append how many blank characters there are
+						if howmanyblanks > maxvoicedblanks:
+							speaklist.append("{} {}s ".format(howmanyblanks,placeholdercharvoiced))
 						else:
-							for x in range(dotstreak):
-								speaklist.append("dot")
+							for x in range(howmanyblanks):
+								speaklist.append(placeholdercharvoiced)
 					speaklist.append(char)
-					dotstreak = 0
+					howmanyblanks = 0
 
-			if char == ".": # needed for when last character is a dot
-				if dotstreak > maxdots:
-					speaklist.append("{} dots ".format(dotstreak))
+			if char == placeholderchar: # needed for when last character is a dot
+				if howmanyblanks > maxvoicedblanks:
+					speaklist.append("{} {}s ".format(howmanyblanks,placeholdercharvoiced))
 				else:
-					for x in range(dotstreak):
-						speaklist.append("dot") # say cannot spell single dots/dashes etc. :(
+					for x in range(howmanyblanks):
+						speaklist.append(placeholdercharvoiced)
 
 			for element in speaklist:
 				subprocess.call([voicesoftware, element])
@@ -87,7 +88,7 @@ def showhint():
 
 
 # ---- start program
-maxdots = 2
+maxvoicedblanks = 2
 voicesoftware = ''
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 mywords = [] # empty list
@@ -97,6 +98,8 @@ correctguesses = ''
 tryword = 'tries'
 sound = True
 wordlanguage = ''
+placeholderchar = '-'
+placeholdercharvoiced = 'blank'
 
 # determine the user's OS and choose the corresponding audio/voice software
 if sys.platform == 'darwin':
@@ -149,13 +152,13 @@ except: # fallback list of words in case dict file isn't found
 
 occurencelist = analysewords(mywords)
 theword = random.choice(mywords)
-placeholder = list("."*len(theword)) # a list consisting of placeholder characters
+placeholder = list(placeholderchar*len(theword)) # a list consisting of placeholder characters
 
 if sound:
 	print("Starting soundcheck...")
-	# using try to test existence of voicesoftware subprocess
+	# use try to test existence of subprocess for audio output (say or espeak)
 	try:
-		subprocess.call([voicesoftware, "If you can hear a voice and want to play with audio output, please type: yes and press enter. Otherwise type: no and press enter."])
+		subprocess.call([voicesoftware, "If you can hear a voice and want to play with audio output, please type yes and press enter. Otherwise type no and press enter."])
 	except:
 		print("Please install the programm '{}' to use audio output (or have your system administrator install it for you).".format(voicesoftware))
 		print("Note that you can still play the text-only version of Hangman even if you don't have '{}' installed!".format(voicesoftware))
@@ -236,14 +239,14 @@ while possibletries > 0:
 			output("You have {} {} left.".format(possibletries,tryword), voice=sound)
 			output("Incorrectly guessed letters so far: ", ending='', voice=sound)
 			output(incorrectguesses, ending='', spell=True, voice=sound)
-			print(".")	
+			print('.')	
 	# ----- end guessing
 
 	# remove pickedletter from hint list occurencelist
 	if pickedletter in occurencelist:
 		occurencelist.remove(pickedletter)
 
-	if not "." in placeholder:
+	if not placeholderchar in placeholder:
 		output("We have a winner! Thanks for playing. :)", voice=sound)
 		break
 
@@ -258,4 +261,4 @@ while possibletries > 0:
 else:
 	output("\nGame over. :( ", voice=sound)
 
-output("The word you were looking for was: " +theword+ ".", voice=sound)
+output("The word you were looking for was: " +theword+ placeholderchar, voice=sound)
