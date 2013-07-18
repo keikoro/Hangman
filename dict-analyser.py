@@ -1,44 +1,37 @@
-# TODO
+alphabet = "abcdefghijklmnopqrstuvwxyz" # allowed characters
+goodwords = [] # empty list
 
-# 1. wort aus de-en rausextrahieren
+myfile = open("de-en.dict")
 
-# für D- wort: anfang der zeile, wort mit mind 5 buchstaben
-# für EN-wort: wort ab ":: ", auch mit mind. 5 buchstaben
-# kommentierte zeilen ignorieren
+for line in myfile:
+	myword = line.split()[0]
+	for letter in myword.lower():
+		if len(myword) < 5: # only use words that are at least 5 characters long
+			break
+		if not letter in alphabet:
+			break
+	else:
+		goodwords.append(myword)
 
-def analysewords(wordlist):
-	alphabet = "abcdefghijklmnopqrstuvwxyz"
-	goodwords = [] # empty list
+myfile.close()
 
-	myfile = open("de-en.dict")
-	for line in myfile:
-		myword = line.split()[0]
-		for letter in myword.lower():
-			if len(myword) < 5:
-				break
-			if not letter in alphabet:
-				break
+# create dictionary with occurence of letters in all words
+mydict = {}
+for word in goodwords:
+	for letter in word.lower():
+		if letter in mydict:
+			mydict[letter] += 1
 		else:
-			goodwords.append(myword)
+			mydict[letter] = 1
 
-	myfile.close()
+# list of pairs (in the dictionary) sorted by occurence (descending)
+# adapted from http://stackoverflow.com/questions/613183/python-sort-a-dictionary-by-value
+pairlist = sorted(mydict.items(), key=lambda x: x[1], reverse=True)
+# pairlist looks like this: [('e', 167410), ('n', 100164),...]
+occurencestring = ''
 
-	# occurence of letters in all words
-	d = {}
-	for word in goodwords:
-		for letter in word.lower():
-			if letter in d:
-				d[letter] += 1
-			else:
-				d[letter] = 1
+for pair in pairlist:
+	occurencestring += pair[0]
 
-	# list of pairs (in the dictionary) sorted by occurence descending
-	pairlist = sorted(d.items(), key=lambda x: x[1], reverse=True)
-
-	# pairlist looks like this: [('e', 167410), ('n', 100164),...]
-	occurencestring = ''
-
-	for pair in pairlist:
-		occurencestring += pair[0]
-
-	tiplist = list(occurencestring)
+tiplist = list(occurencestring)
+print(tiplist)
