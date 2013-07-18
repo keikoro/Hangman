@@ -124,14 +124,14 @@ if sound:
 	# using try to test existence of say subprocess
 	try:
 		subprocess.call(["say", "soundcheck"])
-		subprocess.call(["say", "If you hear the voice, please press yes and the enter key."])
+		subprocess.call(["say", "If you can hear a voice, please type yes (and press enter)."])
 	except:
 		print("Please install the programm 'say' to use audio output (or contact your system administrator).")
-		print("Using this program will still work by the way, only without sound.")
+		print("You can use this program even if you don't have 'say' installed (just without sound).")
 		sound = False
 	else:
 		print("It seems you have 'say' installed which makes audio output possible.")
-		print("Could you hear your computer say 'soundcheck, testing, 1, 2, 3'?")
+		print("Could you hear your computer say 'soundcheck'?")
 		answer = input("Please type yes or no (and press enter): ")
 		if len(answer) > 0 and answer.lower()[0] == 'y':
 			sound = True
