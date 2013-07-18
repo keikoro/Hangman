@@ -261,4 +261,4 @@ while possibletries > 0:
 else:
 	output("\nGame over. :( ", voice=sound)
 
-output("The word you were looking for was: " +theword+ placeholderchar, voice=sound)
+output("The word you were looking for was: " +theword+ '.', voice=sound)
