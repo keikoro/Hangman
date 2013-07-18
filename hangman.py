@@ -8,7 +8,6 @@
 # You can enable/disable audio output (see output function)
 #
 #
-
 '''Hangman - a word-guessing game.
 
 parameters:
@@ -64,6 +63,30 @@ def output(text,voice=True,ending='\n',spell=False):
 		else:
 			subprocess.call([voicesoftware, text])
 
+
+def analysewords(mywords):
+	'''analyse mywords and return a sorted list of chars (sorted by occurence)'''
+	# occurence of letters in all words
+	mydict = {}
+	for word in mywords:
+		for letter in word.lower():
+			if letter in mydict:
+				mydict[letter] += 1
+			else:
+				mydict[letter] = 1
+
+	# list of pairs (in the dictionary) sorted by occurence descending
+	# see http://stackoverflow.com/questions/613183/python-sort-a-dictionary-by-value
+	pairlist = sorted(mydict.items(), key=lambda x: x[1], reverse=True)
+
+	# pairlist looks like this: [('e', 167410), ('n', 100164),...]
+	occurencestring = ''
+
+	for pair in pairlist:
+		occurencestring += pair[0]
+
+	return list(occurencestring)	
+
 # start of the program
 
 maxdots = 2
@@ -81,6 +104,8 @@ wordlanguage = ''
 if sys.platform == 'darwin':
 	voicesoftware = 'say'
 elif (sys.platform == 'linux') or (sys.platform == 'win32'):
+	voicesoftware = 'espeak'
+else:
 	voicesoftware = 'espeak'
 
 # are there any parameters?
@@ -128,8 +153,11 @@ except:
 			"baking", "sherlock", "troll", "batman", "japan", "pastries", "Cairo",
 			"Vienna", "raindrop", "waves", "diving", "Malta", "cupcake", "ukulele"]
 
+occurencelist = analysewords(mywords)
 theword = random.choice(mywords)
 placeholder = list("."*len(theword)) # a list consisting of placeholder characters
+
+print(occurencelist)
 
 if sound:
 	print("Starting sound check:")
