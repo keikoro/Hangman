@@ -63,33 +63,30 @@ def output(text,voice=True,ending='\n',spell=False):
 
 def analysewords(mywords):
 	'''analyse mywords and return a list of all used characters (sorted by occurence)'''
-	# create dictionary with occurence of letters in all words
 	mydict = {}
-	for word in mywords:
+	for word in mywords: # create dictionary with occurence of letters in all words
 		for letter in word.lower():
 			if letter in mydict:
 				mydict[letter] += 1
 			else:
 				mydict[letter] = 1
 
-	# list of pairs (in the dictionary) sorted by occurence (descending)
+	# list of pairs in mydict dictionary sorted by occurence (descending)
 	# adapted from http://stackoverflow.com/questions/613183/python-sort-a-dictionary-by-value
 	pairlist = sorted(mydict.items(), key=lambda x: x[1], reverse=True)
-
 	# pairlist looks like this: [('e', 167410), ('n', 100164),...]
+	
 	occurencestring = ''
-
 	for pair in pairlist:
-		occurencestring += pair[0]
-
+		occurencestring += pair[0] # make string out of each 1st element of a pair
 	return list(occurencestring.upper())	
 
 def showhint():
 	'''returns the first element of occurencelist as text'''
 	return str(occurencelist[0])
 
-# start of the program
 
+# ---- start program
 maxdots = 2
 voicesoftware = ''
 alphabet = "abcdefghijklmnopqrstuvwxyz"
@@ -101,7 +98,7 @@ tryword = 'tries'
 sound = True
 wordlanguage = ''
 
-# check which os the user's on to choose corresponding audio/voice software
+# determine the user's OS and choose the corresponding audio/voice software
 if sys.platform == 'darwin':
 	voicesoftware = 'say'
 elif (sys.platform == 'linux') or (sys.platform == 'win32'):
@@ -109,10 +106,10 @@ elif (sys.platform == 'linux') or (sys.platform == 'win32'):
 else:
 	voicesoftware = 'espeak'
 
-# are there any parameters?
+# check if user input any parameters
 if len(sys.argv) > 1:
 	# begin loop
-	argumentlist = sys.argv[1:] # list includes all argumentls but not the filename
+	argumentlist = sys.argv[1:] # all arguments but the filename (which is the 1st arg)
 	for argument in argumentlist:
 		thisargument = argument.lower()
 		if (thisargument == "-nosound") or (thisargument == "nosound"):
@@ -131,7 +128,7 @@ if len(sys.argv) > 1:
 if wordlanguage == '':
 	wordlanguage = 'en'
 
-try: # get 5+ letter words out of dict file
+try: # filter out 5+ letter words from dict file
 	myfile = open("de-en.dict")
 	for line in myfile:
 		myword = line.split()[0]
@@ -144,7 +141,7 @@ try: # get 5+ letter words out of dict file
 			mywords.append(myword)
 
 	myfile.close()
-except:
+except: # fallback list of words in case dict file isn't found
 	mywords = ["cherry", "summer", "winter", "programming", "hydrogen", "Saturday",
 			"unicorn", "magic", "artichoke", "juice", "hacker", "python", "Neverland",
 			"baking", "sherlock", "troll", "batman", "japan", "pastries", "Cairo",
@@ -155,27 +152,27 @@ theword = random.choice(mywords)
 placeholder = list("."*len(theword)) # a list consisting of placeholder characters
 
 if sound:
-	print("Starting sound check:")
+	print("Starting soundcheck...")
 	# using try to test existence of voicesoftware subprocess
 	try:
-		subprocess.call([voicesoftware, "soundcheck"])
-		subprocess.call([voicesoftware, "If you can hear a voice, please type yes (and press enter)."])
+		subprocess.call([voicesoftware, "If you can hear a voice and want to play with audio output, please type: yes and press enter. Otherwise type: no and press enter."])
 	except:
-		print("Please install the programm '{}' to use audio output (or contact your system administrator).".format(voicesoftware))
-		print("You can use this program even if you don't have '{}' installed (just without sound).".format(voicesoftware))
+		print("Please install the programm '{}' to use audio output (or have your system administrator install it for you).".format(voicesoftware))
+		print("Note that you can still play the text-only version of Hangman even if you don't have '{}' installed!".format(voicesoftware))
 		sound = False
 	else:
-		print("It seems you have '{}' installed which makes audio output possible.".format(voicesoftware))
-		print("Could you hear your computer say 'soundcheck'?")
+		print("You have the necessary software installed to play Hangman with sound/voice output.".format(voicesoftware))
+		print("Could you hear your computer talk and do you want to play with audio enabled?")
 		answer = input("Please type yes or no (and press enter): ")
 		if len(answer) > 0 and answer.lower()[0] == 'y':
 			sound = True
 		else:
 			sound = False
 	finally:
-		print("Soundcheck completed, you're ready to go!")
+		print("Soundcheck completed, you're ready to play.")
 
-output("Let's play hangman: guess the word!", voice=sound)
+output("Let's play Hangman! You have to guess the word.", voice=sound)
+output("Whenever you want the computer to help you, type in a {}.".format("question mark"), voice=sound)
 
 output(stringtogether(placeholder), voice=False) # show blank word
 if sound:
@@ -199,11 +196,11 @@ while possibletries > 0:
 		pickedletter = pickedletter[0]
 
 	if pickedletter == '?':
-		output("You could try the letter {}".format(showhint()), voice=sound)
+		output("You could try guessing the letter '{}'.".format(showhint()), voice=sound)
 		continue		
 
 	if not pickedletter.isalpha() : # don't allow digits, special characters
-		output("Sorry, but that was not a letter! Try again.".format(pickedletter), voice=sound)
+		output("Sorry, but you didn't type a letter! Try again.".format(pickedletter), voice=sound)
 		continue
 
 	if pickedletter in incorrectguesses: # no multiple guesses of same letter
@@ -239,9 +236,8 @@ while possibletries > 0:
 			output("You have {} {} left.".format(possibletries,tryword), voice=sound)
 			output("Incorrectly guessed letters so far: ", ending='', voice=sound)
 			output(incorrectguesses, ending='', spell=True, voice=sound)
-			print(".")
-	
-	# guess done
+			print(".")	
+	# ----- end guessing
 
 	# remove pickedletter from hint list occurencelist
 	if pickedletter in occurencelist:
