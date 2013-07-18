@@ -57,17 +57,34 @@ def output(text,voice=True,ending='\n',spell=False):
 						speaklist.append("dot")
 
 			for element in speaklist:
-				subprocess.call(["say", element])
+				subprocess.call([voicesoftware, element])
 
 			# say cannot say a single underscore/dash/... :( -> needs to be spelled out
 
 		else:
-			subprocess.call(["say", text])
+			subprocess.call([voicesoftware, text])
 
 # start of the program
 
+maxdots = 2
+voicesoftware = ''
+alphabet = "abcdefghijklmnopqrstuvwxyz"
+mywords = [] # empty list
+theword = random.choice(mywords)
+possibletries = 11 # 11 incorrect guesses are allowed
+placeholder = list("."*len(theword)) # a list consisting of placeholder characters
+incorrectguesses = '' # string for incorrectly guessed letters
+correctguesses = ''
+tryword = 'tries'
 sound = True
 wordlanguage = ''
+
+# check for os/voice software
+if sys.platform == 'darwin':
+	voicesoftware = 'say'
+elif (sys.platform == 'linux') or (sys.platform == 'win32'):
+	voicesoftware = 'espeak'
+
 # are there any parameters?
 if len(sys.argv) > 1:
 	# begin loop
@@ -94,11 +111,7 @@ if wordlanguage == '':
 
 print("wordlanguage = {}".format(wordlanguage))
 
-maxdots = 2
-alphabet = "abcdefghijklmnopqrstuvwxyz"
-mywords = [] # empty list
-
-try:
+try: # get 5+ letter words out of dict file
 	myfile = open("de-en.dict")
 	for line in myfile:
 		myword = line.split()[0]
@@ -121,16 +134,16 @@ print(len(mywords))
 
 if sound:
 	print("Starting sound check:")
-	# using try to test existence of say subprocess
+	# using try to test existence of voicesoftware subprocess
 	try:
-		subprocess.call(["say", "soundcheck"])
-		subprocess.call(["say", "If you can hear a voice, please type yes (and press enter)."])
+		subprocess.call([voicesoftware, "soundcheck"])
+		subprocess.call([voicesoftware, "If you can hear a voice, please type yes (and press enter)."])
 	except:
-		print("Please install the programm 'say' to use audio output (or contact your system administrator).")
-		print("You can use this program even if you don't have 'say' installed (just without sound).")
+		print("Please install the programm '{}' to use audio output (or contact your system administrator).".format(voicesoftware))
+		print("You can use this program even if you don't have '{}' installed (just without sound).".format(voicesoftware))
 		sound = False
 	else:
-		print("It seems you have 'say' installed which makes audio output possible.")
+		print("It seems you have '{}' installed which makes audio output possible.".format(voicesoftware))
 		print("Could you hear your computer say 'soundcheck'?")
 		answer = input("Please type yes or no (and press enter): ")
 		if len(answer) > 0 and answer.lower()[0] == 'y':
@@ -143,17 +156,9 @@ if sound:
 
 output("Let's play hangman: guess the word!", voice=sound)
 
-theword = random.choice(mywords)
-
-possibletries = 11 # 11 incorrect guesses are allowed
-placeholder = list("."*len(theword)) # a list consisting of placeholder characters
-incorrectguesses = '' # string for incorrectly guessed letters
-correctguesses = ''
-tryword = 'tries'
-
 output(stringtogether(placeholder), voice=False) # show blank word
 if sound:
-	subprocess.call(["say", "The word you're looking for has {} letters".format(len(theword))])
+	subprocess.call([voicesoftware, "The word you're looking for has {} letters".format(len(theword))])
 
 while possibletries > 0:
 
@@ -209,7 +214,7 @@ while possibletries > 0:
 	if placeholder == list("."*len(theword)):
 		output(stringtogether(placeholder), voice=False) # show blank word
 		if sound:
-			subprocess.call(["say", "The word you're looking for has {} letters".format(len(theword))])
+			subprocess.call([voicesoftware, "The word you're looking for has {} letters".format(len(theword))])
 	else:
 		output("The word is: ", ending='', voice=sound)
 		output(stringtogether(placeholder),spell=True, voice=sound)
