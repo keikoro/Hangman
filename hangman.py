@@ -152,7 +152,7 @@ except: # fallback list of words in case dict file isn't found
 
 occurencelist = analysewords(mywords)
 theword = random.choice(mywords)
-placeholder = list(placeholderchar*len(theword)) # a list consisting of placeholder characters
+placeholderword = list(placeholderchar*len(theword)) # a list consisting of placeholderword characters
 
 if sound:
 	print("Starting soundcheck...")
@@ -177,7 +177,7 @@ if sound:
 output("Let's play Hangman! You have to guess the word.", voice=sound)
 output("Whenever you want the computer to help you, type in a {}.".format("question mark"), voice=sound)
 
-output(stringtogether(placeholder), voice=False) # show blank word
+output(stringtogether(placeholderword), voice=False) # show blank word
 if sound:
 	subprocess.call([voicesoftware, "The word you're looking for has {} letters".format(len(theword))])
 
@@ -216,11 +216,11 @@ while possibletries > 0:
 
 	if pickedletter in theword.upper(): # guess was correct
 		
-		# replace placeholder letters with correctly guessed ones
+		# replace placeholderword letters with correctly guessed ones
 		letterposition = 0
 		for letterexists in theword.upper():
 			if letterexists == pickedletter:
-				placeholder[letterposition] = theword.upper()[letterposition]
+				placeholderword[letterposition] = theword.upper()[letterposition]
 			letterposition += 1
 
 		output("You guessed correctly, well done!", voice=sound)
@@ -246,17 +246,17 @@ while possibletries > 0:
 	if pickedletter in occurencelist:
 		occurencelist.remove(pickedletter)
 
-	if not placeholderchar in placeholder:
+	if not placeholderchar in placeholderword:
 		output("We have a winner! Thanks for playing. :)", voice=sound)
 		break
 
-	if placeholder == list("."*len(theword)):
-		output(stringtogether(placeholder), voice=False) # show blank word
+	if placeholderword == list(placeholderchar*len(theword)):
+		output(stringtogether(placeholderword), voice=False) # show blank word
 		if sound:
 			subprocess.call([voicesoftware, "The word you're looking for has {} letters".format(len(theword))])
 	else:
 		output("The word is: ", ending='', voice=sound)
-		output(stringtogether(placeholder),spell=True, voice=sound)
+		output(stringtogether(placeholderword),spell=True, voice=sound)
 
 else:
 	output("\nGame over. :( ", voice=sound)
