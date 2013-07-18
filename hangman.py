@@ -85,7 +85,11 @@ def analysewords(mywords):
 	for pair in pairlist:
 		occurencestring += pair[0]
 
-	return list(occurencestring)	
+	return list(occurencestring.upper())	
+
+def showhint():
+	'''returns the first element of occurencelist as text'''
+	return str(occurencelist[0])
 
 # start of the program
 
@@ -132,8 +136,6 @@ if len(sys.argv) > 1:
 if wordlanguage == '':
 	wordlanguage = 'en'
 
-print("wordlanguage = {}".format(wordlanguage))
-
 try: # get 5+ letter words out of dict file
 	myfile = open("de-en.dict")
 	for line in myfile:
@@ -157,8 +159,6 @@ occurencelist = analysewords(mywords)
 theword = random.choice(mywords)
 placeholder = list("."*len(theword)) # a list consisting of placeholder characters
 
-print(occurencelist)
-
 if sound:
 	print("Starting sound check:")
 	# using try to test existence of voicesoftware subprocess
@@ -180,7 +180,6 @@ if sound:
 	finally:
 		print("Soundcheck completed, you're ready to go!")
 
-
 output("Let's play hangman: guess the word!", voice=sound)
 
 output(stringtogether(placeholder), voice=False) # show blank word
@@ -192,8 +191,21 @@ while possibletries > 0:
 	output("Please pick a letter: ", ending='', voice=sound)
 	pickedletter = input().upper()
 
+	if pickedletter == '???':
+		occurencestringpretty = ''
+		for char in str(occurencelist):
+			if char not in "'[]":
+				occurencestringpretty += char
+
+		output("Clever you! The most common letters are: {}".format(occurencestringpretty), voice=sound)
+		continue
+
 	if len(pickedletter) > 0:
 		pickedletter = pickedletter[0]
+
+	if pickedletter == '?':
+		output("You could try the letter {}".format(showhint()), voice=sound)
+		continue		
 
 	if not pickedletter.isalpha() : # don't allow digits, special characters
 		output("Sorry, but that was not a letter! Try again.".format(pickedletter), voice=sound)
@@ -220,7 +232,7 @@ while possibletries > 0:
 		correctguesses += pickedletter
 
 	else: # guess was incorrect
-		incorrectguesses += pickedletter			
+		incorrectguesses += pickedletter	
 		possibletries -= 1
 
 		output("Sorry, '{}' is an incorrect guess!".format(pickedletter.upper()), voice=sound)
@@ -233,7 +245,13 @@ while possibletries > 0:
 			output("Incorrectly guessed letters so far: ", ending='', voice=sound)
 			output(incorrectguesses, ending='', spell=True, voice=sound)
 			print(".")
-			
+	
+	# guess done
+
+	# remove pickedletter from hint list occurencelist
+	if pickedletter in occurencelist:
+		occurencelist.remove(pickedletter)
+
 	if not "." in placeholder:
 		output("We have a winner! Thanks for playing. :)", voice=sound)
 		break
