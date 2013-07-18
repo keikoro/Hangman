@@ -7,21 +7,7 @@
 # 11 incorrect guesses are allowed, after the 11th, hangman is hanged and the game is over.
 # You can enable/disable audio output (see output function)
 #
-# TODO
-# - retrieve words from a Wikipedia page
-# - build hangman (ASCII graphics)
-# - transform umlauts (ü -> ue)
-# - delay for say? (so as to display text earlier)
-# - switch between EN and DE words (dict file)
-# - hint system (which letter is likely to be part of the word)
-# - alternatives for say for other platforms (linux, windows)
-# - AI
-# - put licence into comments (check underscore blahfoo)
 #
-# Further ideas:
-# - let user guess the entire word
-# - allow phrases and words with hyphens
-# - multiplayer hangman
 
 '''Hangman - a word-guessing game.
 
