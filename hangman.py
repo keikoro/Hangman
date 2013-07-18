@@ -18,6 +18,11 @@ import random # module for randomisation
 import subprocess # enable command line functions
 import sys # module for parameters
 
+if sys.version_info[0] < 3:
+    print("This program need python version 3.x, you are using python2.x")
+    print("please start this program using python3 or install python3")
+    print("from http://www.python.org")
+
 def stringtogether(thislist):
 	"""return elements in a list as a string"""
 	returnstring = ""
