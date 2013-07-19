@@ -248,8 +248,8 @@ def game(sound, wordlanguage):
             letterposition = 0
             for letterexists in theword.upper():
                 if letterexists == pickedletter:
-                    placeholderword[letterposition] = 
-                    (theword.upper()[letterposition])
+                    placeholderword[letterposition] = (
+                        theword.upper()[letterposition])
                 letterposition += 1
             output("You guessed correctly, well done!",
                 blankchar=placeholderchar,
