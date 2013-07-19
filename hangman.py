@@ -29,7 +29,8 @@ def stringtogether(thislist):
     """return elements in a list as a string"""
     return ''.join(thislist)
 
-def output(text, blankchar='-', blankcharvoiced='blank', software='say', voice=True, outputtext=True, ending='\n', spell=False):
+def output(text, blankchar='-', blankcharvoiced='blank', software='say',
+    voice=True, outputtext=True, ending='\n', spell=False):
     """Print out text and voice it using text-to-speech software.
 
     If outputtext is True, print text.
@@ -37,7 +38,8 @@ def output(text, blankchar='-', blankcharvoiced='blank', software='say', voice=T
     """
 
     maxvoicedblanks = 2
-    t2s_errormsg = ("There was a problem with running the text-to-speech software {}.".format(software))
+    t2s_errormsg = ("There was a problem with running the text-to-speech "
+        "software {}.".format(software))
     # spell out placeholder characters explicitely
     if text:
         print(text,end=ending)
@@ -53,7 +55,8 @@ def output(text, blankchar='-', blankcharvoiced='blank', software='say', voice=T
                     if howmanyblanks > 0:
                         # append no. of blank characters
                         if howmanyblanks > maxvoicedblanks:
-                            speaklist.append("{} {}s ".format(howmanyblanks, blankcharvoiced))
+                            speaklist.append("{} {}s ".format(howmanyblanks,
+                                blankcharvoiced))
                         else:
                             for x in range(howmanyblanks):
                                 speaklist.append(blankcharvoiced)
@@ -62,7 +65,8 @@ def output(text, blankchar='-', blankcharvoiced='blank', software='say', voice=T
 
             if char == blankchar: # needed for when last character is a dot
                 if howmanyblanks > maxvoicedblanks:
-                    speaklist.append("{} {}s ".format(howmanyblanks, blankcharvoiced))
+                    speaklist.append("{} {}s ".format(howmanyblanks,
+                        blankcharvoiced))
                 else:
                     for x in range(howmanyblanks):
                         speaklist.append(blankcharvoiced)
@@ -124,7 +128,8 @@ def game(sound, wordlanguage):
         voicesoftware = 'espeak'
     else:
         voicesoftware = 'espeak'
-    t2s_errormsg = ("There was a problem with running the text-to-speech software {}.".format(voicesoftware))
+    t2s_errormsg = ("There was a problem with running the text-to-speech "
+        "software {}.".format(voicesoftware))
 
     if wordlanguage == '':
         wordlanguage = 'en'
@@ -156,14 +161,22 @@ def game(sound, wordlanguage):
         print("Starting soundcheck...")
         # test existence of text-to-speech software
         try:
-            output("If you can hear a voice and want to play with audio output, please type yes and press enter. Otherwise type no and press enter.", software=voicesoftware, outputtext=False)
+            output("If you can hear a voice and want to play with audio "
+                "output, please type yes and press enter. Otherwise type no "
+                "and press enter.", software=voicesoftware, outputtext=False)
         except:
-            print("Please install the programm '{}' to use audio output (or have your system administrator install it for you).".format(voicesoftware))
-            print("Note that you can still play the text-only version of Hangman even if you don't have '{}' installed!".format(voicesoftware))
+            print("Please install the programm '{}' to use audio output (or "
+                "have your system administrator install it for you)."
+                .format(voicesoftware))
+            print("Note that you can still play the text-only version of "
+                "Hangman even if you don't have '{}' installed!"
+                .format(voicesoftware))
             sound = False
         else:
-            print("You have the necessary software installed to play Hangman with sound/voice output.".format(voicesoftware))
-            print("Could you hear your computer talk and do you want to play with audio enabled?")
+            print("You have the necessary software installed to play Hangman "
+                "with sound/voice output.".format(voicesoftware))
+            print("Could you hear your computer talk and do you want to play "
+                "with audio enabled?")
             answer = input("Please type yes or no (and press enter): ")
             if len(answer) > 0 and answer.lower()[0] == 'y':
                 sound = True
@@ -173,16 +186,23 @@ def game(sound, wordlanguage):
             print("Soundcheck completed, you're ready to play.")
 
     output("Let's play Hangman! You have to guess the word.",
-        blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced, software=voicesoftware, voice=sound)
-    output("Whenever you want the computer to help you, type in a {}.".format("question mark"), blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced, software=voicesoftware, voice=sound)
-    output(stringtogether(placeholderword), blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced, software=voicesoftware,
+        blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced,
+        software=voicesoftware, voice=sound)
+    output("Whenever you want the computer to help you, type in a {}."
+        .format("question mark"), blankchar=placeholderchar,
+        blankcharvoiced=placeholdercharvoiced, software=voicesoftware,
+        voice=sound)
+    output(stringtogether(placeholderword), blankchar=placeholderchar,
+        blankcharvoiced=placeholdercharvoiced, software=voicesoftware,
         voice=False) # show blank word
     if sound:
         output("The word you're looking for has {} letters"
             .format(len(theword)), software=voicesoftware, outputtext=False)
 
     while possibletries > 0:
-        output("Please pick a letter: ", blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced, software=voicesoftware, voice=sound, ending='')
+        output("Please pick a letter: ", blankchar=placeholderchar,
+            blankcharvoiced=placeholdercharvoiced, software=voicesoftware,
+            voice=sound, ending='')
         pickedletter = input().upper()
 
         if pickedletter == '???':
@@ -191,7 +211,8 @@ def game(sound, wordlanguage):
                 if char not in "'[]":
                     occurencestringpretty += char
             output("Clever you! The most common letters are: {}"
-                .format(occurencestringpretty), blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced,
+                .format(occurencestringpretty), blankchar=placeholderchar,
+                blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
             continue
 
@@ -217,7 +238,8 @@ def game(sound, wordlanguage):
             continue
         if pickedletter in correctguesses:
             output("You already successfully picked '{}'!"
-                .format(pickedletter.upper()), blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced,
+                .format(pickedletter.upper()), blankchar=placeholderchar,
+                blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
             continue
 
@@ -225,7 +247,8 @@ def game(sound, wordlanguage):
             letterposition = 0
             for letterexists in theword.upper():
                 if letterexists == pickedletter:
-                    placeholderword[letterposition] = (theword.upper()[letterposition])
+                    placeholderword[letterposition] = 
+                    (theword.upper()[letterposition])
                 letterposition += 1
             output("You guessed correctly, well done!",
                 blankchar=placeholderchar,
@@ -279,21 +302,26 @@ def game(sound, wordlanguage):
             if sound:
                 try:
                     output("The word you're looking for has {} letters"
-                        .format(len(theword)), software=voicesoftware, outputtext=False)
+                        .format(len(theword)), software=voicesoftware, 
+                        outputtext=False)
                 except:
                     print(t2s_errormsg)
         else:
-            output("The word is: ", ending='', blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced,
+            output("The word is: ", ending='', blankchar=placeholderchar, 
+                blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
             output(stringtogether(placeholderword), spell=True,
-                blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced, software=voicesoftware,
+                blankchar=placeholderchar, 
+                blankcharvoiced=placeholdercharvoiced, 
+                software=voicesoftware,
                 voice=sound)
     else:
         output("\nGame over. :( ", blankchar=placeholderchar,
             blankcharvoiced=placeholdercharvoiced,
             software=voicesoftware, voice=sound)
     output("The word you were looking for was: " +theword+ '.',
-        blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced, software=voicesoftware, voice=sound)
+        blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced, 
+        software=voicesoftware, voice=sound)
 
 # ------- variable not part of functions -------
 sound = True
@@ -314,10 +342,12 @@ if __name__ == "__main__":
              (thisargument == "de") or (thisargument == "-de")):
                 if "en" in thisargument:
                     if wordlanguage != '':
-                        print("You entered more than one parameter for language - Hangman will now default to English.")
+                        print("You entered more than one parameter for "
+                            "language - Hangman will now default to English.")
                     wordlanguage = "en"
                 else:
                     if wordlanguage != '':
-                        print("You entered more than one parameter for language - Hangman will now default to German.")
+                        print("You entered more than one parameter for "
+                            "language - Hangman will now default to German.")
                     wordlanguage = "de"
     game(sound, wordlanguage)
