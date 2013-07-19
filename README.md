@@ -9,12 +9,11 @@ All programs were written in Python 3 (tested on 3.3.2) and are very likely - or
 ## Hangman
 A Hangman game programmed in Python 3.
 
-Notes:
-
+__Notes:__<br>
 You need to have Python 3.x installed to run this game.<br>
 The game's objective is to guess a word, letter by letter.<br>
 11 incorrect guesses are possible, then hangman dies and the game is over.<br>
 
-Parameters the game can be run with:<br>
+__Parameters__ the game can be run with:
 * -nosound to turn off text-to-speech
 * -en|de to play with English or German words # TODO: (defaults to English)
