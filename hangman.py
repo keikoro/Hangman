@@ -161,12 +161,13 @@ def game(sound, wordlanguage):
         print("Starting soundcheck...")
         # test existence of text-to-speech software
         try:
-            output("If you can hear a voice and want to play with audio "
-                "output, please type yes and press enter. Otherwise type no "
-                "and press enter.", software=voicesoftware, outputtext=False)
+            output("If you can hear a voice and want to play the game with "
+                "text-to-speech output, please type yes and press enter. "
+                "Otherwise type no and press enter.", software=voicesoftware,
+                outputtext=False)
         except:
-            print("Please install the programm '{}' to use audio output (or "
-                "have your system administrator install it for you)."
+            print("Please install the programm '{}' to use text-to-speech "
+                "(or have your system administrator install it for you)."
                 .format(voicesoftware))
             print("Note that you can still play the text-only version of "
                 "Hangman even if you don't have '{}' installed!"
@@ -174,9 +175,9 @@ def game(sound, wordlanguage):
             sound = False
         else:
             print("You have the necessary software installed to play Hangman "
-                "with sound/voice output.".format(voicesoftware))
+                "with text-to-speech output.".format(voicesoftware))
             print("Could you hear your computer talk and do you want to play "
-                "with audio enabled?")
+                "with text-to-speech enabled?")
             answer = input("Please type yes or no (and press enter): ")
             if len(answer) > 0 and answer.lower()[0] == 'y':
                 sound = True
