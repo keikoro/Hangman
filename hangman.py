@@ -18,10 +18,6 @@ import random # module for randomisation
 import subprocess # enable command line functions
 import sys # module for parameters
 
-if sys.version_info[0] < 3:
-    print("You are currently using Python 2.x but need to use Python 3.x to be able to run this game.")
-    print("Please start this program by starting your command with python3 or install Python 3 from http://www.python.org if you don't have it installed on your system.")
-
 def stringtogether(thislist):
 	"""return elements in a list as a string"""
 	returnstring = ""
