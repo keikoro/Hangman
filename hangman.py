@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# A simple hangman game programmed in Python 3.
+# A Hangman game programmed in Python 3.
 #
 # Copyright (c) 2013 K Kollmann <code∆k.kollmann·moe>
 # License: http://opensource.org/licenses/MIT MIT
