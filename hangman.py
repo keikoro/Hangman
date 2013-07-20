@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # A Hangman game programmed in Python 3.
@@ -21,6 +21,7 @@ parameters:
 -en|de ... play the game with English/German words
 """
 
+from __future__ import print_function # for python2.x
 import random # module for randomisation
 import subprocess # enable command line functions
 import sys # module for parameters
@@ -179,6 +180,8 @@ def game(sound, wordlanguage):
             print("Could you hear your computer talk and do you want to play "
                 "with text-to-speech enabled?")
             answer = input("Please type yes or no (and press enter): ")
+            # TODO use raw_input() for py2
+            # answer = raw_input("Please type yes or no (and press enter): ")
             if len(answer) > 0 and answer.lower()[0] == 'y':
                 sound = True
             else:
@@ -205,6 +208,8 @@ def game(sound, wordlanguage):
             blankcharvoiced=placeholdercharvoiced, software=voicesoftware,
             voice=sound, ending='')
         pickedletter = input().upper()
+        # TODO use raw_input().upper() for py2
+        # pickedletter = input().upper()
 
         if pickedletter == '???':
             occurencestringpretty = ''
