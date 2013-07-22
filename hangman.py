@@ -37,7 +37,6 @@ def output(text, blankchar='-', blankcharvoiced='blank', software='say',
     If outputtext is True, print text.
     If voice is True, voice text with text-to-speech.
     """
-
     maxvoicedblanks = 2
     t2s_errormsg = ("There was a problem with running the text-to-speech "
         "software {}.".format(software))
