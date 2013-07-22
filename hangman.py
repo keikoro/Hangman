@@ -26,9 +26,81 @@ import random # module for randomisation
 import subprocess # enable command line functions
 import sys # module for parameters
 
-def stringtogether(thislist):
+def hangman(leftovertries):
+    """Print out hangman ASCII graphic on incorrect guesses."""
+    allhangmans = [
+    """  ______
+  |/   |
+  |    o
+  |   ´|`
+  |   / \\
+__|________""",
+    """  ______
+  |/   |
+  |    o
+  |   ´|`
+  |   /
+__|________""",
+    """  ______
+  |/   |
+  |    o
+  |   ´|`
+  |
+__|________""",
+    """  ______
+  |/   |
+  |    o
+  |   ´|
+  |
+__|________""",
+    """  ______
+  |/   |
+  |    o
+  |    |
+  |
+__|________""",
+    """  ______
+  |/   |
+  |    o
+  |
+  |
+__|________""",
+    """  ______
+  |/   |
+  |
+  |
+  |
+__|________""",
+    """  ______
+  |/
+  |
+  |
+  |
+__|________""",
+    """  ______
+  |
+  |
+  |
+  |
+__|________""",
+    """
+  |
+  |
+  |
+  |
+__|________""",
+    """
+
+
+
+
+___________""",
+    ]
+    return allhangmans[leftovertries]
+
+def stringtogether(alist):
     """return elements in a list as a string"""
-    return ''.join(thislist)
+    return ''.join(alist)
 
 def output(text, blankchar='-', blankcharvoiced='blank', software='say',
     voice=True, outputtext=True, ending='\n', spell=False):
@@ -102,12 +174,12 @@ def analysewords(mywords):
     occurencestring = ''
     for pair in pairlist:
         occurencestring += pair[0] # use 1st element of each pair
-    return list(occurencestring.upper())    
+    return list(occurencestring.upper())
 
 def showhint(occurencelist):
     """Returns the first element of occurencelist as string."""
     return str(occurencelist[0])
-    
+
 def checkOS():
     """Determine OS and choose corresponding text-to-speech software."""
     if sys.platform == 'darwin':
@@ -117,7 +189,7 @@ def checkOS():
     else:
         return 'espeak'
 
-def createMyWords(wordlanguage):
+def createMyWords(wordlanguage, alphabet):
     """Return a list of guessable words.
 
     Ideally, these words originate from a dictionary file
@@ -136,7 +208,6 @@ def createMyWords(wordlanguage):
             else:
                 mywords.append(myword)
         myfile.close()
-
     except: # fallback list of words if dict file isn't found
         mywords = ["cherry", "summer", "winter", "programming", "hydrogen",
                 "Saturday", "unicorn", "magic", "artichoke", "juice",
@@ -189,7 +260,7 @@ def game(sound, wordlanguage):
     correctguesses = ''
     tryword = 'tries'
     placeholderchar = '-'
-    placeholdercharvoiced = 'blank' 
+    placeholdercharvoiced = 'blank'
 
     voicesoftware = checkOS()
     t2s_errormsg = ("There was a problem with running the text-to-speech "
@@ -197,7 +268,7 @@ def game(sound, wordlanguage):
 
     if wordlanguage == '':
         wordlanguage = 'en'
-    mywords = createMyWords(wordlanguage)
+    mywords = createMyWords(wordlanguage, alphabet)
 
     occurencelist = analysewords(mywords)
     theword = random.choice(mywords)
@@ -270,7 +341,7 @@ def game(sound, wordlanguage):
             continue
 
         # correct guess
-        if pickedletter in theword.upper():           
+        if pickedletter in theword.upper():
             letterposition = 0
             for letterexists in theword.upper():
                 if letterexists == pickedletter:
@@ -285,16 +356,23 @@ def game(sound, wordlanguage):
             correctguesses += pickedletter
         # incorrect guess
         else:
-            incorrectguesses += pickedletter    
+            incorrectguesses += pickedletter
             possibletries -= 1
             output("Sorry, '{}' is an incorrect guess!"
                 .format(pickedletter.upper()), blankchar=placeholderchar,
                 blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
 
+            print(hangman(possibletries)) # print hangman
+
             if (incorrectguesses != '') and (possibletries > 0):
                 if possibletries == 1:
-                    tryword = 'try' 
+                    tryword = 'try'
+                output(incorrectguesses, ending='\n\n', spell=False,
+                    blankchar=placeholderchar,
+                    blankcharvoiced=placeholdercharvoiced,
+                    software=voicesoftware,
+                    voice=sound)
                 output("You have {} {} left."
                     .format(possibletries,tryword),
                     blankchar=placeholderchar,
@@ -304,13 +382,13 @@ def game(sound, wordlanguage):
                     blankchar=placeholderchar,
                     blankcharvoiced=placeholdercharvoiced,
                     software=voicesoftware,
-                    voice=sound,  ending='')
+                    voice=sound, ending='')
                 output(incorrectguesses, ending='', spell=True,
                     blankchar=placeholderchar,
                     blankcharvoiced=placeholdercharvoiced,
                     software=voicesoftware,
                     voice=sound)
-                print('.')  
+                print('.')
         # ----- end guessing
 
         # remove pickedletter from hint list
@@ -330,17 +408,17 @@ def game(sound, wordlanguage):
             if sound:
                 try:
                     output("The word you're looking for has {} letters"
-                        .format(len(theword)), software=voicesoftware, 
+                        .format(len(theword)), software=voicesoftware,
                         outputtext=False)
                 except:
                     print(t2s_errormsg)
         else:
-            output("The word is: ", ending='', blankchar=placeholderchar, 
+            output("The word is: ", ending='', blankchar=placeholderchar,
                 blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
             output(stringtogether(placeholderword), spell=True,
-                blankchar=placeholderchar, 
-                blankcharvoiced=placeholdercharvoiced, 
+                blankchar=placeholderchar,
+                blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware,
                 voice=sound)
     else:
@@ -348,7 +426,7 @@ def game(sound, wordlanguage):
             blankcharvoiced=placeholdercharvoiced,
             software=voicesoftware, voice=sound)
     output("The word you were looking for was: " +theword+ '.',
-        blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced, 
+        blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced,
         software=voicesoftware, voice=sound)
 
 # ------- variables not part of functions -------
