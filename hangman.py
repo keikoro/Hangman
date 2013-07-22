@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # A Hangman game programmed in Python 3.
@@ -108,31 +108,22 @@ def showhint(occurencelist):
     """Returns the first element of occurencelist as string."""
     return str(occurencelist[0])
 
-def game(sound, wordlanguage):
-    """the actual Hangman game"""
-
-    # ---- start program
-    possibletries = 11 # 11 incorrect guesses allowed
-    alphabet = "abcdefghijklmnopqrstuvwxyz"
-    mywords = [] # guessable words
-    incorrectguesses = '' # string for incorrectly guessed letters
-    correctguesses = ''
-    tryword = 'tries'
-    placeholderchar = '-'
-    placeholdercharvoiced = 'blank' 
-
-    # determine OS and choose corresponding text-to-speech software
+def checkOS():
+    """Determine OS and choose corresponding text-to-speech software."""
     if sys.platform == 'darwin':
-        voicesoftware = 'say'
+        return 'say'
     elif (sys.platform == 'linux') or (sys.platform == 'win32'):
-        voicesoftware = 'espeak'
+        return 'espeak'
     else:
-        voicesoftware = 'espeak'
-    t2s_errormsg = ("There was a problem with running the text-to-speech "
-        "software {}.".format(voicesoftware))
+        return 'espeak'
 
-    if wordlanguage == '':
-        wordlanguage = 'en'
+def createMyWords(wordlanguage):
+    """Return a list of guessable words.
+
+    Ideally, these words originate from a dictionary file
+    called de-en.dict.
+    """
+    mywords = [] # guessable words
     try: # filter out 5+ letter words from dict file
         myfile = open("de-en.dict")
         for line in myfile:
@@ -144,49 +135,81 @@ def game(sound, wordlanguage):
                     break
             else:
                 mywords.append(myword)
-
         myfile.close()
+
     except: # fallback list of words if dict file isn't found
         mywords = ["cherry", "summer", "winter", "programming", "hydrogen",
                 "Saturday", "unicorn", "magic", "artichoke", "juice",
                 "hacker", "python", "Neverland", "baking", "sherlock",
                 "troll", "batman", "japan", "pastries", "Cairo", "Vienna",
                 "raindrop", "waves", "diving", "Malta", "cupcake", "ukulele"]
+    finally:
+        return mywords
+
+def soundcheck(voicesoftware):
+    """Check if text-to-speech is possible."""
+    print("Starting soundcheck...")
+    # test existence of text-to-speech software
+    try:
+        output("If you can hear a voice and want to play the game with "
+            "text-to-speech output, please type yes and press enter. "
+            "Otherwise type no and press enter.", software=voicesoftware,
+            outputtext=False)
+    except:
+        print("Please install the programm '{}' to use text-to-speech "
+            "(or have your system administrator install it for you)."
+            .format(voicesoftware))
+        print("Note that you can still play the text-only version of "
+            "Hangman even if you don't have '{}' installed!"
+            .format(voicesoftware))
+        sound = False
+    else:
+        print("You have the necessary software installed to play Hangman "
+            "with text-to-speech output.".format(voicesoftware))
+        print("Could you hear your computer talk and do you want to play "
+            "with text-to-speech enabled?")
+        answer = input("Please type yes or no (and press enter): ")
+        # TODO use raw_input() for py2
+        # answer = raw_input("Please type yes or no (and press enter): ")
+        if len(answer) > 0 and answer.lower()[0] == 'y':
+            sound = True
+        else:
+            sound = False
+    finally:
+        print("Soundcheck completed, you're ready to play.")
+        return sound
+
+def game(sound, wordlanguage):
+    """the actual Hangman game"""
+
+    # ---- start program
+    possibletries = 11 # 11 incorrect guesses allowed
+    alphabet = "abcdefghijklmnopqrstuvwxyz"
+    incorrectguesses = '' # string for incorrectly guessed letters
+    correctguesses = ''
+    tryword = 'tries'
+    placeholderchar = '-'
+    placeholdercharvoiced = 'blank' 
+
+    # TODO funktionsaufruf checkOS
+    # output voicesoftware
+    voicesoftware = checkOS()
+    t2s_errormsg = ("There was a problem with running the text-to-speech "
+        "software {}.".format(voicesoftware))
+
+    # TODO mywords in funktoin
+    # rückgabe mywords
+    if wordlanguage == '':
+        wordlanguage = 'en'
+
+    mywords = createMyWords(wordlanguage)
 
     occurencelist = analysewords(mywords)
     theword = random.choice(mywords)
     placeholderword = list(placeholderchar*len(theword))
 
     if sound:
-        print("Starting soundcheck...")
-        # test existence of text-to-speech software
-        try:
-            output("If you can hear a voice and want to play the game with "
-                "text-to-speech output, please type yes and press enter. "
-                "Otherwise type no and press enter.", software=voicesoftware,
-                outputtext=False)
-        except:
-            print("Please install the programm '{}' to use text-to-speech "
-                "(or have your system administrator install it for you)."
-                .format(voicesoftware))
-            print("Note that you can still play the text-only version of "
-                "Hangman even if you don't have '{}' installed!"
-                .format(voicesoftware))
-            sound = False
-        else:
-            print("You have the necessary software installed to play Hangman "
-                "with text-to-speech output.".format(voicesoftware))
-            print("Could you hear your computer talk and do you want to play "
-                "with text-to-speech enabled?")
-            answer = input("Please type yes or no (and press enter): ")
-            # TODO use raw_input() for py2
-            # answer = raw_input("Please type yes or no (and press enter): ")
-            if len(answer) > 0 and answer.lower()[0] == 'y':
-                sound = True
-            else:
-                sound = False
-        finally:
-            print("Soundcheck completed, you're ready to play.")
+        sound = soundcheck(voicesoftware)
 
     output("Let's play Hangman! You have to guess the word.",
         blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced,
