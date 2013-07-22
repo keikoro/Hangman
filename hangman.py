@@ -29,67 +29,67 @@ import sys # module for parameters
 def hangman(leftovertries):
     """Print out hangman ASCII graphic on incorrect guesses."""
     allhangmans = [
-    """  ______
+"""  ______
   |/   |
   |    o
   |   ´|`
   |   / \\
 __|________""",
-    """  ______
+"""  ______
   |/   |
   |    o
   |   ´|`
   |   /
 __|________""",
-    """  ______
+"""  ______
   |/   |
   |    o
   |   ´|`
   |
 __|________""",
-    """  ______
+"""  ______
   |/   |
   |    o
   |   ´|
   |
 __|________""",
-    """  ______
+"""  ______
   |/   |
   |    o
   |    |
   |
 __|________""",
-    """  ______
+"""  ______
   |/   |
   |    o
   |
   |
 __|________""",
-    """  ______
+"""  ______
   |/   |
   |
   |
   |
 __|________""",
-    """  ______
+"""  ______
   |/
   |
   |
   |
 __|________""",
-    """  ______
+"""  ______
   |
   |
   |
   |
 __|________""",
-    """
+"""
   |
   |
   |
   |
 __|________""",
-    """
+"""
 
 
 
@@ -113,7 +113,7 @@ def output(text, blankchar='-', blankcharvoiced='blank', software='say',
     t2s_errormsg = ("There was a problem with running the text-to-speech "
         "software {}.".format(software))
     # spell out placeholder characters explicitely
-    if text:
+    if text and outputtext == True:
         print(text,end=ending)
     if voice:
         if spell:
@@ -285,12 +285,12 @@ def game(sound, wordlanguage):
         .format("question mark"), blankchar=placeholderchar,
         blankcharvoiced=placeholdercharvoiced, software=voicesoftware,
         voice=sound)
+    if sound:
+        output("The word you're looking for has {} letters"
+        .format(len(theword)), software=voicesoftware, outputtext=False)
     output(stringtogether(placeholderword), blankchar=placeholderchar,
         blankcharvoiced=placeholdercharvoiced, software=voicesoftware,
         voice=False) # show blank word
-    if sound:
-        output("The word you're looking for has {} letters"
-            .format(len(theword)), software=voicesoftware, outputtext=False)
 
     # main loop
     while possibletries > 0:
@@ -371,24 +371,22 @@ def game(sound, wordlanguage):
                 output(incorrectguesses, ending='\n\n', spell=False,
                     blankchar=placeholderchar,
                     blankcharvoiced=placeholdercharvoiced,
+                    software=voicesoftware, voice=False)
+                output("Incorrectly guessed letters so far: ",
+                    blankchar=placeholderchar,
+                    blankcharvoiced=placeholdercharvoiced,
+                    software=voicesoftware, spell=False,
+                    voice=sound, ending='', outputtext=False)
+                output(incorrectguesses, ending='', spell=True,
+                    blankchar=placeholderchar,
+                    blankcharvoiced=placeholdercharvoiced,
                     software=voicesoftware,
-                    voice=sound)
+                    voice=sound, outputtext=False)
                 output("You have {} {} left."
                     .format(possibletries,tryword),
                     blankchar=placeholderchar,
                     blankcharvoiced=placeholdercharvoiced,
                     software=voicesoftware, voice=sound)
-                output("Incorrectly guessed letters so far: ",
-                    blankchar=placeholderchar,
-                    blankcharvoiced=placeholdercharvoiced,
-                    software=voicesoftware,
-                    voice=sound, ending='')
-                output(incorrectguesses, ending='', spell=True,
-                    blankchar=placeholderchar,
-                    blankcharvoiced=placeholdercharvoiced,
-                    software=voicesoftware,
-                    voice=sound)
-                print('.')
         # ----- end guessing
 
         # remove pickedletter from hint list
