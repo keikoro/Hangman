@@ -107,7 +107,7 @@ def analysewords(mywords):
 def showhint(occurencelist):
     """Returns the first element of occurencelist as string."""
     return str(occurencelist[0])
-
+    
 def checkOS():
     """Determine OS and choose corresponding text-to-speech software."""
     if sys.platform == 'darwin':
@@ -191,17 +191,12 @@ def game(sound, wordlanguage):
     placeholderchar = '-'
     placeholdercharvoiced = 'blank' 
 
-    # TODO funktionsaufruf checkOS
-    # output voicesoftware
     voicesoftware = checkOS()
     t2s_errormsg = ("There was a problem with running the text-to-speech "
         "software {}.".format(voicesoftware))
 
-    # TODO mywords in funktoin
-    # rückgabe mywords
     if wordlanguage == '':
         wordlanguage = 'en'
-
     mywords = createMyWords(wordlanguage)
 
     occurencelist = analysewords(mywords)
@@ -211,6 +206,7 @@ def game(sound, wordlanguage):
     if sound:
         sound = soundcheck(voicesoftware)
 
+    # introduction
     output("Let's play Hangman! You have to guess the word.",
         blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced,
         software=voicesoftware, voice=sound)
@@ -225,6 +221,7 @@ def game(sound, wordlanguage):
         output("The word you're looking for has {} letters"
             .format(len(theword)), software=voicesoftware, outputtext=False)
 
+    # main loop
     while possibletries > 0:
         output("Please pick a letter: ", blankchar=placeholderchar,
             blankcharvoiced=placeholdercharvoiced, software=voicesoftware,
@@ -245,6 +242,7 @@ def game(sound, wordlanguage):
             continue
 
         if len(pickedletter) > 0:
+            # TODO several letters -> guess whole word
             pickedletter = pickedletter[0]
         if pickedletter == '?':
             output("You could try guessing the letter '{}'."
@@ -271,7 +269,8 @@ def game(sound, wordlanguage):
                 software=voicesoftware, voice=sound)
             continue
 
-        if pickedletter in theword.upper(): # correct guess            
+        # correct guess
+        if pickedletter in theword.upper():           
             letterposition = 0
             for letterexists in theword.upper():
                 if letterexists == pickedletter:
@@ -284,7 +283,8 @@ def game(sound, wordlanguage):
                 software=voicesoftware,
                 voice=sound)
             correctguesses += pickedletter
-        else: # incorrect guess
+        # incorrect guess
+        else:
             incorrectguesses += pickedletter    
             possibletries -= 1
             output("Sorry, '{}' is an incorrect guess!"
@@ -351,7 +351,7 @@ def game(sound, wordlanguage):
         blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced, 
         software=voicesoftware, voice=sound)
 
-# ------- variable not part of functions -------
+# ------- variables not part of functions -------
 sound = True
 wordlanguage = ''
 voicesoftware = ''
@@ -360,7 +360,7 @@ voicesoftware = ''
 if __name__ == "__main__":
     if len(sys.argv) > 1:   # check for parameter input
         # begin loop
-        argumentlist = sys.argv[1:] # all args but filename (= 1st arg)
+        argumentlist = sys.argv[1:]    # all args but filename (= 1st arg)
         for argument in argumentlist:
             thisargument = argument.lower()
             if (thisargument == "-nosound") or (thisargument == "nosound"):
