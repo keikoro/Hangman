@@ -195,25 +195,32 @@ def createMyWords(wordlanguage, alphabet):
     Ideally, these words originate from a dictionary file
     called de-en.dict.
     """
-    mywords = [] # guessable words
+    mywords = set() # guessable words
+    if wordlanguage == 'en':
+        languagepicker = 2
+    else:
+        languagepicker = 0
     try: # filter out 5+ letter words from dict file
         myfile = open("de-en.dict")
         for line in myfile:
-            myword = line.split()[0]
+            # OLD myword = line.split()[0]
+            myword1 = line.partition(':: ')[languagepicker] # EN = 2, DE = 0
+            myword = myword1.partition(' ')[0]
             for letter in myword.lower():
                 if len(myword) < 5:
                     break
                 if not letter in alphabet:
                     break
             else:
-                mywords.append(myword)
+                mywords.add(myword)
         myfile.close()
     except: # fallback list of words if dict file isn't found
-        mywords = ["cherry", "summer", "winter", "programming", "hydrogen",
+        # TODO make fallback words in DE
+        mywords = {"cherry", "summer", "winter", "programming", "hydrogen",
                 "Saturday", "unicorn", "magic", "artichoke", "juice",
                 "hacker", "python", "Neverland", "baking", "sherlock",
                 "troll", "batman", "japan", "pastries", "Cairo", "Vienna",
-                "raindrop", "waves", "diving", "Malta", "cupcake", "ukulele"]
+                "raindrop", "waves", "diving", "Malta", "cupcake", "ukulele"}
     finally:
         # mywords = ["unicorn"] # use only one word to try out things
         return mywords
@@ -274,7 +281,7 @@ def playGame(sound, wordlanguage):
     mywords = createMyWords(wordlanguage, alphabet)
 
     occurencelist = analyseWords(mywords)
-    theword = random.choice(mywords)
+    theword = random.choice(list(mywords))
     placeholderword = list(placeholderchar*len(theword))
 
     if sound:
