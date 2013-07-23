@@ -215,6 +215,7 @@ def createMyWords(wordlanguage, alphabet):
                 "troll", "batman", "japan", "pastries", "Cairo", "Vienna",
                 "raindrop", "waves", "diving", "Malta", "cupcake", "ukulele"]
     finally:
+        # mywords = ["unicorn"] # use only one word to try out things
         return mywords
 
 def soundcheck(voicesoftware):
