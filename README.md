@@ -16,4 +16,4 @@ The game's objective is to guess a word, letter by letter.<br>
 
 __Parameters__ the game can be run with:
 * -nosound to turn off text-to-speech
-* -en|de to play with English or German words # TODO: (defaults to English)
+* -en|de to play with English or German words
