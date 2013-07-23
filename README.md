@@ -14,7 +14,8 @@ You need to have Python 3.x installed to run this game.<br>
 The game's objective is to guess a word, letter by letter.<br>
 11 incorrect guesses are possible, then hangman dies and the game is over.
 
-__Currently, the game still picks only the German words from the dictionary file!__ Working on making the English words guessable too...
+__Currently, the game still picks only the German words from the dictionary file!__<br>
+Working on making the English words guessable too...
 
 __Parameters__ the game can be run with:
 * -nosound to turn off text-to-speech
