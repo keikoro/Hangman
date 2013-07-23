@@ -215,12 +215,18 @@ def createMyWords(wordlanguage, alphabet):
                 mywords.add(myword)
         myfile.close()
     except: # fallback list of words if dict file isn't found
-        # TODO make fallback words in DE
-        mywords = {"cherry", "summer", "winter", "programming", "hydrogen",
+        if wordlanguage == 'en': # EN list
+            mywords = {"cherry", "summer", "winter", "programming", "hydrogen",
                 "Saturday", "unicorn", "magic", "artichoke", "juice",
                 "hacker", "python", "Neverland", "baking", "sherlock",
                 "troll", "batman", "japan", "pastries", "Cairo", "Vienna",
                 "raindrop", "waves", "diving", "Malta", "cupcake", "ukulele"}
+        else: # DE list
+            mywords = {"Ferien", "Grashuepfer", "programmieren", "Polizei",
+                "Zielgerade", "Kronkorken", "Kuchen", "rumlungern", "kichern",
+                "Salzwasser", "Schwimmflossen", "Motorradhelm", "feiern",
+                "Fehlbesetzung", "Regisseurin", "Zuckerwatte", "pieksen",
+                "Nebelmaschine", "Lampenschirm", "Redewendung"}
     finally:
         # mywords = ["unicorn"] # use only one word to try out things
         return mywords
