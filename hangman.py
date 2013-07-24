@@ -189,33 +189,37 @@ def checkOS():
     else:
         return 'espeak'
 
-def createMyWords(wordlanguage, alphabet):
+def createMyWords(language, validletters, additionals=''):
     """Return a list of guessable words.
 
     Ideally, these words originate from a dictionary file
     called de-en.dict.
     """
     mywords = set() # guessable words
-    if wordlanguage == 'en':
-        languagepicker = 2
+    if language == 'en':
+        languagepick = 2
     else:
-        languagepicker = 0
+        languagepick = 0
     try: # filter out 5+ letter words from dict file
         myfile = open("de-en.dict")
         for line in myfile:
             # OLD myword = line.split()[0]
-            myword1 = line.partition(':: ')[languagepicker] # EN = 2, DE = 0
-            myword = myword1.partition(' ')[0]
+            mywordsplit = line.partition(':: ')[languagepick] # EN = 2, DE = 0
+            myword = mywordsplit.partition(' ')[0]
             for letter in myword.lower():
                 if len(myword) < 5:
                     break
-                if not letter in alphabet:
-                    break
+                if not letter in validletters:
+                    if letter in additionals:
+                        # TODO convert extended latin chars
+                        pass
+                    else:
+                        break
             else:
                 mywords.add(myword)
         myfile.close()
     except: # fallback list of words if dict file isn't found
-        if wordlanguage == 'en': # EN list
+        if language == 'en': # EN list
             mywords = {"cherry", "summer", "winter", "programming", "hydrogen",
                 "Saturday", "unicorn", "magic", "artichoke", "juice",
                 "hacker", "python", "Neverland", "baking", "sherlock",
@@ -229,6 +233,7 @@ def createMyWords(wordlanguage, alphabet):
                 "Nebelmaschine", "Lampenschirm", "Redewendung"}
     finally:
         # mywords = ["unicorn"] # use only one word to try out things
+        # mywords = ["Hülsenfrüchte"] # use only one word to try out things
         return mywords
 
 def soundcheck(voicesoftware):
@@ -269,7 +274,6 @@ def playGame(sound, wordlanguage):
 
     # ---- start program
     possibletries = 11 # 11 incorrect guesses allowed
-    alphabet = "abcdefghijklmnopqrstuvwxyz"
     incorrectguesses = '' # string for incorrectly guessed letters
     correctguesses = ''
     tryword = 'tries'
@@ -277,6 +281,9 @@ def playGame(sound, wordlanguage):
     placeholderchar = '-'
     placeholdercharvoiced = 'blank'
     fullguesses = 3
+    alphabet = "abcdefghijklmnopqrstuvwxyz" # standard alphabet
+    # extended alphabet chars
+    extendedalpha = {"ä":"ae", "ö":"oe", "ü":"ue", "ß":"ss", "é":"e", "è":"e"}
 
     voicesoftware = checkOS()
     t2s_errormsg = ("There was a problem with running the text-to-speech "
@@ -284,7 +291,7 @@ def playGame(sound, wordlanguage):
 
     if wordlanguage == '':
         wordlanguage = 'en'
-    mywords = createMyWords(wordlanguage, alphabet)
+    mywords = createMyWords(wordlanguage, alphabet, additionals=extendedalpha)
 
     occurencelist = analyseWords(mywords)
     theword = random.choice(list(mywords))
