@@ -14,7 +14,8 @@ The game's objective is to guess a word, letter by letter.<br>
 __Parameters__ the game can be run with:
 * -nosound to turn off text-to-speech
 * -en|de to play with English or German words
-
+<br>
+<br>
 
 __Status 13-07-25__<br>
 __WIP__ Currently working on making the game playable on different devices with [Kivy](http://kivy.org/).
