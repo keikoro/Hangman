@@ -16,5 +16,5 @@ __Parameters__ the game can be run with:
 * -en|de to play with English or German words
 
 
-Status 13-07-25__<br>
+__Status 13-07-25__<br>
 __WIP__ Currently working on making the game playable on different devices with [Kivy](http://kivy.org/).
