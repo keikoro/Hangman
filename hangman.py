@@ -212,6 +212,14 @@ def createMyWords(language, validletters, additionals=''):
                 if not letter in validletters:
                     if letter in additionals:
                         # TODO convert extended latin chars
+                        # problem: if they are converted,
+                        # the "solution" will also be converted
+                        # when it would be nicer to present the word
+                        # correctly spelled in the end...
+
+
+                        # mywords.add(myword)
+
                         pass
                     else:
                         break
