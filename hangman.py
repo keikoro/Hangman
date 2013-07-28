@@ -301,6 +301,8 @@ def playGame(sound, wordlanguage):
         theword.append(letter)
     theword = stringtogether(theword)
 
+    # TODO fix special characters suddenly appearing in occurencelist
+    # check createmywords function
     occurencelist = analyseWords(mywords)
     placeholderword = list(placeholderchar*len(theword))
 
