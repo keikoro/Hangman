@@ -210,17 +210,8 @@ def createMyWords(language, validletters, additionals=''):
                 if len(myword) < 5:
                     break
                 if not letter in validletters:
-                    if letter in additionals:
-                        # TODO convert extended latin chars
-                        # problem: if they are converted,
-                        # the "solution" will also be converted
-                        # when it would be nicer to present the word
-                        # correctly spelled in the end...
-
-
-                        # mywords.add(myword)
-
-                        pass
+                    if additionals and (letter in additionals):
+                        mywords.add(myword)
                     else:
                         break
             else:
@@ -292,6 +283,7 @@ def playGame(sound, wordlanguage):
     alphabet = "abcdefghijklmnopqrstuvwxyz" # standard alphabet
     # extended alphabet chars
     extendedalpha = {"ä":"ae", "ö":"oe", "ü":"ue", "ß":"ss", "é":"e", "è":"e"}
+    theword = []
 
     voicesoftware = checkOS()
     t2s_errormsg = ("There was a problem with running the text-to-speech "
@@ -299,10 +291,17 @@ def playGame(sound, wordlanguage):
 
     if wordlanguage == '':
         wordlanguage = 'en'
-    mywords = createMyWords(wordlanguage, alphabet, additionals=extendedalpha)
+
+    mywords = createMyWords('de', alphabet, additionals=extendedalpha)
+
+    randomword = random.choice(list(mywords))
+    for letter in randomword.lower():
+        if extendedalpha and (letter in extendedalpha):
+            letter = extendedalpha[letter]
+        theword.append(letter)
+    theword = stringtogether(theword)
 
     occurencelist = analyseWords(mywords)
-    theword = random.choice(list(mywords))
     placeholderword = list(placeholderchar*len(theword))
 
     if sound:
@@ -479,7 +478,7 @@ def playGame(sound, wordlanguage):
         output("\nGame over. :( ", blankchar=placeholderchar,
             blankcharvoiced=placeholdercharvoiced,
             software=voicesoftware, voice=sound)
-    output("The word you were looking for was: " +theword+ '.',
+    output("The word you were looking for was: " +randomword+ '.',
         blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced,
         software=voicesoftware, voice=sound)
 
