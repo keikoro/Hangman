@@ -154,14 +154,22 @@ def output(text, blankchar='-', blankcharvoiced='blank', software='say',
             except:
                 print(t2s_errormsg)
 
-def analyseWords(mywords):
+def analyseWords(mywords, additionals=''):
     """Analyse mywords and return all used characters.
 
      The characters are sorted by occurence (descending).
      """
     mydict = {}
+    moreletters = []
     for word in mywords: # create dict with occurence of letters in all words
         for letter in word.lower():
+            if additionals and (letter in additionals):
+                moreletters = additionals[letter]
+                for letter in moreletters:
+                    if letter in mydict:
+                        mydict[letter] += 1
+                    else:
+                        mydict[letter] = 1
             if letter in mydict:
                 mydict[letter] += 1
             else:
@@ -233,6 +241,7 @@ def createMyWords(language, validletters, additionals=''):
     finally:
         # mywords = ["unicorn"] # use only one word to try out things
         # mywords = ["Hülsenfrüchte"] # use only one word to try out things
+        mywords = ["Überbrückungstür"] # use only one word to try out things
         return mywords
 
 def soundcheck(voicesoftware):
@@ -303,7 +312,7 @@ def playGame(sound, wordlanguage):
 
     # TODO fix special characters suddenly appearing in occurencelist
     # check createmywords function
-    occurencelist = analyseWords(mywords)
+    occurencelist = analyseWords(mywords, additionals=extendedalpha)
     placeholderword = list(placeholderchar*len(theword))
 
     if sound:
@@ -378,6 +387,14 @@ def playGame(sound, wordlanguage):
                 blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
             continue
+        # TODO picking a letter in the extended characters set
+        # should result in a warning that the letter cannot be picked
+        #
+        # if extendedalpha and pickedletter in extendedalpha:
+        #     output("Sorry, but '{}'' isn't a valid guess! Try again."
+        #         .format(pickedletter), blankchar=placeholderchar,
+        #         blankcharvoiced=placeholdercharvoiced,
+        #         software=voicesoftware, voice=sound)
         if not pickedletter.isalpha() : # disallow digits, special chars
             output("Sorry, but you didn't type a letter! Try again."
                 .format(pickedletter), blankchar=placeholderchar,
