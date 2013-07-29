@@ -16,6 +16,11 @@ from kivy.uix.image import Image
 # only in version 1.8.0
 # from kivy.uix.behaviors import *
 
+# only in version 1.8.0
+# class ImageButton(ButtonBehavior, Image):
+#     pass
+
+
 def callback_pos(instance, value):
     """Give back the value of a certain position."""
     print('The widget', instance, 'moved to', value)
@@ -31,7 +36,6 @@ def print_it(instance, value):
     """Print Hangman based on position of Hangman grid."""
 
     # currently prints randomly coloured squares :P
-
     print(value)
 
     a = random.random()
@@ -44,10 +48,6 @@ def print_it(instance, value):
         # clear()
         Color(a, b, c)
         Rectangle(pos=(myvalue, myvalue), size=(myvalue/2, myvalue/2))
-
-# only in version 1.8.0
-# class ImageButton(ButtonBehavior, Image):
-#     pass
 
 # class ShowImage(Image):
 #    pass
@@ -88,7 +88,6 @@ class GridHangman(GridLayout):
         #     size=(256, 256))
         # self.add_widget(self.image)
 
-
         # self.hangman = Label(text=str(self.center_y)+"..." +
         #     str(callback_pos(self, self.pos)))
         # self.add_widget(self.hangman)
@@ -103,8 +102,6 @@ class GridHangman(GridLayout):
 
         self.i.bind(on_press=change_img)
         #self.x += 1
-
-
         # buttons.bind(on_press = self.t1.insert_text(str(item)))
 
         self.add_widget(Label(text='wrong letters go here'))
