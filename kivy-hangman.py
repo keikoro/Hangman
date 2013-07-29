@@ -3,7 +3,7 @@
 
 import random
 import kivy
-kivy.require('1.0.6') # replace with your current kivy version !
+kivy.require('1.7.1') # replace with your current kivy version !
 
 from kivy.app import App
 from kivy.uix.label import Label
@@ -12,12 +12,20 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.togglebutton import ToggleButton
 from kivy.graphics import *
-from kivy.core.image import Image
+from kivy.uix.image import Image
+# only in version 1.8.0
+# from kivy.uix.behaviors import *
 
 def callback_pos(instance, value):
     """Give back the value of a certain position."""
     print('The widget', instance, 'moved to', value)
     return value
+
+def change_img(instance, value):
+    """Change image on image click."""
+
+    print(value)
+    print("Bild wurde geklickt")
 
 def print_it(instance, value):
     """Print Hangman based on position of Hangman grid."""
@@ -37,8 +45,12 @@ def print_it(instance, value):
         Color(a, b, c)
         Rectangle(pos=(myvalue, myvalue), size=(myvalue/2, myvalue/2))
 
-class ShowImage(Image):
-   pass
+# only in version 1.8.0
+# class ImageButton(ButtonBehavior, Image):
+#     pass
+
+# class ShowImage(Image):
+#    pass
 
 class MyApp(App):
     """Main app."""
@@ -69,18 +81,34 @@ class GridHangman(GridLayout):
     def __init__(self, **kwargs):
         super(GridHangman, self).__init__(**kwargs)
         self.rows = 2
-
+        self.x = 2
         # this is a hot mess / in-progress work ;)
 
         # self.image = ShowImage(source='logo-kivy.png', pos=(200, 200),
         #     size=(256, 256))
         # self.add_widget(self.image)
 
-        self.hangman = Label(text=str(self.center_y)+"..." +
-            str(callback_pos(self, self.pos)))
-        self.add_widget(self.hangman)
+
+        # self.hangman = Label(text=str(self.center_y)+"..." +
+        #     str(callback_pos(self, self.pos)))
+        # self.add_widget(self.hangman)
+
+        if self.x%2 == 0:
+            hangman_img = 'logo-kivy.png'
+        else:
+            hangman_img = 'green.png'
+
+        self.i = Image(source=hangman_img)
+        self.add_widget(self.i)
+
+        self.i.bind(on_press=change_img)
+        #self.x += 1
+
+
+        # buttons.bind(on_press = self.t1.insert_text(str(item)))
 
         self.add_widget(Label(text='wrong letters go here'))
+
         self.bind(pos=callback_pos)
 
 class GridUserInput(GridLayout):
@@ -136,6 +164,7 @@ class MainGrid(GridLayout):
         super(MainGrid, self).__init__(**kwargs)
         self.cols = 1
         self.add_widget(Label(text='Hangman'))
+
         self.infolabel = Label(text='Some more [ref=text]info[/ref] on the game...', markup=True)
 
         # show position
