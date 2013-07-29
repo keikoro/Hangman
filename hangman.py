@@ -214,24 +214,18 @@ def createMyWords(language, validletters, additionals=''):
             # OLD myword = line.split()[0]
             mywordsplit = line.partition(':: ')[languagepick] # EN = 2, DE = 0
             myword = mywordsplit.partition(' ')[0]
-            for letter in myword.lower():
-                if len(myword) < 5:
-                    break
-                if not letter.isalpha():
-                    break
-                if not letter in validletters:
-                    # this does not work
-                    #
-                    # if additionals and (letter in additionals):
-                    #     mywords.add(myword)
-                    # else:
-                    #     print("no no noooooooooo ooooo oooo ooo oooo ")
-                    #     print(myword)
-                    #     break
-                    break
+            if len(myword) < 5:
+                pass
+            elif not (myword.lower()).isalpha():
+                pass
             else:
-                # pass
-                mywords.add(myword)
+                for letter in myword.lower():
+                    if (letter not in validletters) and (
+                        letter not in additionals):
+                        break
+                else:
+                    mywords.add(myword)
+
         myfile.close()
     except: # fallback list of words if dict file isn't found
         if language == 'en': # EN list
