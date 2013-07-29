@@ -217,12 +217,20 @@ def createMyWords(language, validletters, additionals=''):
             for letter in myword.lower():
                 if len(myword) < 5:
                     break
+                if not letter.isalpha():
+                    break
                 if not letter in validletters:
-                    if additionals and (letter in additionals):
-                        mywords.add(myword)
-                    else:
-                        break
+                    # this does not work
+                    #
+                    # if additionals and (letter in additionals):
+                    #     mywords.add(myword)
+                    # else:
+                    #     print("no no noooooooooo ooooo oooo ooo oooo ")
+                    #     print(myword)
+                    #     break
+                    break
             else:
+                # pass
                 mywords.add(myword)
         myfile.close()
     except: # fallback list of words if dict file isn't found
@@ -241,8 +249,8 @@ def createMyWords(language, validletters, additionals=''):
     finally:
         # mywords = ["unicorn"] # use only one word to try out things
         # mywords = ["Hülsenfrüchte"] # use only one word to try out things
-        mywords = ["Überbrückungstür"] # use only one word to try out things
         return mywords
+        #print(mywords)
 
 def soundcheck(voicesoftware):
     """Check if text-to-speech is possible."""
@@ -395,7 +403,7 @@ def playGame(sound, wordlanguage):
         #         .format(pickedletter), blankchar=placeholderchar,
         #         blankcharvoiced=placeholdercharvoiced,
         #         software=voicesoftware, voice=sound)
-        if not pickedletter.isalpha() : # disallow digits, special chars
+        if not pickedletter.isalpha(): # disallow digits, special chars
             output("Sorry, but you didn't type a letter! Try again."
                 .format(pickedletter), blankchar=placeholderchar,
                 blankcharvoiced=placeholdercharvoiced,
