@@ -182,7 +182,7 @@ def analyseWords(mywords, additionals=''):
     occurencestring = ''
     for pair in pairlist:
         occurencestring += pair[0] # use 1st element of each pair
-    return list(occurencestring.upper())
+    return list(occurencestring.lower())
 
 def showHint(occurencelist):
     """Returns the first element of occurencelist as string."""
@@ -312,8 +312,6 @@ def playGame(sound, wordlanguage):
         theword.append(letter)
     theword = stringtogether(theword)
 
-    # TODO fix special characters suddenly appearing in occurencelist
-    # check createmywords function
     occurencelist = analyseWords(mywords, additionals=extendedalpha)
     placeholderword = list(placeholderchar*len(theword))
 
@@ -340,10 +338,11 @@ def playGame(sound, wordlanguage):
         output("Please pick a letter: ", blankchar=placeholderchar,
             blankcharvoiced=placeholdercharvoiced, software=voicesoftware,
             voice=sound, ending='')
-        # uppercasing picked letter like in real Hangman
-        pickedletter = input().upper()
-        # TODO use raw_input().upper() for py2
-        # pickedletter = input().upper()
+        # lowercasing picked letter
+        # for easier handling of extended characters (ß etc.)
+        pickedletter = input().lower()
+        # TODO use raw_input().lower() for py2
+        # pickedletter = input().lower()
 
         if pickedletter == '???':
             occurencestringpretty = ''
@@ -351,7 +350,7 @@ def playGame(sound, wordlanguage):
                 if char not in "'[]":
                     occurencestringpretty += char
             output("Clever you! The most common letters are: {}"
-                .format(occurencestringpretty), blankchar=placeholderchar,
+                .format(occurencestringpretty.upper()), blankchar=placeholderchar,
                 blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
             continue
@@ -363,8 +362,8 @@ def playGame(sound, wordlanguage):
             #     if fullguesses == 1:
             #         timesword = 'time'
             #     if fullguesses > 0:
-            #         if pickedletter == theword.upper():
-            #             placeholderword = theword.upper()
+            #         if pickedletter == theword.lower():
+            #             placeholderword = theword.lower()
             #             output("Your guess was spot on!",
             #                 blankchar=placeholderchar,
             #                 blankcharvoiced=placeholdercharvoiced,
@@ -389,14 +388,12 @@ def playGame(sound, wordlanguage):
                 blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
             continue
-        # TODO picking a letter in the extended characters set
-        # should result in a warning that the letter cannot be picked
-        #
-        # if extendedalpha and pickedletter in extendedalpha:
-        #     output("Sorry, but '{}'' isn't a valid guess! Try again."
-        #         .format(pickedletter), blankchar=placeholderchar,
-        #         blankcharvoiced=placeholdercharvoiced,
-        #         software=voicesoftware, voice=sound)
+        if extendedalpha and (pickedletter in extendedalpha):
+            output("Sorry, but '{}' isn't a valid guess! Try again."
+                .format(pickedletter.upper()), blankchar=placeholderchar,
+                blankcharvoiced=placeholdercharvoiced,
+                software=voicesoftware, voice=sound)
+            continue
         if not pickedletter.isalpha(): # disallow digits, special chars
             output("Sorry, but you didn't type a letter! Try again."
                 .format(pickedletter), blankchar=placeholderchar,
@@ -405,7 +402,7 @@ def playGame(sound, wordlanguage):
             continue
         if pickedletter in incorrectguesses: # letter was already guessed
             output("You already guessed the letter '{}'!"
-                .format(pickedletter), blankchar=placeholderchar,
+                .format(pickedletter.upper()), blankchar=placeholderchar,
                 blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
             continue
@@ -417,9 +414,9 @@ def playGame(sound, wordlanguage):
             continue
 
         # correct guess
-        if pickedletter in theword.upper():
+        if pickedletter in theword.lower():
             letterposition = 0
-            for letterexists in theword.upper():
+            for letterexists in theword.lower():
                 if letterexists == pickedletter:
                     placeholderword[letterposition] = (
                         theword.upper()[letterposition])
@@ -444,7 +441,7 @@ def playGame(sound, wordlanguage):
             if (incorrectguesses != '') and (possibletries > 0):
                 if possibletries == 1:
                     tryword = 'try'
-                output(incorrectguesses, ending='\n\n', spell=False,
+                output(incorrectguesses.upper(), ending='\n\n', spell=False,
                     blankchar=placeholderchar,
                     blankcharvoiced=placeholdercharvoiced,
                     software=voicesoftware, voice=False)
@@ -453,7 +450,7 @@ def playGame(sound, wordlanguage):
                     blankcharvoiced=placeholdercharvoiced,
                     software=voicesoftware, spell=False,
                     voice=sound, ending='', outputtext=False)
-                output(incorrectguesses, ending='', spell=True,
+                output(incorrectguesses.upper(), ending='', spell=True,
                     blankchar=placeholderchar,
                     blankcharvoiced=placeholdercharvoiced,
                     software=voicesoftware,
