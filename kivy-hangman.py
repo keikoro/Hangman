@@ -13,6 +13,7 @@ from kivy.uix.button import Button
 from kivy.uix.togglebutton import ToggleButton
 from kivy.graphics import *
 from kivy.uix.image import Image
+from kivy.uix.widget import Widget
 # only in version 1.8.0
 # from kivy.uix.behaviors import *
 
@@ -168,9 +169,9 @@ class GridLanguages(GridLayout):
         super(GridLanguages, self).__init__(**kwargs)
         self.cols = 2
         self.lang1 = ToggleButton(text = "EN",
-            group = "language", state = "down")
+            group = "language", state = "down", text_size=(10, 10))
         self.lang2 = ToggleButton(text = "DE",
-            group = "language")
+            group = "language", background_color=(1,0.5,0.5,1))
         self.add_widget(self.lang1)
         self.add_widget(self.lang2)
 
@@ -183,13 +184,16 @@ class GridInfoExit(GridLayout):
         self.add_widget(self.infobutton)
         self.infobutton.bind(on_press=self.callback)
 
+        self.exitbuttonwidget = Widget()
         self.exitbutton = Button(text='Exit game', font_size=14)
         self.add_widget(self.exitbutton)
+        # self.exitbutton = Button(text='Exit game', font_size=14)
+        # self.add_widget(self.exitbutton)
 
 
     def callback(self, value):
         print("this is the info button")
-        print(self.userinput.text)
+        #print(self.userinput.text)
 
 class MainGrid(GridLayout):
     """1st level grid. The main grid of the app.
