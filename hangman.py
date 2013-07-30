@@ -21,6 +21,9 @@ parameters:
 -en|de ... play the game with English/German words
 """
 
+# TODO fix ß -> SS issue
+# "Sorry, but 'SS' isn't a valid guess! Try again."
+
 from __future__ import print_function # for python2.x
 import random # module for randomisation
 import subprocess # enable command line functions
@@ -294,6 +297,7 @@ def playGame(sound, wordlanguage):
     alphabet = "abcdefghijklmnopqrstuvwxyz" # standard alphabet
     # extended alphabet chars
     extendedalpha = {"ä":"ae", "ö":"oe", "ü":"ue", "ß":"ss", "é":"e", "è":"e"}
+    # TODO make separate list for characters that musn't be uppered
     theword = []
 
     voicesoftware = checkOS()
@@ -496,7 +500,7 @@ def playGame(sound, wordlanguage):
         output("\nGame over. :( ", blankchar=placeholderchar,
             blankcharvoiced=placeholdercharvoiced,
             software=voicesoftware, voice=sound)
-    output("The word you were looking for was: " +randomword+ '.',
+    output("The word you were looking for was: {}.".format(randomword),
         blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced,
         software=voicesoftware, voice=sound)
 
