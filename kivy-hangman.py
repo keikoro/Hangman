@@ -26,6 +26,15 @@ def callback_pos(instance, value):
     print('The widget', instance, 'moved to', value)
     return value
 
+# def callback(instance):
+#     print('The button {} is being pressed'.format(instance.text))
+
+def on_enter(instance, value):
+    print('User pressed enter in', instance, ' and typed ', value)
+
+# def on_text(instance, value):
+#     print('The widget', instance, 'have:', value)
+
 def change_img(instance, value):
     """Change image on image click."""
 
@@ -52,6 +61,7 @@ def print_it(instance, value):
 # class ShowImage(Image):
 #    pass
 
+
 class MyApp(App):
     """Main app."""
     def build(self):
@@ -73,8 +83,15 @@ class GridHangmanRow(GridLayout):
     def __init__(self, **kwargs):
         super(GridHangmanRow, self).__init__(**kwargs)
         self.cols = 2
-        self.add_widget(GridHangman())
-        self.add_widget(GridUserInput())
+
+        self.drawblock = GridHangman()
+        self.add_widget(self.drawblock)
+
+        self.guessblock = GridUserInput()
+        self.add_widget(self.guessblock)
+
+        # self.wrongletterswidget = GridUserInput()
+        # self.add_widget(self.wrongletterswidget)
 
 class GridHangman(GridLayout):
     """3rd level grid for Hangman graphic."""
@@ -97,14 +114,15 @@ class GridHangman(GridLayout):
         else:
             hangman_img = 'green.png'
 
-        self.i = Image(source=hangman_img)
-        self.add_widget(self.i)
+        self.hangman = Image(source=hangman_img)
+        self.add_widget(self.hangman)
+        self.hangman.bind(on_press=change_img)
 
-        self.i.bind(on_press=change_img)
         #self.x += 1
         # buttons.bind(on_press = self.t1.insert_text(str(item)))
 
-        self.add_widget(Label(text='wrong letters go here'))
+        self.wrongletters = Label(text='')
+        self.add_widget(self.wrongletters)
 
         self.bind(pos=callback_pos)
 
@@ -116,10 +134,23 @@ class GridUserInput(GridLayout):
     def __init__(self, **kwargs):
         super(GridUserInput, self).__init__(**kwargs)
         self.rows = 2
-        self.userinput = TextInput(multiline=False)
+        self.userinput = TextInput(text='', multiline=False)
         self.add_widget(self.userinput)
-        self.userinput = Button(text='OK', font_size=14)
-        self.add_widget(self.userinput)
+        # self.userinput.bind(on_text_validate=on_enter)
+        self.userinput.bind(text=self.on_text)
+
+        self.okbutton = Button(text='OK', font_size=14)
+        self.add_widget(self.okbutton)
+        self.okbutton.bind(on_press=self.callback)
+
+    def callback(self, value):
+        print(self.currenttext)
+        self.parent.drawblock.wrongletters.text += self.currenttext
+        self.userinput.text = ''
+
+    def on_text(self, memaddress, content):
+        print('The widget', content, 'have:', memaddress)
+        self.currenttext = content
 
 class GridLangRow(GridLayout):
     """2nd level grid for row with language selector.
@@ -148,10 +179,17 @@ class GridInfoExit(GridLayout):
     def __init__(self, **kwargs):
         super(GridInfoExit, self).__init__(**kwargs)
         self.cols = 2
-        self.buttoninfo = Button(text='Info', font_size=14)
-        self.add_widget(self.buttoninfo)
+        self.infobutton = Button(text='Info', font_size=14)
+        self.add_widget(self.infobutton)
+        self.infobutton.bind(on_press=self.callback)
 
-        self.buttonexit = Button(text='Exit game', font_size=14)
+        self.exitbutton = Button(text='Exit game', font_size=14)
+        self.add_widget(self.exitbutton)
+
+
+    def callback(self, value):
+        print("this is the info button")
+        print(self.userinput.text)
 
 class MainGrid(GridLayout):
     """1st level grid. The main grid of the app.
@@ -160,24 +198,32 @@ class MainGrid(GridLayout):
     def __init__(self, **kwargs):
         super(MainGrid, self).__init__(**kwargs)
         self.cols = 1
-        self.add_widget(Label(text='Hangman'))
 
-        self.infolabel = Label(text='Some more [ref=text]info[/ref] on the game...', markup=True)
+        # title widget
+        self.title = Label(text='Hangman')
+        self.add_widget(self.title)
 
-        # show position
-        self.infolabel.bind(on_ref_press=print_it)
-        self.add_widget(self.infolabel)
+        # subtitle widget
+        self.subtitle = Label(text='Some more [ref=text]info[/ref] on the game...', markup=True)
+        self.subtitle.bind(on_ref_press=print_it)
+        self.add_widget(self.subtitle)
 
-        self.add_widget(Label(text='------------------ (x letters)'))
+        # the word to be guessed
+        self.worddisplay = Label(text='------------------ (x letters)')
+        self.add_widget(self.worddisplay)
 
         # needs two cols
-        self.add_widget(GridHangmanRow())
+        #
+        self.hangmanrow = GridHangmanRow()
+        self.add_widget(self.hangmanrow)
 
         # needs 2 cols
-        self.add_widget(GridLangRow())
+        self.languagerow = GridLangRow()
+        self.add_widget(self.languagerow)
 
         # needs 2 cols
-        self.add_widget(GridInfoExit())
+        self.exitrow = GridInfoExit()
+        self.add_widget(self.exitrow)
 
 if __name__ == '__main__':
     m = MyApp().run()
