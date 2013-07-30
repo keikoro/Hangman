@@ -184,11 +184,12 @@ class GridInfoExit(GridLayout):
         self.add_widget(self.infobutton)
         self.infobutton.bind(on_press=self.callback)
 
-        self.exitbuttonwidget = Widget()
-        self.exitbutton = Button(text='Exit game', font_size=14)
-        self.add_widget(self.exitbutton)
+        # self.exitbuttonwidget = Widget()
         # self.exitbutton = Button(text='Exit game', font_size=14)
         # self.add_widget(self.exitbutton)
+
+        self.exitbutton = Button(text='Exit game', font_size=14)
+        self.add_widget(self.exitbutton)
 
 
     def callback(self, value):
