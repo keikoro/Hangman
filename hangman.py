@@ -101,6 +101,13 @@ ___________""",
     ]
     return allhangmans[leftovertries]
 
+
+def flexibleInput(prompt=''):
+    if sys.version_info[0] < 3:
+        return raw_input(prompt)
+    else:
+        return input(prompt)
+
 def stringtogether(alist):
     """return elements in a list as a string"""
     return ''.join(alist)
@@ -228,7 +235,6 @@ def createMyWords(language, validletters, additionals=''):
                         break
                 else:
                     mywords.add(myword)
-
         myfile.close()
     except: # fallback list of words if dict file isn't found
         if language == 'en': # EN list
@@ -249,7 +255,7 @@ def createMyWords(language, validletters, additionals=''):
         return mywords
         #print(mywords)
 
-def soundcheck(voicesoftware):
+def soundcheck(sound, voicesoftware):
     """Check if text-to-speech is possible."""
     print("Starting soundcheck...")
     # test existence of text-to-speech software
@@ -271,7 +277,7 @@ def soundcheck(voicesoftware):
             "with text-to-speech output.".format(voicesoftware))
         print("Could you hear your computer talk and do you want to play "
             "with text-to-speech enabled?")
-        answer = input("Please type yes or no (and press enter): ")
+        answer = flexibleInput("Please type yes or no (and press enter): ")
         # TODO use raw_input() for py2
         # answer = raw_input("Please type yes or no (and press enter): ")
         if len(answer) > 0 and answer.lower()[0] == 'y':
@@ -295,8 +301,11 @@ def playGame(sound, wordlanguage):
     placeholdercharvoiced = 'blank'
     fullguesses = 3
     alphabet = "abcdefghijklmnopqrstuvwxyz" # standard alphabet
-    # extended alphabet chars
-    extendedalpha = {"ä":"ae", "ö":"oe", "ü":"ue", "ß":"ss", "é":"e", "è":"e"}
+    # extended alphabet chars (can not be used in Python 2!)
+    if sys.version_info[0] < 3:
+        extendedalpha = ''
+    else:
+        extendedalpha = {"ä":"ae", "ö":"oe", "ü":"ue", "ß":"ss", "é":"e", "è":"e"}
     # TODO make separate list for characters that musn't be uppered
     theword = []
 
@@ -307,7 +316,7 @@ def playGame(sound, wordlanguage):
     if wordlanguage == '':
         wordlanguage = 'en'
 
-    mywords = createMyWords('de', alphabet, additionals=extendedalpha)
+    mywords = createMyWords(wordlanguage, alphabet, additionals=extendedalpha)
 
     randomword = random.choice(list(mywords))
     for letter in randomword.lower():
@@ -320,7 +329,7 @@ def playGame(sound, wordlanguage):
     placeholderword = list(placeholderchar*len(theword))
 
     if sound:
-        sound = soundcheck(voicesoftware)
+        sound = soundcheck(sound, voicesoftware)
 
     # introduction
     output("Let's play Hangman! You have to guess the word.",
@@ -344,7 +353,7 @@ def playGame(sound, wordlanguage):
             voice=sound, ending='')
         # lowercasing picked letter
         # for easier handling of extended characters (ß etc.)
-        pickedletter = input().lower()
+        pickedletter = flexibleInput().lower()
         # TODO use raw_input().lower() for py2
         # pickedletter = input().lower()
 
