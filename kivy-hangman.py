@@ -85,6 +85,11 @@ class GridHangmanRow(GridLayout):
         super(GridHangmanRow, self).__init__(**kwargs)
         self.cols = 2
 
+        # self.img1 = 'logo-kivy.png'
+        # self.img2 = 'green.png'
+
+        self.imageliste = ['logo-kivy.png', 'green.png']
+
         self.drawblock = GridHangman()
         self.add_widget(self.drawblock)
 
@@ -110,12 +115,16 @@ class GridHangman(GridLayout):
         #     str(callback_pos(self, self.pos)))
         # self.add_widget(self.hangman)
 
-        if self.x%2 == 0:
-            hangman_img = 'logo-kivy.png'
-        else:
-            hangman_img = 'green.png'
+        # if self.x%2 == 0:
+        #     hangman_img = 'logo-kivy.png'
+        # else:
+        #     hangman_img = 'green.png'
 
-        self.hangman = Image(source=hangman_img)
+#        self.imgsource = self.parent.img1
+
+        self.imgsource = 'logo-kivy.png'
+
+        self.hangman = Image(source=self.imgsource)
         self.add_widget(self.hangman)
         self.hangman.bind(on_press=change_img)
 
@@ -146,6 +155,10 @@ class GridUserInput(GridLayout):
 
     def callback(self, value):
         print(self.currenttext)
+
+        self.parent.drawblock.hangman.source = random.choice(self.parent.imageliste)
+
+        # wrong letters
         self.parent.drawblock.wrongletters.text += self.currenttext
         self.userinput.text = ''
 
@@ -184,9 +197,12 @@ class GridInfoExit(GridLayout):
         self.add_widget(self.infobutton)
         self.infobutton.bind(on_press=self.callback)
 
-        # self.exitbuttonwidget = Widget()
-        # self.exitbutton = Button(text='Exit game', font_size=14)
-        # self.add_widget(self.exitbutton)
+        # self.exitwidget = Widget(height=200, width=300)
+        # self.exitbutton = Button(text='New exit', font_size=14)
+        # self.exitwidget.add_widget(self.exitbutton)
+
+        # with self.exitwidget.canvas:
+        #     Color(0.5, 0.7, 0)
 
         self.exitbutton = Button(text='Exit game', font_size=14)
         self.add_widget(self.exitbutton)
