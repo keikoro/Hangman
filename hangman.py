@@ -103,13 +103,14 @@ ___________""",
 
 
 def flexibleInput(prompt=''):
+    """Use different input function depending on Python version."""
     if sys.version_info[0] < 3:
         return raw_input(prompt)
     else:
         return input(prompt)
 
 def stringtogether(alist):
-    """return elements in a list as a string"""
+    """Return elements in a list as a string."""
     return ''.join(alist)
 
 def output(text, blankchar='-', blankcharvoiced='blank', software='say',
@@ -210,21 +211,21 @@ def checkOS():
 def createMyWords(language, validletters, additionals=''):
     """Return a list of guessable words.
 
-    Ideally, these words originate from a dictionary file
+    Ideally, these words originate from an included dictionary file
     called de-en.dict.
     """
-    mywords = set() # guessable words
+    mywords = set()     # guessable words
     if language == 'en':
         languagepick = 2
     else:
         languagepick = 0
-    try: # filter out 5+ letter words from dict file
+    try:
         myfile = open("de-en.dict")
         for line in myfile:
-            # OLD myword = line.split()[0]
-            mywordsplit = line.partition(':: ')[languagepick] # EN = 2, DE = 0
+            # EN = 2, DE = 0
+            mywordsplit = line.partition(':: ')[languagepick]
             myword = mywordsplit.partition(' ')[0]
-            if len(myword) < 5:
+            if len(myword) < 5:     # filter out certain words
                 pass
             elif not (myword.lower()).isalpha():
                 pass
@@ -236,7 +237,7 @@ def createMyWords(language, validletters, additionals=''):
                 else:
                     mywords.add(myword)
         myfile.close()
-    except: # fallback list of words if dict file isn't found
+    except:     # fallback list of words if dict file isn't found
         if language == 'en': # EN list
             mywords = {"cherry", "summer", "winter", "programming", "hydrogen",
                 "Saturday", "unicorn", "magic", "artichoke", "juice",
@@ -253,13 +254,11 @@ def createMyWords(language, validletters, additionals=''):
         # mywords = ["unicorn"] # use only one word to try out things
         # mywords = ["Hülsenfrüchte"] # use only one word to try out things
         return mywords
-        #print(mywords)
 
 def soundcheck(sound, voicesoftware):
-    """Check if text-to-speech is possible."""
+    """Check if text-to-speech output is possible."""
     print("Starting soundcheck...")
-    # test existence of text-to-speech software
-    try:
+    try:    # test existence of text-to-speech software
         output("If you can hear a voice and want to play the game with "
             "text-to-speech output, please type yes and press enter. "
             "Otherwise type no and press enter.", software=voicesoftware,
@@ -278,8 +277,6 @@ def soundcheck(sound, voicesoftware):
         print("Could you hear your computer talk and do you want to play "
             "with text-to-speech enabled?")
         answer = flexibleInput("Please type yes or no (and press enter): ")
-        # TODO use raw_input() for py2
-        # answer = raw_input("Please type yes or no (and press enter): ")
         if len(answer) > 0 and answer.lower()[0] == 'y':
             sound = True
         else:
@@ -289,19 +286,19 @@ def soundcheck(sound, voicesoftware):
         return sound
 
 def playGame(sound, wordlanguage):
-    """the actual Hangman game"""
+    """The actual Hangman game."""
 
     # ---- start program
-    possibletries = 11 # 11 incorrect guesses allowed
-    incorrectguesses = '' # string for incorrectly guessed letters
+    possibletries = 11     # 11 incorrect guesses allowed
+    incorrectguesses = ''   # string for incorrectly guessed letters
     correctguesses = ''
     tryword = 'tries'
     timesword = 'times'
     placeholderchar = '-'
     placeholdercharvoiced = 'blank'
     fullguesses = 3
-    alphabet = "abcdefghijklmnopqrstuvwxyz" # standard alphabet
-    # extended alphabet chars (can not be used in Python 2!)
+    alphabet = "abcdefghijklmnopqrstuvwxyz"     # standard alphabet
+    # extended alphabet chars (cannot be used in Python 2!)
     if sys.version_info[0] < 3:
         extendedalpha = ''
     else:
@@ -313,7 +310,7 @@ def playGame(sound, wordlanguage):
     t2s_errormsg = ("There was a problem with running the text-to-speech "
         "software {}.".format(voicesoftware))
 
-    if wordlanguage == '':
+    if wordlanguage == '':      # default to English words
         wordlanguage = 'en'
 
     mywords = createMyWords(wordlanguage, alphabet, additionals=extendedalpha)
@@ -352,10 +349,8 @@ def playGame(sound, wordlanguage):
             blankcharvoiced=placeholdercharvoiced, software=voicesoftware,
             voice=sound, ending='')
         # lowercasing picked letter
-        # for easier handling of extended characters (ß etc.)
+        # for easier handling of extended characters (ä, ß etc.)
         pickedletter = flexibleInput().lower()
-        # TODO use raw_input().lower() for py2
-        # pickedletter = input().lower()
 
         if pickedletter == '???':
             occurencestringpretty = ''
@@ -407,13 +402,13 @@ def playGame(sound, wordlanguage):
                 blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
             continue
-        if not pickedletter.isalpha(): # disallow digits, special chars
+        if not pickedletter.isalpha():  # disallow digits, special chars
             output("Sorry, but you didn't type a letter! Try again."
                 .format(pickedletter), blankchar=placeholderchar,
                 blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
             continue
-        if pickedletter in incorrectguesses: # letter was already guessed
+        if pickedletter in incorrectguesses:    # letter was already guessed
             output("You already guessed the letter '{}'!"
                 .format(pickedletter.upper()), blankchar=placeholderchar,
                 blankcharvoiced=placeholdercharvoiced,
@@ -449,7 +444,7 @@ def playGame(sound, wordlanguage):
                 blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
 
-            print(hangman(possibletries)) # print hangman
+            print(hangman(possibletries))   # print hangman
 
             if (incorrectguesses != '') and (possibletries > 0):
                 if possibletries == 1:
@@ -488,7 +483,7 @@ def playGame(sound, wordlanguage):
             output(stringtogether(placeholderword),
                 blankchar=placeholderchar,
                 blankcharvoiced=placeholdercharvoiced,
-                software=voicesoftware, voice=False) # show whole blank word
+                software=voicesoftware, voice=False)    # show whole blank word
             if sound:
                 try:
                     output("The word you're looking for has {} letters"
