@@ -1,6 +1,7 @@
 # Make Hangman playable on different devices
 # with Kivy http://kivy.org/
 
+from __future__ import print_function # for python2.x
 import random
 import kivy
 kivy.require('1.7.1') # replace with your current kivy version !
@@ -8,12 +9,20 @@ kivy.require('1.7.1') # replace with your current kivy version !
 from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.togglebutton import ToggleButton
 from kivy.graphics import *
 from kivy.uix.image import Image
 from kivy.uix.widget import Widget
+from kivy.uix.popup import Popup
+from kivy.clock import Clock
+
+# only in version 1.8.0
+# from kivy.uix.behaviors import ButtonBehavior
+
 # only in version 1.8.0
 # from kivy.uix.behaviors import *
 
@@ -63,11 +72,16 @@ def print_it(instance, value):
 #    pass
 
 
-class MyApp(App):
+class HangmanApp(App):
     """Main app."""
     def build(self):
         # return Label(text='Hello world')
         return MainGrid()
+
+    # def on_start(self):
+    #     print("ich starte")
+    #     self.info_popup()
+
 
 class MiniGrid(GridLayout): # only needed as 'template' right now
     def __init__(self, **kwargs):
@@ -197,6 +211,7 @@ class GridInfoExit(GridLayout):
         self.add_widget(self.infobutton)
         self.infobutton.bind(on_press=self.callback)
 
+
         # self.exitwidget = Widget(height=200, width=300)
         # self.exitbutton = Button(text='New exit', font_size=14)
         # self.exitwidget.add_widget(self.exitbutton)
@@ -207,9 +222,12 @@ class GridInfoExit(GridLayout):
         self.exitbutton = Button(text='Exit game', font_size=14)
         self.add_widget(self.exitbutton)
 
+        # self.infobutton.trigger_action(duration=1)
+
 
     def callback(self, value):
         print("this is the info button")
+        self.parent.info_popup()
         #print(self.userinput.text)
 
 class MainGrid(GridLayout):
@@ -218,10 +236,11 @@ class MainGrid(GridLayout):
     This is where ALL the labels, buttons, inputs etc. go."""
     def __init__(self, **kwargs):
         super(MainGrid, self).__init__(**kwargs)
+        self.voice = False
         self.cols = 1
 
         # title widget
-        self.title = Label(text='Hangman')
+        self.title = Label(text='Blblbllablbl text here')
         self.add_widget(self.title)
 
         # subtitle widget
@@ -246,5 +265,62 @@ class MainGrid(GridLayout):
         self.exitrow = GridInfoExit()
         self.add_widget(self.exitrow)
 
+        Clock.schedule_once(self.voice_popup, 1)
+
+#        self.info_popup()
+
+        # open the text-to-speech selection popup
+        # self.voice_popup()
+
+    def info_popup(self):
+        btnclose = Button(text='Close this popup', size_hint_y=None, height='50sp')
+        content = BoxLayout(orientation='vertical')
+        content.add_widget(Label(text='This is the info text'))
+        content.add_widget(btnclose)
+        popup = Popup(content=content, title='This is the popup\'s title',
+                      size_hint=(None, None), size=('300dp', '300dp'))
+        btnclose.bind(on_release=popup.dismiss)
+        button = Button(text='Open popup', size_hint=(None, None),
+                        size=('150sp', '70dp'),
+                        on_release=popup.open)
+        popup.open()
+        col = AnchorLayout()
+        col.add_widget(button)
+        return col
+
+    def voice_popup(self, bla):
+        voiceon = Button(text='text-to-speech', size_hint_y=None, height='50sp')
+        voiceoff = Button(text='text-only', size_hint_y=None, height='50sp')
+        content = BoxLayout(orientation='vertical')
+
+        content.add_widget(Label(text='Do you want to play this game with text-to-speech output?'))
+        content.add_widget(voiceon)
+        content.add_widget(voiceoff)
+
+        self.popup = Popup(content=content, title='Text-to-speech',
+                      size_hint=(None, None), size=('300dp', '300dp'))
+        voiceon.bind(on_release=self.voice_on)
+        voiceoff.bind(on_release=self.voice_off)
+
+        # button = Button(text='Open popup', size_hint=(None, None),
+        #                 size=('150dp', '70dp'),
+        #                 on_release=popup.open)
+
+        self.popup.open()
+        col = AnchorLayout()
+        # col.add_widget(button)
+        return col
+
+    def voice_on(self, bla):
+        self.voice = True
+        print("voice: ", self.voice)
+        self.popup.dismiss()
+
+    def voice_off(self, bla):
+        self.voice = False
+        print("voice: ", self.voice)
+        self.popup.dismiss()
+
+
 if __name__ == '__main__':
-    m = MyApp().run()
+    m = HangmanApp().run()
