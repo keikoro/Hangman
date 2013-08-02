@@ -118,6 +118,37 @@ def createMyWords(language, validletters='abcdefghijklmnopqrstuvwxyz',
         # mywords = ["Hülsenfrüchte"] # use only one word to try out things
         return mywords
 
+
+def analyseWords(mywords, additionals=''):
+    """Analyse mywords and return all used characters.
+
+     The characters are sorted by occurence (descending).
+     """
+    mydict = {}
+    moreletters = []
+    for word in mywords: # create dict with occurence of letters in all words
+        for letter in word.lower():
+            if additionals and (letter in additionals):
+                moreletters = additionals[letter]
+                for letter in moreletters:
+                    if letter in mydict:
+                        mydict[letter] += 1
+                    else:
+                        mydict[letter] = 1
+            if letter in mydict:
+                mydict[letter] += 1
+            else:
+                mydict[letter] = 1
+
+    # pairs in mydict dictionary sorted by occurence (descending)
+    # http://stackoverflow.com/questions/613183/python-sort-a-dictionary-by-value
+    # pairlist looks like this: [('e', 167410), ('n', 100164),...]
+    pairlist = sorted(mydict.items(), key=lambda x: x[1], reverse=True)
+    occurencestring = ''
+    for pair in pairlist:
+        occurencestring += pair[0] # use 1st element of each pair
+    return list(occurencestring.lower())
+
 class HangmanApp(App):
     """Main app."""
     def build(self):
