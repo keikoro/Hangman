@@ -200,6 +200,10 @@ class GridUserInput(GridLayout):
     def okclick(self, value):
         print(self.currenttext)
 
+        self.parent.drawblock.wrongletters.text += self.currenttext
+        self.userinput.text = ''
+
+
         self.parent.parent.possibletries -= 1
         thistext = "{} tries left".format(self.parent.parent.possibletries)
 
@@ -207,34 +211,11 @@ class GridUserInput(GridLayout):
         self.parent.parent.triesleft.tries.text = thistext
 
         # wrong letters
-        self.parent.drawblock.wrongletters.text += self.currenttext
-        self.userinput.text = ''
+
 
     def on_text(self, memaddress, content):
         print('The widget', content, 'have:', memaddress)
         self.currenttext = content
-
-# class GridLangRow(GridLayout):
-#     """2nd level grid for row with language selector.
-
-#     Only the left side of the row should be used for language selection."""
-#     def __init__(self, **kwargs):
-#         super(GridLangRow, self).__init__(**kwargs)
-#         self.cols = 2
-#         self.add_widget(GridLanguages())
-#         self.add_widget(Label(text=''))
-
-# class GridLanguages(GridLayout):
-#     """3rd level grid for the actual language selector."""
-#     def __init__(self, **kwargs):
-#         super(GridLanguages, self).__init__(**kwargs)
-#         self.cols = 2
-#         self.lang1 = ToggleButton(text = "EN",
-#             group = "language", state = "down", text_size=(10, 10))
-#         self.lang2 = ToggleButton(text = "DE",
-#             group = "language", background_color=(1,0.5,0.5,1))
-#         self.add_widget(self.lang1)
-#         self.add_widget(self.lang2)
 
 class GridTriesLeft(GridLayout):
     """Shows how many tries are left."""
