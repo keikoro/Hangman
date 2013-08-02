@@ -231,6 +231,9 @@ class GridUserInput(GridLayout):
     def okclick(self, value):
         print(self.currenttext)
 
+
+        self.parent.parent.word_to_guess.text = ''.join(
+            self.parent.parent.placeholderword)
         self.parent.drawblock.wrongletters.text += self.currenttext
         self.userinput.text = ''
 
@@ -311,7 +314,7 @@ class MainGrid(GridLayout):
         self.possibletries = 11     # 11 incorrect guesses allowed
         self.randomword = ''
         self.myword = ''
-        self.placeholderchar = '-'
+        self.placeholderchar = '_ '
         self.placeholdercharvoiced = 'blank'
         # extended alphabet chars (cannot be used in Python 2!)
         if sys.version_info[0] < 3:
@@ -320,6 +323,21 @@ class MainGrid(GridLayout):
             self.extendedalpha = {"ä":"ae", "ö":"oe", "ü":"ue", "ß":"ss",
                 "é":"e", "è":"e"}
         self.theword = []
+
+        # start actual game
+        self.mywords = createMyWords(self.wordlanguage, additionals='')
+        self.randomword = random.choice(list(self.mywords))
+
+        self.randomword = random.choice(list(self.mywords))
+        for letter in self.randomword.lower():
+            if self.extendedalpha and (letter in self.extendedalpha):
+                letter = extendedalpha[letter]
+            self.theword.append(letter)
+        self.theword = ''.join(self.theword)
+
+        self.occurencelist = analyseWords(self.mywords, additionals='')
+        self.placeholderword = list(self.placeholderchar*len(self.theword))
+        self.placeholderword_str = ''.join(self.placeholderword)
 
 
         # title widget
@@ -332,8 +350,8 @@ class MainGrid(GridLayout):
         # self.add_widget(self.subtitle)
 
         # the word to be guessed
-        self.worddisplay = Label(text='------------------ (x letters)')
-        self.add_widget(self.worddisplay)
+        self.word_to_guess = Label(text="{}".format(self.placeholderword_str))
+        self.add_widget(self.word_to_guess)
 
         # needs two cols
         #
@@ -356,19 +374,7 @@ class MainGrid(GridLayout):
         # with delay (otherwise the popup's not overlayed!)
         Clock.schedule_once(self.settings_popup, 1)
 
-        # start actual game
-        self.mywords = createMyWords(self.wordlanguage, additionals='')
-        self.randomword = random.choice(list(self.mywords))
 
-        self.randomword = random.choice(list(self.mywords))
-        for letter in self.randomword.lower():
-            if self.extendedalpha and (letter in self.extendedalpha):
-                letter = extendedalpha[letter]
-            self.theword.append(letter)
-        self.theword = ''.join(self.theword)
-
-        self.occurencelist = analyseWords(self.mywords, additionals='')
-        self.placeholderword = list(self.placeholderchar*len(self.theword))
 
     def info_popup(self):
         btnclose = Button(text='Close this popup', size_hint_y=None, height='50sp')
@@ -401,6 +407,7 @@ class MainGrid(GridLayout):
             size_hint_y=None, height='50sp')
 
         content = BoxLayout(orientation='vertical')
+        # content = GridLayout(cols=2)
 
         content.add_widget(description)
         content.add_widget(voiceon)
