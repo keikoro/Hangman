@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 # Make Hangman playable on different devices
 # with Kivy http://kivy.org/
 
 from __future__ import print_function # for python2.x
 import random
+import sys # module for parameters
 import kivy
 kivy.require('1.7.1') # replace with your current kivy version !
 
@@ -67,6 +69,54 @@ def print_it(instance, value):
         # clear()
         Color(a, b, c)
         Rectangle(pos=(myvalue, myvalue), size=(myvalue/2, myvalue/2))
+
+def createMyWords(language, validletters='abcdefghijklmnopqrstuvwxyz',
+        additionals=''):
+    """Return a list of guessable words.
+
+    Ideally, these words originate from an included dictionary file
+    called de-en.dict.
+    """
+    mywords = set()     # guessable words
+    if language == 'en':
+        languagepick = 2
+    else:
+        languagepick = 0
+    try:
+        myfile = open("de-en.dict")
+        for line in myfile:
+            # EN = 2, DE = 0
+            mywordsplit = line.partition(':: ')[languagepick]
+            myword = mywordsplit.partition(' ')[0]
+            if len(myword) < 5:     # filter out certain words
+                pass
+            elif not (myword.lower()).isalpha():
+                pass
+            else:
+                for letter in myword.lower():
+                    if (letter not in validletters) and (
+                        letter not in additionals):
+                        break
+                else:
+                    mywords.add(myword)
+        myfile.close()
+    except:     # fallback list of words if dict file isn't found
+        if language == 'en': # EN list
+            mywords = {"cherry", "summer", "winter", "programming", "hydrogen",
+                "Saturday", "unicorn", "magic", "artichoke", "juice",
+                "hacker", "python", "Neverland", "baking", "sherlock",
+                "troll", "batman", "japan", "pastries", "Cairo", "Vienna",
+                "raindrop", "waves", "diving", "Malta", "cupcake", "ukulele"}
+        else: # DE list
+            mywords = {"Ferien", "Grashuepfer", "programmieren", "Polizei",
+                "Zielgerade", "Kronkorken", "Kuchen", "rumlungern", "kichern",
+                "Salzwasser", "Schwimmflossen", "Motorradhelm", "feiern",
+                "Fehlbesetzung", "Regisseurin", "Zuckerwatte", "pieksen",
+                "Nebelmaschine", "Lampenschirm", "Redewendung"}
+    finally:
+        # mywords = ["unicorn"] # use only one word to try out things
+        # mywords = ["Hülsenfrüchte"] # use only one word to try out things
+        return mywords
 
 class HangmanApp(App):
     """Main app."""
@@ -145,12 +195,16 @@ class GridUserInput(GridLayout):
 
         self.okbutton = Button(text='OK', font_size=14)
         self.add_widget(self.okbutton)
-        self.okbutton.bind(on_press=self.callback)
+        self.okbutton.bind(on_press=self.okclick)
 
-    def callback(self, value):
+    def okclick(self, value):
         print(self.currenttext)
 
+        self.parent.parent.possibletries -= 1
+        thistext = "{} tries left".format(self.parent.parent.possibletries)
+
         self.parent.drawblock.hangman.source = random.choice(self.parent.imageliste)
+        self.parent.parent.triesleft.tries.text = thistext
 
         # wrong letters
         self.parent.drawblock.wrongletters.text += self.currenttext
@@ -160,27 +214,45 @@ class GridUserInput(GridLayout):
         print('The widget', content, 'have:', memaddress)
         self.currenttext = content
 
-class GridLangRow(GridLayout):
-    """2nd level grid for row with language selector.
+# class GridLangRow(GridLayout):
+#     """2nd level grid for row with language selector.
 
-    Only the left side of the row should be used for language selection."""
-    def __init__(self, **kwargs):
-        super(GridLangRow, self).__init__(**kwargs)
-        self.cols = 2
-        self.add_widget(GridLanguages())
-        self.add_widget(Label(text=''))
+#     Only the left side of the row should be used for language selection."""
+#     def __init__(self, **kwargs):
+#         super(GridLangRow, self).__init__(**kwargs)
+#         self.cols = 2
+#         self.add_widget(GridLanguages())
+#         self.add_widget(Label(text=''))
 
-class GridLanguages(GridLayout):
-    """3rd level grid for the actual language selector."""
+# class GridLanguages(GridLayout):
+#     """3rd level grid for the actual language selector."""
+#     def __init__(self, **kwargs):
+#         super(GridLanguages, self).__init__(**kwargs)
+#         self.cols = 2
+#         self.lang1 = ToggleButton(text = "EN",
+#             group = "language", state = "down", text_size=(10, 10))
+#         self.lang2 = ToggleButton(text = "DE",
+#             group = "language", background_color=(1,0.5,0.5,1))
+#         self.add_widget(self.lang1)
+#         self.add_widget(self.lang2)
+
+class GridTriesLeft(GridLayout):
+    """Shows how many tries are left."""
     def __init__(self, **kwargs):
-        super(GridLanguages, self).__init__(**kwargs)
+        super(GridTriesLeft, self).__init__(**kwargs)
         self.cols = 2
-        self.lang1 = ToggleButton(text = "EN",
-            group = "language", state = "down", text_size=(10, 10))
-        self.lang2 = ToggleButton(text = "DE",
-            group = "language", background_color=(1,0.5,0.5,1))
-        self.add_widget(self.lang1)
-        self.add_widget(self.lang2)
+
+        # thistryno = 11
+        # thistext = "You have {} tries left.".format(thistryno)
+
+        self.tries = Label(text="11 tries left")
+#        self.tries = Label(text="You have {} tries left.".format(self.parent.possibletries))
+
+
+        self.add_widget(self.tries)
+        self.emptylabel = Label(text="")
+        self.add_widget(self.emptylabel)
+
 
 class GridInfoExit(GridLayout):
     """2nd level grid for row with Info button and Exit button."""
@@ -202,6 +274,7 @@ class GridInfoExit(GridLayout):
         self.add_widget(self.exitbutton)
         self.exitbutton.bind(on_release=self.debug)
 
+
         # self.infobutton.trigger_action(duration=1)
 
     def callback(self, value):
@@ -210,8 +283,9 @@ class GridInfoExit(GridLayout):
         #print(self.userinput.text)
 
     def debug(self, value):
-        print("voice: ", self.parent.voice, ", language: ", self.parent.language)
-
+        print("voice: ", self.parent.voice, ", language: ",
+            self.parent.wordlanguage)
+        # super.stop()
 
 class MainGrid(GridLayout):
     """1st level grid. The main grid of the app.
@@ -220,19 +294,30 @@ class MainGrid(GridLayout):
     def __init__(self, **kwargs):
         super(MainGrid, self).__init__(**kwargs)
         self.voice = False
-        self.language = 'en'
+        self.wordlanguage = 'en'
         self.cols = 1
         self.possibletries = 11     # 11 incorrect guesses allowed
+        self.randomword = ''
+        self.myword = ''
+        self.placeholderchar = '-'
+        self.placeholdercharvoiced = 'blank'
+        # extended alphabet chars (cannot be used in Python 2!)
+        if sys.version_info[0] < 3:
+            self.extendedalpha = ''
+        else:
+            self.extendedalpha = {"ä":"ae", "ö":"oe", "ü":"ue", "ß":"ss",
+                "é":"e", "è":"e"}
+        self.theword = []
 
 
         # title widget
         self.title = Label(text='Blblbllablbl text here')
         self.add_widget(self.title)
 
-        # subtitle widget
-        self.subtitle = Label(text='Some more [ref=text]info[/ref] on the game...', markup=True)
-        self.subtitle.bind(on_ref_press=print_it)
-        self.add_widget(self.subtitle)
+        # # subtitle widget
+        # self.subtitle = Label(text='Some more [ref=text]info[/ref] on the game...', markup=True)
+        # self.subtitle.bind(on_ref_press=print_it)
+        # self.add_widget(self.subtitle)
 
         # the word to be guessed
         self.worddisplay = Label(text='------------------ (x letters)')
@@ -246,6 +331,10 @@ class MainGrid(GridLayout):
         # # needs 2 cols
         # self.languagerow = GridLangRow()
         # self.add_widget(self.languagerow)
+
+        # needs 2 cols
+        self.triesleft = GridTriesLeft()
+        self.add_widget(self.triesleft)
 
         # needs 2 cols
         self.exitrow = GridInfoExit()
@@ -310,12 +399,12 @@ class MainGrid(GridLayout):
         return col
 
     def pick_lang_en(self, bla):
-        self.language = 'en'
-        print("language: ", self.language)
+        self.wordlanguage = 'en'
+        print("language: ", self.wordlanguage)
 
     def pick_lang_de(self, bla):
-        self.language = 'de'
-        print("language: ", self.language)
+        self.wordlanguage = 'de'
+        print("language: ", self.wordlanguage)
 
     def voice_on(self, bla):
         self.voice = True
@@ -327,6 +416,18 @@ class MainGrid(GridLayout):
 
     def close_popup(self, bla):
         self.popup.dismiss()
+        self.mywords = createMyWords(self.wordlanguage, additionals='')
+        self.randomword = random.choice(list(self.mywords))
+
+        self.randomword = random.choice(list(self.mywords))
+        for letter in self.randomword.lower():
+            if self.extendedalpha and (letter in self.extendedalpha):
+                letter = extendedalpha[letter]
+            self.theword.append(letter)
+        self.theword = ''.join(self.theword)
+
+
+        print(self.randomword)
 
 if __name__ == '__main__':
     m = HangmanApp().run()
