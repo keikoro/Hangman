@@ -221,14 +221,18 @@ class GridInfoExit(GridLayout):
 
         self.exitbutton = Button(text='Exit game', font_size=14)
         self.add_widget(self.exitbutton)
+        self.exitbutton.bind(on_release=self.debug)
 
         # self.infobutton.trigger_action(duration=1)
-
 
     def callback(self, value):
         print("this is the info button")
         self.parent.info_popup()
         #print(self.userinput.text)
+
+    def debug(self, value):
+        print("voice: ", self.parent.voice, ", language: ", self.parent.language)
+
 
 class MainGrid(GridLayout):
     """1st level grid. The main grid of the app.
@@ -237,6 +241,7 @@ class MainGrid(GridLayout):
     def __init__(self, **kwargs):
         super(MainGrid, self).__init__(**kwargs)
         self.voice = False
+        self.language = 'en'
         self.cols = 1
 
         # title widget
@@ -257,20 +262,20 @@ class MainGrid(GridLayout):
         self.hangmanrow = GridHangmanRow()
         self.add_widget(self.hangmanrow)
 
-        # needs 2 cols
-        self.languagerow = GridLangRow()
-        self.add_widget(self.languagerow)
+        # # needs 2 cols
+        # self.languagerow = GridLangRow()
+        # self.add_widget(self.languagerow)
 
         # needs 2 cols
         self.exitrow = GridInfoExit()
         self.add_widget(self.exitrow)
 
-        Clock.schedule_once(self.voice_popup, 1)
+        Clock.schedule_once(self.settings_popup, 1)
 
 #        self.info_popup()
 
         # open the text-to-speech selection popup
-        # self.voice_popup()
+        # self.settings_popup()
 
     def info_popup(self):
         btnclose = Button(text='Close this popup', size_hint_y=None, height='50sp')
@@ -288,19 +293,39 @@ class MainGrid(GridLayout):
         col.add_widget(button)
         return col
 
-    def voice_popup(self, bla):
-        voiceon = Button(text='text-to-speech', size_hint_y=None, height='50sp')
-        voiceoff = Button(text='text-only', size_hint_y=None, height='50sp')
+    def settings_popup(self, bla):
+        voiceon = ToggleButton(group="voice", state="down",
+            text='text-to-speech', size_hint_y=None, height='50sp')
+        voiceoff = ToggleButton(group="voice", text='text-only',
+            size_hint_y=None, height='50sp')
+        lang_en = ToggleButton(group="language", state="down",
+            text='English words', size_hint_y=None, height='50sp')
+        lang_de = ToggleButton(group="language", text='German words',
+            size_hint_y=None, height='50sp')
+        closebutton = Button(text='Apply settings',
+            size_hint_y=None, height='50sp')
+
         content = BoxLayout(orientation='vertical')
 
-        content.add_widget(Label(text='Do you want to play this game with text-to-speech output?'))
+        content.add_widget(Label(text='Here you can change the settings\n'
+            'of the game', height='100sp'))
         content.add_widget(voiceon)
         content.add_widget(voiceoff)
+        content.add_widget(lang_en)
+        content.add_widget(lang_de)
+        content.add_widget(closebutton)
 
-        self.popup = Popup(content=content, title='Text-to-speech',
-                      size_hint=(None, None), size=('300dp', '300dp'))
+        self.popup = Popup(content=content, title='Hangman settings',
+                      size_hint=(None, None), size=('300dp', '400dp'))
+
+        closebutton.bind(on_release=self.close_popup)
         voiceon.bind(on_release=self.voice_on)
         voiceoff.bind(on_release=self.voice_off)
+        lang_en.bind(on_release=self.pick_lang_en)
+        lang_de.bind(on_release=self.pick_lang_de)
+
+        # voiceon.bind(on_release=self.voice_on)
+        # voiceoff.bind(on_release=self.voice_off)
 
         # button = Button(text='Open popup', size_hint=(None, None),
         #                 size=('150dp', '70dp'),
@@ -311,16 +336,34 @@ class MainGrid(GridLayout):
         # col.add_widget(button)
         return col
 
+    def pick_lang_en(self, bla):
+        self.language = 'en'
+        print("language: ", self.language)
+
+    def pick_lang_de(self, bla):
+        self.language = 'de'
+        print("language: ", self.language)
+
     def voice_on(self, bla):
         self.voice = True
         print("voice: ", self.voice)
-        self.popup.dismiss()
 
     def voice_off(self, bla):
         self.voice = False
         print("voice: ", self.voice)
+
+    def close_popup(self, bla):
         self.popup.dismiss()
 
+    # def voice_on(self, bla):
+    #     self.voice = True
+    #     print("voice: ", self.voice)
+    #     self.popup.dismiss()
+
+    # def voice_off(self, bla):
+    #     self.voice = False
+    #     print("voice: ", self.voice)
+    #     self.popup.dismiss()
 
 if __name__ == '__main__':
     m = HangmanApp().run()
