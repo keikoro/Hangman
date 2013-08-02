@@ -68,20 +68,11 @@ def print_it(instance, value):
         Color(a, b, c)
         Rectangle(pos=(myvalue, myvalue), size=(myvalue/2, myvalue/2))
 
-# class ShowImage(Image):
-#    pass
-
-
 class HangmanApp(App):
     """Main app."""
     def build(self):
         # return Label(text='Hello world')
         return MainGrid()
-
-    # def on_start(self):
-    #     print("ich starte")
-    #     self.info_popup()
-
 
 class MiniGrid(GridLayout): # only needed as 'template' right now
     def __init__(self, **kwargs):
@@ -119,22 +110,11 @@ class GridHangman(GridLayout):
         super(GridHangman, self).__init__(**kwargs)
         self.rows = 2
         self.x = 2
-        # this is a hot mess / in-progress work ;)
-
-        # self.image = ShowImage(source='logo-kivy.png', pos=(200, 200),
-        #     size=(256, 256))
-        # self.add_widget(self.image)
-
-        # self.hangman = Label(text=str(self.center_y)+"..." +
-        #     str(callback_pos(self, self.pos)))
-        # self.add_widget(self.hangman)
 
         # if self.x%2 == 0:
         #     hangman_img = 'logo-kivy.png'
         # else:
         #     hangman_img = 'green.png'
-
-#        self.imgsource = self.parent.img1
 
         self.imgsource = 'logo-kivy.png'
 
@@ -211,7 +191,6 @@ class GridInfoExit(GridLayout):
         self.add_widget(self.infobutton)
         self.infobutton.bind(on_press=self.callback)
 
-
         # self.exitwidget = Widget(height=200, width=300)
         # self.exitbutton = Button(text='New exit', font_size=14)
         # self.exitwidget.add_widget(self.exitbutton)
@@ -243,6 +222,8 @@ class MainGrid(GridLayout):
         self.voice = False
         self.language = 'en'
         self.cols = 1
+        self.possibletries = 11     # 11 incorrect guesses allowed
+
 
         # title widget
         self.title = Label(text='Blblbllablbl text here')
@@ -324,16 +305,8 @@ class MainGrid(GridLayout):
         lang_en.bind(on_release=self.pick_lang_en)
         lang_de.bind(on_release=self.pick_lang_de)
 
-        # voiceon.bind(on_release=self.voice_on)
-        # voiceoff.bind(on_release=self.voice_off)
-
-        # button = Button(text='Open popup', size_hint=(None, None),
-        #                 size=('150dp', '70dp'),
-        #                 on_release=popup.open)
-
         self.popup.open()
         col = AnchorLayout()
-        # col.add_widget(button)
         return col
 
     def pick_lang_en(self, bla):
@@ -354,16 +327,6 @@ class MainGrid(GridLayout):
 
     def close_popup(self, bla):
         self.popup.dismiss()
-
-    # def voice_on(self, bla):
-    #     self.voice = True
-    #     print("voice: ", self.voice)
-    #     self.popup.dismiss()
-
-    # def voice_off(self, bla):
-    #     self.voice = False
-    #     print("voice: ", self.voice)
-    #     self.popup.dismiss()
 
 if __name__ == '__main__':
     m = HangmanApp().run()
