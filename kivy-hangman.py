@@ -234,7 +234,6 @@ class GridUserInput(GridLayout):
         self.parent.drawblock.wrongletters.text += self.currenttext
         self.userinput.text = ''
 
-
         self.parent.parent.possibletries -= 1
         thistext = "{} tries left".format(self.parent.parent.possibletries)
 
@@ -308,6 +307,7 @@ class MainGrid(GridLayout):
         self.voice = False
         self.wordlanguage = 'en'
         self.cols = 1
+
         self.possibletries = 11     # 11 incorrect guesses allowed
         self.randomword = ''
         self.myword = ''
@@ -352,12 +352,23 @@ class MainGrid(GridLayout):
         self.exitrow = GridInfoExit()
         self.add_widget(self.exitrow)
 
+        # open settings popup at beginning of game
+        # with delay (otherwise the popup's not overlayed!)
         Clock.schedule_once(self.settings_popup, 1)
 
-#        self.info_popup()
+        # start actual game
+        self.mywords = createMyWords(self.wordlanguage, additionals='')
+        self.randomword = random.choice(list(self.mywords))
 
-        # open the text-to-speech selection popup
-        # self.settings_popup()
+        self.randomword = random.choice(list(self.mywords))
+        for letter in self.randomword.lower():
+            if self.extendedalpha and (letter in self.extendedalpha):
+                letter = extendedalpha[letter]
+            self.theword.append(letter)
+        self.theword = ''.join(self.theword)
+
+        self.occurencelist = analyseWords(self.mywords, additionals='')
+        self.placeholderword = list(self.placeholderchar*len(self.theword))
 
     def info_popup(self):
         btnclose = Button(text='Close this popup', size_hint_y=None, height='50sp')
@@ -376,6 +387,8 @@ class MainGrid(GridLayout):
         return col
 
     def settings_popup(self, bla):
+        description = Label(text='Here you can change the settings\n'
+            'of the game', height='100sp')
         voiceon = ToggleButton(group="voice", state="down",
             text='text-to-speech', size_hint_y=None, height='50sp')
         voiceoff = ToggleButton(group="voice", text='text-only',
@@ -389,8 +402,7 @@ class MainGrid(GridLayout):
 
         content = BoxLayout(orientation='vertical')
 
-        content.add_widget(Label(text='Here you can change the settings\n'
-            'of the game', height='100sp'))
+        content.add_widget(description)
         content.add_widget(voiceon)
         content.add_widget(voiceoff)
         content.add_widget(lang_en)
@@ -401,8 +413,8 @@ class MainGrid(GridLayout):
                       size_hint=(None, None), size=('300dp', '400dp'))
 
         closebutton.bind(on_release=self.close_popup)
-        voiceon.bind(on_release=self.voice_on)
-        voiceoff.bind(on_release=self.voice_off)
+        voiceon.bind(on_release=self.turn_voice_on)
+        voiceoff.bind(on_release=self.turn_voice_off)
         lang_en.bind(on_release=self.pick_lang_en)
         lang_de.bind(on_release=self.pick_lang_de)
 
@@ -418,28 +430,33 @@ class MainGrid(GridLayout):
         self.wordlanguage = 'de'
         print("language: ", self.wordlanguage)
 
-    def voice_on(self, bla):
+    def turn_voice_on(self, bla):
         self.voice = True
         print("voice: ", self.voice)
 
-    def voice_off(self, bla):
+    def turn_voice_off(self, bla):
         self.voice = False
         print("voice: ", self.voice)
 
     def close_popup(self, bla):
         self.popup.dismiss()
-        self.mywords = createMyWords(self.wordlanguage, additionals='')
-        self.randomword = random.choice(list(self.mywords))
 
-        self.randomword = random.choice(list(self.mywords))
-        for letter in self.randomword.lower():
-            if self.extendedalpha and (letter in self.extendedalpha):
-                letter = extendedalpha[letter]
-            self.theword.append(letter)
-        self.theword = ''.join(self.theword)
+        # self.mywords = createMyWords(self.wordlanguage, additionals='')
+        # self.randomword = random.choice(list(self.mywords))
 
+        # self.randomword = random.choice(list(self.mywords))
+        # for letter in self.randomword.lower():
+        #     if self.extendedalpha and (letter in self.extendedalpha):
+        #         letter = extendedalpha[letter]
+        #     self.theword.append(letter)
+        # self.theword = ''.join(self.theword)
+
+        # self.occurencelist = analyseWords(self.mywords, additionals='')
+        # self.placeholderword = list(self.placeholderchar*len(self.theword))
 
         print(self.randomword)
+        print(self.placeholderword)
+
 
 if __name__ == '__main__':
     m = HangmanApp().run()
