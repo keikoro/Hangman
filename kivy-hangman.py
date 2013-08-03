@@ -238,7 +238,12 @@ class GridUserInput(GridLayout):
         self.userinput.text = ''
 
         self.parent.parent.possibletries -= 1
-        thistext = "{} tries left".format(self.parent.parent.possibletries)
+
+        if self.parent.parent.possibletries == 1:
+            self.parent.parent.tryword = 'try'
+
+        thistext = "{} {} left".format(self.parent.parent.possibletries,
+            self.parent.parent.tryword)
 
         self.parent.drawblock.hangman.source = random.choice(self.parent.imageliste)
         self.parent.parent.triesleft.tries.text = thistext
@@ -316,6 +321,8 @@ class MainGrid(GridLayout):
         self.myword = ''
         self.placeholderchar = '_ '
         self.placeholdercharvoiced = 'blank'
+        self.tryword = 'tries'
+
         # extended alphabet chars (cannot be used in Python 2!)
         if sys.version_info[0] < 3:
             self.extendedalpha = ''
