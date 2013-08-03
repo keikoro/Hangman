@@ -1,13 +1,10 @@
 # Hangman
-### A Hangman game programmed in Python 3.
+### A Hangman game programmed in Python.
 
-My very first Python program as well as my first game. Developed during the summer of 2013 as part of the course work at/for [Spielend Programmieren](http://www.spielend-programmieren.at), written in Python 3 (tested on 3.3.2).
-
-In its current form, the game does not work with Python 2.<br>
-I am, however, planning to make it compatible with Python 2.6+.
+My very first Python program as well as my first game. Developed during the summer of 2013 as part of the course work at/for [Spielend Programmieren](http://www.spielend-programmieren.at). Originally written in Python 3, now also backward compatible with 2.6+. Tested on Python 3.3.2 and 2.7.
 
 __Notes:__<br>
-You need to have Python 3.x installed to run this game.<br>
+You need to have Python 2.6+ installed to run this game.<br>
 The game's objective is to guess a word, letter by letter.<br>
 11 incorrect guesses are possible, then hangman dies and the game is over.
 
@@ -17,5 +14,5 @@ __Parameters__ the game can be run with:
 <br>
 <br>
 
-__Status 13-07-25__<br>
-__WIP__ Currently working on making the game playable on different devices with [Kivy](http://kivy.org/).
+__WIP (13-07-25)__<br>
+Currently working on making the game playable on different devices with [Kivy](http://kivy.org/).
