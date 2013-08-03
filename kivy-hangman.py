@@ -344,7 +344,7 @@ class MainGrid(GridLayout):
 
 
         # title widget
-        self.title = Label(text='Blblbllablbl text here')
+        self.title = Label(text='Let\'s play Hangman!\nGuess the word:')
         self.add_widget(self.title)
 
         # # subtitle widget
