@@ -174,7 +174,7 @@ class GridHangmanRow(GridLayout):
         # self.img1 = 'logo-kivy.png'
         # self.img2 = 'green.png'
 
-        self.imageliste = ['logo-kivy.png', 'green.png']
+        self.imageliste = ['images/hangman-1-00.png', 'green.png']
 
         self.drawblock = GridHangman()
         self.add_widget(self.drawblock)
@@ -190,16 +190,11 @@ class GridHangman(GridLayout):
     def __init__(self, **kwargs):
         super(GridHangman, self).__init__(**kwargs)
         self.rows = 2
-        self.x = 2
+        self.row_force_default=True
+        self.row_default_height=180
 
-        # if self.x%2 == 0:
-        #     hangman_img = 'logo-kivy.png'
-        # else:
-        #     hangman_img = 'green.png'
-
-        self.imgsource = 'logo-kivy.png'
-
-        self.hangman = Image(source=self.imgsource)
+        self.imgsource = 'images/hangman-1-00.png'
+        self.hangman = Image(source=self.imgsource, size=(500,500))
         self.add_widget(self.hangman)
         self.hangman.bind(on_press=change_img)
 
@@ -219,6 +214,7 @@ class GridUserInput(GridLayout):
     def __init__(self, **kwargs):
         super(GridUserInput, self).__init__(**kwargs)
         self.rows = 2
+
         self.userinput = TextInput(text='', multiline=False)
         self.add_widget(self.userinput)
         # self.userinput.bind(on_text_validate=on_enter)
