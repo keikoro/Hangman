@@ -194,7 +194,7 @@ class GridHangman(GridLayout):
         self.row_force_default=True
         self.row_default_height=180
 
-        self.imgsource = 'images/hangman-1-00.png'
+        self.imgsource = 'images/hangman-1-11.png'
         self.hangman = Image(source=self.imgsource, size=(500,500))
         self.add_widget(self.hangman)
         self.hangman.bind(on_press=change_img)
