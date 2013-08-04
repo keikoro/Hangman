@@ -4,6 +4,7 @@
 
 from __future__ import print_function # for python2.x
 import random
+import glob
 import sys # module for parameters
 import kivy
 kivy.require('1.7.1') # replace with your current kivy version !
@@ -174,7 +175,7 @@ class GridHangmanRow(GridLayout):
         # self.img1 = 'logo-kivy.png'
         # self.img2 = 'green.png'
 
-        self.imageliste = ['images/hangman-1-00.png', 'green.png']
+        self.imageliste = glob.glob('images/*.png')
 
         self.drawblock = GridHangman()
         self.add_widget(self.drawblock)
