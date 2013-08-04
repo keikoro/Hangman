@@ -253,6 +253,7 @@ def createMyWords(language, validletters, additionals=''):
     finally:
         # mywords = ["unicorn"] # use only one word to try out things
         # mywords = ["Hülsenfrüchte"] # use only one word to try out things
+        mywords = ["Müßiggang"]
         return mywords
 
 def soundcheck(sound, voicesoftware):
