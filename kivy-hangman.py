@@ -162,7 +162,6 @@ class MiniGrid(GridLayout): # only needed as 'template' right now
         self.cols = 2
         self.buttoninfo = Button(text='Info', font_size=14)
         self.add_widget(self.buttoninfo)
-        #self.add_widget(Label(text='6. Zeile, 2. Spalte'))
         self.buttonexit = Button(text='Exit game', font_size=14)
         self.add_widget(self.buttonexit)
 
@@ -171,9 +170,6 @@ class GridHangmanRow(GridLayout):
     def __init__(self, **kwargs):
         super(GridHangmanRow, self).__init__(**kwargs)
         self.cols = 2
-
-        # self.img1 = 'logo-kivy.png'
-        # self.img2 = 'green.png'
 
         self.imageliste = glob.glob('images/*.png')
 
@@ -228,7 +224,6 @@ class GridUserInput(GridLayout):
     def okclick(self, value):
         print(self.currenttext)
 
-
         self.parent.parent.word_to_guess.text = ''.join(
             self.parent.parent.placeholderword)
         self.parent.drawblock.wrongletters.text += self.currenttext
@@ -247,7 +242,6 @@ class GridUserInput(GridLayout):
 
         # wrong letters
 
-
     def on_text(self, memaddress, content):
         print('The widget', content, 'have:', memaddress)
         self.currenttext = content
@@ -258,17 +252,10 @@ class GridTriesLeft(GridLayout):
         super(GridTriesLeft, self).__init__(**kwargs)
         self.cols = 2
 
-        # thistryno = 11
-        # thistext = "You have {} tries left.".format(thistryno)
-
         self.tries = Label(text="11 tries left")
-#        self.tries = Label(text="You have {} tries left.".format(self.parent.possibletries))
-
-
         self.add_widget(self.tries)
         self.emptylabel = Label(text="")
         self.add_widget(self.emptylabel)
-
 
 class GridInfoExit(GridLayout):
     """2nd level grid for row with Info button and Exit button."""
@@ -279,17 +266,9 @@ class GridInfoExit(GridLayout):
         self.add_widget(self.infobutton)
         self.infobutton.bind(on_press=self.callback)
 
-        # self.exitwidget = Widget(height=200, width=300)
-        # self.exitbutton = Button(text='New exit', font_size=14)
-        # self.exitwidget.add_widget(self.exitbutton)
-
-        # with self.exitwidget.canvas:
-        #     Color(0.5, 0.7, 0)
-
         self.exitbutton = Button(text='Exit game', font_size=14)
         self.add_widget(self.exitbutton)
         self.exitbutton.bind(on_release=self.debug)
-
 
         # self.infobutton.trigger_action(duration=1)
 
@@ -343,7 +322,6 @@ class MainGrid(GridLayout):
         self.add_widget(self.word_to_guess)
 
         # needs two cols
-        #
         self.hangmanrow = GridHangmanRow()
         self.add_widget(self.hangmanrow)
 
