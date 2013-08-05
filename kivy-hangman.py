@@ -312,13 +312,13 @@ class MainGrid(GridLayout):
         self.voice = False
         self.wordlanguage = 'en'
         self.cols = 1
-
         self.possibletries = 11     # 11 incorrect guesses allowed
         self.randomword = ''
         self.myword = ''
         self.placeholderchar = '_ '
         self.placeholdercharvoiced = 'blank'
         self.tryword = 'tries'
+        #self.theword = []
 
         # extended alphabet chars (cannot be used in Python 2!)
         if sys.version_info[0] < 3:
@@ -326,18 +326,9 @@ class MainGrid(GridLayout):
         else:
             self.extendedalpha = {"ä":"ae", "ö":"oe", "ü":"ue", "ß":"ss",
                 "é":"e", "è":"e"}
-        self.theword = []
 
         # start actual game
-        self.mywords = createMyWords(self.wordlanguage, additionals='')
-        self.randomword = random.choice(list(self.mywords))
-
-        self.randomword = random.choice(list(self.mywords))
-        for letter in self.randomword.lower():
-            if self.extendedalpha and (letter in self.extendedalpha):
-                letter = extendedalpha[letter]
-            self.theword.append(letter)
-        self.theword = ''.join(self.theword)
+        self.randomword, self.theword = self.pickAWord(self.wordlanguage, self.extendedalpha)
 
         self.occurencelist = analyseWords(self.mywords, additionals='')
         self.placeholderword = list(self.placeholderchar*len(self.theword))
@@ -377,8 +368,6 @@ class MainGrid(GridLayout):
         # open settings popup at beginning of game
         # with delay (otherwise the popup's not overlayed!)
         Clock.schedule_once(self.settings_popup, 1)
-
-
 
     def info_popup(self):
         btnclose = Button(text='Close this popup', size_hint_y=None, height='50sp')
@@ -449,8 +438,22 @@ class MainGrid(GridLayout):
         self.voice = False
         print("voice: ", self.voice)
 
+    def pickAWord(self, wordlanguage, additionals):
+        theword = []
+        self.mywords = createMyWords(wordlanguage, additionals='')
+        randomword = random.choice(list(self.mywords))
+        for letter in randomword.lower():
+            if self.extendedalpha and (letter in self.extendedalpha):
+                letter = self.extendedalpha[letter]
+            theword.append(letter)
+        theword = ''.join(theword)
+        return randomword, theword
+
     def close_popup(self, bla):
+        self.randomword, self.theword = self.pickAWord(self.wordlanguage, additionals='')
+        print("word language is: ", self.wordlanguage)
         self.popup.dismiss()
+
 
         # self.mywords = createMyWords(self.wordlanguage, additionals='')
         # self.randomword = random.choice(list(self.mywords))
@@ -465,7 +468,7 @@ class MainGrid(GridLayout):
         # self.occurencelist = analyseWords(self.mywords, additionals='')
         # self.placeholderword = list(self.placeholderchar*len(self.theword))
 
-        print(self.randomword)
+        print("this is the word: ", self.theword)
         print(self.placeholderword)
 
 
