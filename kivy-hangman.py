@@ -334,15 +334,9 @@ class MainGrid(GridLayout):
         self.placeholderword = list(self.placeholderchar*len(self.theword))
         self.placeholderword_str = ''.join(self.placeholderword)
 
-
         # title widget
         self.title = Label(text='Let\'s play Hangman!\nGuess the word:')
         self.add_widget(self.title)
-
-        # # subtitle widget
-        # self.subtitle = Label(text='Some more [ref=text]info[/ref] on the game...', markup=True)
-        # self.subtitle.bind(on_ref_press=print_it)
-        # self.add_widget(self.subtitle)
 
         # the word to be guessed
         self.word_to_guess = Label(text="{}".format(self.placeholderword_str))
@@ -352,10 +346,6 @@ class MainGrid(GridLayout):
         #
         self.hangmanrow = GridHangmanRow()
         self.add_widget(self.hangmanrow)
-
-        # # needs 2 cols
-        # self.languagerow = GridLangRow()
-        # self.add_widget(self.languagerow)
 
         # needs 2 cols
         self.triesleft = GridTriesLeft()
@@ -453,21 +443,6 @@ class MainGrid(GridLayout):
         self.randomword, self.theword = self.pickAWord(self.wordlanguage, additionals='')
         print("word language is: ", self.wordlanguage)
         self.popup.dismiss()
-
-
-        # self.mywords = createMyWords(self.wordlanguage, additionals='')
-        # self.randomword = random.choice(list(self.mywords))
-
-        # self.randomword = random.choice(list(self.mywords))
-        # for letter in self.randomword.lower():
-        #     if self.extendedalpha and (letter in self.extendedalpha):
-        #         letter = extendedalpha[letter]
-        #     self.theword.append(letter)
-        # self.theword = ''.join(self.theword)
-
-        # self.occurencelist = analyseWords(self.mywords, additionals='')
-        # self.placeholderword = list(self.placeholderchar*len(self.theword))
-
         print("this is the word: ", self.theword)
         print(self.placeholderword)
 
