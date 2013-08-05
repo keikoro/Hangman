@@ -221,29 +221,43 @@ class GridUserInput(GridLayout):
         self.add_widget(self.okbutton)
         self.okbutton.bind(on_press=self.okclick)
 
+
+
+
+
+
+
     def okclick(self, value):
-        print(self.currenttext)
+        """Start actual program when user starts guessing letters."""
 
-        self.parent.parent.word_to_guess.text = ''.join(
-            self.parent.parent.placeholderword)
-        self.parent.drawblock.wrongletters.text += self.currenttext
-        self.userinput.text = ''
+        if self.currenttext.isalpha():
+            print(self.currenttext) # prints out current value of input field
 
-        self.parent.parent.possibletries -= 1
+            self.parent.parent.word_to_guess.text = ''.join(
+                self.parent.parent.placeholderword)
+            self.parent.drawblock.wrongletters.text += self.currenttext
+            self.userinput.text = ''
 
-        if self.parent.parent.possibletries == 1:
-            self.parent.parent.tryword = 'try'
+            self.parent.parent.possibletries -= 1
 
-        thistext = "{} {} left".format(self.parent.parent.possibletries,
-            self.parent.parent.tryword)
+            if self.parent.parent.possibletries == 1:
+                self.parent.parent.tryword = 'try'
 
-        self.parent.drawblock.hangman.source = random.choice(self.parent.imageliste)
-        self.parent.parent.triesleft.tries.text = thistext
+            if self.parent.parent.possibletries > 0:
+                thistext = "{} {} left".format(
+                    self.parent.parent.possibletries,
+                self.parent.parent.tryword)
+            else:
+                thistext = "Game over. :( "
+
+            self.parent.drawblock.hangman.source = self.parent.imageliste[
+                self.parent.parent.possibletries]
+            self.parent.parent.triesleft.tries.text = thistext
 
         # wrong letters
 
     def on_text(self, memaddress, content):
-        print('The widget', content, 'have:', memaddress)
+        print(content) # prints out current value of input field
         self.currenttext = content
 
 class GridTriesLeft(GridLayout):
@@ -307,7 +321,8 @@ class MainGrid(GridLayout):
                 "é":"e", "è":"e"}
 
         # start actual game
-        self.randomword, self.theword = self.pickAWord(self.wordlanguage, self.extendedalpha)
+        self.randomword, self.theword = self.pickAWord(
+            self.wordlanguage, self.extendedalpha)
 
         self.occurencelist = analyseWords(self.mywords, additionals='')
         self.placeholderword = list(self.placeholderchar*len(self.theword))
@@ -338,7 +353,8 @@ class MainGrid(GridLayout):
         Clock.schedule_once(self.settings_popup, 1)
 
     def info_popup(self):
-        btnclose = Button(text='Close this popup', size_hint_y=None, height='50sp')
+        btnclose = Button(text='Close this popup', size_hint_y=None,
+            height='50sp')
         content = BoxLayout(orientation='vertical')
         content.add_widget(Label(text='This is the info text'))
         content.add_widget(btnclose)
@@ -418,7 +434,8 @@ class MainGrid(GridLayout):
         return randomword, theword
 
     def close_popup(self, bla):
-        self.randomword, self.theword = self.pickAWord(self.wordlanguage, additionals='')
+        self.randomword, self.theword = self.pickAWord(self.wordlanguage,
+            additionals='')
         print("word language is: ", self.wordlanguage)
         self.popup.dismiss()
         print("this is the word: ", self.theword)
