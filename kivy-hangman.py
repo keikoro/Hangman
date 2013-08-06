@@ -230,32 +230,45 @@ class GridUserInput(GridLayout):
     def okclick(self, value):
         """Start actual program when user starts guessing letters."""
 
-        if self.currenttext.isalpha():
-            print(self.currenttext) # prints out current value of input field
+    # main loop
+        if self.parent.parent.possibletries > 0:
 
-            self.parent.parent.word_to_guess.text = ''.join(
-                self.parent.parent.placeholderword)
-            self.parent.drawblock.wrongletters.text += self.currenttext
-            self.userinput.text = ''
+            if self.currenttext.isalpha():
 
-            self.parent.parent.possibletries -= 1
+                # TODO lower picked letter
 
-            if self.parent.parent.possibletries == 1:
-                self.parent.parent.tryword = 'try'
+                if len(self.currenttext) > 0:
+                        self.currenttext = self.currenttext[0]
 
-            if self.parent.parent.possibletries > 0:
-                thistext = "{} {} left".format(
-                    self.parent.parent.possibletries,
-                self.parent.parent.tryword)
-            else:
-                thistext = "Game over. :( "
+                print(self.currenttext) # prints out current value of input field
 
-            self.parent.drawblock.hangman.source = self.parent.imageliste[
-                self.parent.parent.possibletries]
-            self.parent.parent.triesleft.tries.text = thistext
+                if self.currenttext in self.parent.parent.incorrectguesses:    # letter was already guessed
+                    self.parent.parent.triesleft.emptylabel.text = "bla"
+
+                    print("You already guessed the letter '{}'!".format(self.currenttext.upper()))
+
+                self.parent.parent.word_to_guess.text = ''.join(
+                    self.parent.parent.placeholderword)
+                self.parent.drawblock.wrongletters.text += self.currenttext
+                self.userinput.text = ''
+
+                self.parent.parent.possibletries -= 1
+
+                if self.parent.parent.possibletries == 1:
+                    self.parent.parent.tryword = 'try'
+
+                if self.parent.parent.possibletries > 0:
+                    thistext = "{} {} left".format(
+                        self.parent.parent.possibletries,
+                    self.parent.parent.tryword)
+                else:
+                    thistext = "Game over. :( "
+
+                self.parent.drawblock.hangman.source = self.parent.imageliste[
+                    self.parent.parent.possibletries]
+                self.parent.parent.triesleft.tries.text = thistext
 
         # wrong letters
-
 
 
 
@@ -316,6 +329,9 @@ class MainGrid(GridLayout):
         self.placeholderchar = '_ '
         self.placeholdercharvoiced = 'blank'
         self.tryword = 'tries'
+        self.incorrectguesses = ''   # string for incorrectly guessed letters
+        self.correctguesses = ''
+
         #self.theword = []
 
         # extended alphabet chars (cannot be used in Python 2!)
