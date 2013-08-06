@@ -256,6 +256,11 @@ class GridUserInput(GridLayout):
 
         # wrong letters
 
+
+
+
+
+
     def on_text(self, memaddress, content):
         print(content) # prints out current value of input field
         self.currenttext = content
@@ -436,8 +441,14 @@ class MainGrid(GridLayout):
     def close_popup(self, bla):
         self.randomword, self.theword = self.pickAWord(self.wordlanguage,
             additionals='')
-        print("word language is: ", self.wordlanguage)
+        self.placeholderword = list(self.placeholderchar*len(self.theword))
+        self.placeholderword_str = ''.join(self.placeholderword)
+
+        self.word_to_guess.text = self.placeholderword_str
+
         self.popup.dismiss()
+
+        print("word language is: ", self.wordlanguage)
         print("this is the word: ", self.theword)
         print(self.placeholderword)
 
