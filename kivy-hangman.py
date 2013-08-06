@@ -233,24 +233,36 @@ class GridUserInput(GridLayout):
     # main loop
         if self.parent.parent.possibletries > 0:
 
-            if self.currenttext.isalpha():
+            if self.pickedletter.isalpha():
 
                 # TODO lower picked letter
 
-                if len(self.currenttext) > 0:
-                        self.currenttext = self.currenttext[0]
+                if len(self.pickedletter) > 0:
+                        self.pickedletter = self.pickedletter[0]
 
-                print(self.currenttext) # prints out current value of input field
+                print(self.pickedletter) # prints out current value of input field
 
-                if self.currenttext in self.parent.parent.incorrectguesses:    # letter was already guessed
+                if self.pickedletter in self.parent.parent.incorrectguesses:    # letter was already guessed
                     self.parent.parent.triesleft.emptylabel.text = "bla"
 
-                    print("You already guessed the letter '{}'!".format(self.currenttext.upper()))
+                    print("You already guessed the letter '{}'!".format(self.pickedletter.upper()))
 
                 self.parent.parent.word_to_guess.text = ''.join(
                     self.parent.parent.placeholderword)
-                self.parent.drawblock.wrongletters.text += self.currenttext
+                self.parent.drawblock.wrongletters.text += self.pickedletter
                 self.userinput.text = ''
+
+                if self.pickedletter in self.parent.parent.theword.lower():
+                    print("letter exists!")
+                    letterposition = 0
+                    for letterexists in self.parent.parent.theword.lower():
+                        if letterexists == self.pickedletter:
+                            self.parent.parent.placeholderword[letterposition] = (
+                                self.parent.parent.theword.upper()[letterposition])
+                        letterposition += 1
+                    self.parent.parent.correctguesses += self.pickedletter
+                    print(self.parent.parent.correctguesses)
+
 
                 self.parent.parent.possibletries -= 1
 
@@ -276,7 +288,7 @@ class GridUserInput(GridLayout):
 
     def on_text(self, memaddress, content):
         print(content) # prints out current value of input field
-        self.currenttext = content
+        self.pickedletter = content
 
 class GridTriesLeft(GridLayout):
     """Shows how many tries are left."""
