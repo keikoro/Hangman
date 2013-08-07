@@ -179,9 +179,6 @@ class GridHangmanRow(GridLayout):
         self.guessblock = GridUserInput()
         self.add_widget(self.guessblock)
 
-        # self.wrongletterswidget = GridUserInput()
-        # self.add_widget(self.wrongletterswidget)
-
 class GridHangman(GridLayout):
     """3rd level grid for Hangman graphic."""
     def __init__(self, **kwargs):
