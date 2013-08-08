@@ -21,9 +21,6 @@ parameters:
 -en|de ... play the game with English/German words
 """
 
-# TODO fix ß -> SS issue
-# "Sorry, but 'SS' isn't a valid guess! Try again."
-
 from __future__ import print_function # for python2.x
 import random # module for randomisation
 import subprocess # enable command line functions
@@ -304,10 +301,11 @@ def playGame(sound, wordlanguage):
     # extended alphabet chars (cannot be used in Python 2!)
     if sys.version_info[0] < 3:
         extendedalpha = ''
+        extendedalphaspecial = ''
     else:
         extendedalpha = {"ä":"ae", "ö":"oe", "ü":"ue", "ß":"ss", "é":"e",
             "è":"e"}
-    # TODO make separate list for characters that musn't be uppered
+        extendedalphaspecial = {"ß"}    # don't change case for these!
     theword = []
 
     voicesoftware = checkOS()
@@ -369,9 +367,7 @@ def playGame(sound, wordlanguage):
             continue
 
         if len(pickedletter) > 0:
-            # TODO several letters -> guess whole word
-            # only for words that are as long as the word to be guessed
-            # fullmatch(pickedletter, theword)
+            # match full word if word length matches
             if len(pickedletter) == len(theword):
                 fullguesses -= 1
                 if fullguesses == 1:
@@ -410,10 +406,16 @@ def playGame(sound, wordlanguage):
                 software=voicesoftware, voice=sound)
             continue
         if extendedalpha and (pickedletter in extendedalpha):
-            output("Sorry, but '{}' isn't a valid guess! Try again."
-                .format(pickedletter.upper()), blankchar=placeholderchar,
-                blankcharvoiced=placeholdercharvoiced,
-                software=voicesoftware, voice=sound)
+            if pickedletter not in extendedalphaspecial:
+                output("Sorry, but '{}' isn't a valid guess! Try again."
+                    .format(pickedletter.upper()), blankchar=placeholderchar,
+                    blankcharvoiced=placeholdercharvoiced,
+                    software=voicesoftware, voice=sound)
+            else:
+                output("Sorry, but '{}' isn't a valid guess! Try again."
+                    .format(pickedletter), blankchar=placeholderchar,
+                    blankcharvoiced=placeholdercharvoiced,
+                    software=voicesoftware, voice=sound)
             continue
         if not pickedletter.isalpha():  # disallow digits, special chars
             output("Sorry, but you didn't type a letter! Try again."
@@ -506,7 +508,7 @@ def playGame(sound, wordlanguage):
                         outputtext=False)
                 except:
                     print(t2s_errormsg)
-        if possibletries > 0:
+        if possibletries > 0 and placeholderword != list(placeholderchar*len(theword)):
             output("The word is: ", ending='', blankchar=placeholderchar,
                 blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
