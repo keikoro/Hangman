@@ -287,9 +287,6 @@ def soundcheck(sound, voicesoftware):
         print("Soundcheck completed, you're ready to play.")
         return sound
 
-# def fullmatch(pickedword, guessword):
-#     print("fullmatch working")
-
 def playGame(sound, wordlanguage):
     """The actual Hangman game."""
 
@@ -302,12 +299,14 @@ def playGame(sound, wordlanguage):
     placeholderchar = '-'
     placeholdercharvoiced = 'blank'
     fullguesses = 3
+    pickedword = False
     alphabet = "abcdefghijklmnopqrstuvwxyz"     # standard alphabet
     # extended alphabet chars (cannot be used in Python 2!)
     if sys.version_info[0] < 3:
         extendedalpha = ''
     else:
-        extendedalpha = {"ä":"ae", "ö":"oe", "ü":"ue", "ß":"ss", "é":"e", "è":"e"}
+        extendedalpha = {"ä":"ae", "ö":"oe", "ü":"ue", "ß":"ss", "é":"e",
+            "è":"e"}
     # TODO make separate list for characters that musn't be uppered
     theword = []
 
@@ -363,7 +362,8 @@ def playGame(sound, wordlanguage):
                 if char not in "'[]":
                     occurencestringpretty += char
             output("Clever you! The most common letters are: {}"
-                .format(occurencestringpretty.upper()), blankchar=placeholderchar,
+                .format(occurencestringpretty.upper()),
+                blankchar=placeholderchar,
                 blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
             continue
@@ -376,24 +376,29 @@ def playGame(sound, wordlanguage):
                 fullguesses -= 1
                 if fullguesses == 1:
                     timesword = 'time'
-                if fullguesses > 0:
+                if fullguesses >= 0:
                     if pickedletter == theword.lower():
                         placeholderword = theword.lower()
                         output("Your guess was spot on!",
                             blankchar=placeholderchar,
                             blankcharvoiced=placeholdercharvoiced,
                             software=voicesoftware, voice=sound)
+                        pickedword = True
                     else:
-                        output("Sorry, your guess was wrong. You may guess the "
-                            "full word {} more {}."
-                            .format(fullguesses, timesword),
-                            blankchar=placeholderchar,
-                            blankcharvoiced=placeholdercharvoiced,
-                            software=voicesoftware, voice=sound)
+                        if fullguesses > 0:
+                            output("Sorry, your guess was wrong. "
+                                "You may guess the full word {} more {}."
+                                .format(fullguesses, timesword),
+                                blankchar=placeholderchar,
+                                blankcharvoiced=placeholdercharvoiced,
+                                software=voicesoftware, voice=sound)
+                        else:
+                            output("\nGame over. :( ",
+                                blankchar=placeholderchar,
+                                blankcharvoiced=placeholdercharvoiced,
+                                software=voicesoftware, voice=sound)
+                            break
                 else:
-                    output("\nGame over. :( ", blankchar=placeholderchar,
-                        blankcharvoiced=placeholdercharvoiced,
-                        software=voicesoftware, voice=sound)
                     break
             else:
                 pickedletter = pickedletter[0]
@@ -429,7 +434,7 @@ def playGame(sound, wordlanguage):
             continue
 
         # correct guess
-        if pickedletter in theword.lower():
+        if pickedletter in theword.lower() and pickedword is not True:
             letterposition = 0
             for letterexists in theword.lower():
                 if letterexists == pickedletter:
@@ -498,7 +503,7 @@ def playGame(sound, wordlanguage):
                         outputtext=False)
                 except:
                     print(t2s_errormsg)
-        else:
+        if possibletries > 0:
             output("The word is: ", ending='', blankchar=placeholderchar,
                 blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
