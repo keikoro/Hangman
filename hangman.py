@@ -379,10 +379,11 @@ def playGame(sound, wordlanguage):
                 if fullguesses >= 0:
                     if pickedletter == theword.lower():
                         placeholderword = theword.lower()
-                        output("Your guess was spot on!",
+                        output("\nYour guess was spot on!",
                             blankchar=placeholderchar,
                             blankcharvoiced=placeholdercharvoiced,
-                            software=voicesoftware, voice=sound)
+                            software=voicesoftware, voice=sound,
+                            ending='')
                         pickedword = True
                     else:
                         if fullguesses > 0:
@@ -486,7 +487,9 @@ def playGame(sound, wordlanguage):
         if pickedletter in occurencelist:
             occurencelist.remove(pickedletter)
         if not placeholderchar in placeholderword:
-            output("We have a winner! Thanks for playing. :)",
+            # if pickedword is not True:
+            #     output("\n")
+            output("\nWe have a winner! Thanks for playing. :)",
                 blankchar=placeholderchar,
                 blankcharvoiced=placeholdercharvoiced,
                 software=voicesoftware, voice=sound)
