@@ -197,7 +197,7 @@ def analyseWords(mywords, additionals=''):
 
 def showHint(occurencelist):
     """Returns the first element of occurencelist as string."""
-    return str(occurencelist[0])
+    return str(occurencelist[0].upper())
 
 def checkOS():
     """Determine OS and choose corresponding text-to-speech software."""
@@ -251,9 +251,10 @@ def createMyWords(language, validletters, additionals=''):
                 "Fehlbesetzung", "Regisseurin", "Zuckerwatte", "pieksen",
                 "Nebelmaschine", "Lampenschirm", "Redewendung"}
     finally:
+        # TODO (at the end) remove test words
         # mywords = ["unicorn"] # use only one word to try out things
         # mywords = ["Hülsenfrüchte"] # use only one word to try out things
-        mywords = ["Müßiggang"]
+        # mywords = ["Müßiggang"]
         return mywords
 
 def soundcheck(sound, voicesoftware):
@@ -285,6 +286,9 @@ def soundcheck(sound, voicesoftware):
     finally:
         print("Soundcheck completed, you're ready to play.")
         return sound
+
+# def fullmatch(pickedword, guessword):
+#     print("fullmatch working")
 
 def playGame(sound, wordlanguage):
     """The actual Hangman game."""
@@ -365,31 +369,33 @@ def playGame(sound, wordlanguage):
             continue
 
         if len(pickedletter) > 0:
-            # # TODO several letters -> guess whole word
-            # if len(pickedletter) == len(theword):
-            #     fullguesses -= 1
-            #     if fullguesses == 1:
-            #         timesword = 'time'
-            #     if fullguesses > 0:
-            #         if pickedletter == theword.lower():
-            #             placeholderword = theword.lower()
-            #             output("Your guess was spot on!",
-            #                 blankchar=placeholderchar,
-            #                 blankcharvoiced=placeholdercharvoiced,
-            #                 software=voicesoftware, voice=sound)
-            #         else:
-            #             output("Sorry, your guess was wrong. You may guess the "
-            #                 "full word {} more {}."
-            #                 .format(fullguesses, timesword),
-            #                 blankchar=placeholderchar,
-            #                 blankcharvoiced=placeholdercharvoiced,
-            #                 software=voicesoftware, voice=sound)
-            #     else:
-            #         output("\nGame over. :( ", blankchar=placeholderchar,
-            #             blankcharvoiced=placeholdercharvoiced,
-            #             software=voicesoftware, voice=sound)
-            #         break
-            # else:
+            # TODO several letters -> guess whole word
+            # only for words that are as long as the word to be guessed
+            # fullmatch(pickedletter, theword)
+            if len(pickedletter) == len(theword):
+                fullguesses -= 1
+                if fullguesses == 1:
+                    timesword = 'time'
+                if fullguesses > 0:
+                    if pickedletter == theword.lower():
+                        placeholderword = theword.lower()
+                        output("Your guess was spot on!",
+                            blankchar=placeholderchar,
+                            blankcharvoiced=placeholdercharvoiced,
+                            software=voicesoftware, voice=sound)
+                    else:
+                        output("Sorry, your guess was wrong. You may guess the "
+                            "full word {} more {}."
+                            .format(fullguesses, timesword),
+                            blankchar=placeholderchar,
+                            blankcharvoiced=placeholdercharvoiced,
+                            software=voicesoftware, voice=sound)
+                else:
+                    output("\nGame over. :( ", blankchar=placeholderchar,
+                        blankcharvoiced=placeholdercharvoiced,
+                        software=voicesoftware, voice=sound)
+                    break
+            else:
                 pickedletter = pickedletter[0]
         if pickedletter == '?':
             output("You could try guessing the letter '{}'."
