@@ -293,7 +293,7 @@ def playGame(sound, wordlanguage):
     correctguesses = ''
     tryword = 'tries'
     timesword = 'times'
-    placeholderchar = '-'
+    placeholderchar = '-'   # must be a single character
     placeholdercharvoiced = 'blank'
     fullguesses = 3
     pickedword = False
@@ -305,7 +305,8 @@ def playGame(sound, wordlanguage):
     else:
         extendedalpha = {"ä":"ae", "ö":"oe", "ü":"ue", "ß":"ss", "é":"e",
             "è":"e"}
-        extendedalphaspecial = {"ß"}    # don't change case for these!
+        # elements of extendedalpha whose case mustn't be changed
+        extendedalphaspecial = {"ß"}
     theword = []
 
     voicesoftware = checkOS()
