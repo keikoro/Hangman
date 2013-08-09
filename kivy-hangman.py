@@ -25,11 +25,7 @@ from kivy.clock import Clock
 
 # only in version 1.8.0
 # from kivy.uix.behaviors import ButtonBehavior
-
-# only in version 1.8.0
 # from kivy.uix.behaviors import *
-
-# only in version 1.8.0
 # class ImageButton(ButtonBehavior, Image):
 #     pass
 
