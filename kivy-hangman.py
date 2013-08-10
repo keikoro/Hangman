@@ -111,8 +111,6 @@ def createMyWords(language, validletters='abcdefghijklmnopqrstuvwxyz',
                 "Fehlbesetzung", "Regisseurin", "Zuckerwatte", "pieksen",
                 "Nebelmaschine", "Lampenschirm", "Redewendung"}
     finally:
-        # mywords = ["unicorn"] # use only one word to try out things
-        # mywords = ["Hülsenfrüchte"] # use only one word to try out things
         return mywords
 
 
