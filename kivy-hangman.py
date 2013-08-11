@@ -335,8 +335,6 @@ class MainGrid(GridLayout):
         self.incorrectguesses = ''   # string for incorrectly guessed letters
         self.correctguesses = ''
 
-        #self.theword = []
-
         # extended alphabet chars (cannot be used in Python 2!)
         if sys.version_info[0] < 3:
             self.extendedalpha = ''
@@ -372,10 +370,8 @@ class MainGrid(GridLayout):
         self.exitrow = GridInfoExit()
         self.add_widget(self.exitrow)
 
-        # open settings popup at beginning of game
-        # with delay (otherwise the popup's not overlayed!)
-        # Clock.schedule_once(self.settings_popup, 1)
-
+        # just checking for correct output
+        # TODO remove at end
         print("The word to guess is: ", self.theword)
 
     def settings_popup(self):
@@ -394,6 +390,7 @@ class MainGrid(GridLayout):
 
         content = BoxLayout(orientation='vertical')
         # content = GridLayout(cols=2)
+        # TODO turn this into a two-column layout
 
         content.add_widget(description)
         content.add_widget(voiceon)
