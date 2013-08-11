@@ -297,19 +297,19 @@ class GridInfoExit(GridLayout):
     def __init__(self, **kwargs):
         super(GridInfoExit, self).__init__(**kwargs)
         self.cols = 2
-        self.infobutton = Button(text='Info', font_size=14)
-        self.add_widget(self.infobutton)
-        self.infobutton.bind(on_press=self.callback)
+        self.settingsbutton = Button(text='Settings', font_size=14)
+        self.add_widget(self.settingsbutton)
+        self.settingsbutton.bind(on_press=self.callback)
 
         self.exitbutton = Button(text='Exit game', font_size=14)
         self.add_widget(self.exitbutton)
         self.exitbutton.bind(on_release=self.debug)
 
-        # self.infobutton.trigger_action(duration=1)
+        # self.settingsbutton.trigger_action(duration=1)
 
     def callback(self, value):
         print("this is the info button")
-        self.parent.info_popup()
+        self.parent.settings_popup()
         #print(self.userinput.text)
 
     def debug(self, value):
@@ -374,26 +374,26 @@ class MainGrid(GridLayout):
 
         # open settings popup at beginning of game
         # with delay (otherwise the popup's not overlayed!)
-        Clock.schedule_once(self.settings_popup, 1)
+        # Clock.schedule_once(self.settings_popup, 1)
 
-    def info_popup(self):
-        btnclose = Button(text='Close this popup', size_hint_y=None,
-            height='50sp')
-        content = BoxLayout(orientation='vertical')
-        content.add_widget(Label(text='This is the info text'))
-        content.add_widget(btnclose)
-        popup = Popup(content=content, title='This is the popup\'s title',
-                      size_hint=(None, None), size=('300dp', '300dp'))
-        btnclose.bind(on_release=popup.dismiss)
-        button = Button(text='Open popup', size_hint=(None, None),
-                        size=('150sp', '70dp'),
-                        on_release=popup.open)
-        popup.open()
-        col = AnchorLayout()
-        col.add_widget(button)
-        return col
+        print("The word to guess is: ", self.theword)
 
-    def settings_popup(self, bla):
+    def settings_popup(self):
+        # btnclose = Button(text='Close this popup', size_hint_y=None,
+        #     height='50sp')
+        # content = BoxLayout(orientation='vertical')
+        # content.add_widget(Label(text='This is the info text'))
+        # content.add_widget(btnclose)
+        # popup = Popup(content=content, title='This is the popup\'s title',
+        #               size_hint=(None, None), size=('300dp', '300dp'))
+        # btnclose.bind(on_release=popup.dismiss)
+        # button = Button(text='Open popup', size_hint=(None, None),
+        #                 size=('150sp', '70dp'),
+        #                 on_release=popup.open)
+        # popup.open()
+        # col = AnchorLayout()
+        # col.add_widget(button)
+        # return col
         description = Label(text='Here you can change the settings\n'
             'of the game', height='100sp')
         voiceon = ToggleButton(group="voice", state="down",
@@ -429,6 +429,43 @@ class MainGrid(GridLayout):
         self.popup.open()
         col = AnchorLayout()
         return col
+
+    # def settings_popup(self, bla):
+    #     description = Label(text='Here you can change the settings\n'
+    #         'of the game', height='100sp')
+    #     voiceon = ToggleButton(group="voice", state="down",
+    #         text='text-to-speech', size_hint_y=None, height='50sp')
+    #     voiceoff = ToggleButton(group="voice", text='text-only',
+    #         size_hint_y=None, height='50sp')
+    #     lang_en = ToggleButton(group="language", state="down",
+    #         text='English words', size_hint_y=None, height='50sp')
+    #     lang_de = ToggleButton(group="language", text='German words',
+    #         size_hint_y=None, height='50sp')
+    #     closebutton = Button(text='Apply settings',
+    #         size_hint_y=None, height='50sp')
+
+    #     content = BoxLayout(orientation='vertical')
+    #     # content = GridLayout(cols=2)
+
+    #     content.add_widget(description)
+    #     content.add_widget(voiceon)
+    #     content.add_widget(voiceoff)
+    #     content.add_widget(lang_en)
+    #     content.add_widget(lang_de)
+    #     content.add_widget(closebutton)
+
+    #     self.popup = Popup(content=content, title='Hangman settings',
+    #                   size_hint=(None, None), size=('300dp', '400dp'))
+
+    #     closebutton.bind(on_release=self.close_popup)
+    #     voiceon.bind(on_release=self.turn_voice_on)
+    #     voiceoff.bind(on_release=self.turn_voice_off)
+    #     lang_en.bind(on_release=self.pick_lang_en)
+    #     lang_de.bind(on_release=self.pick_lang_de)
+
+    #     self.popup.open()
+    #     col = AnchorLayout()
+    #     return col
 
     def pick_lang_en(self, bla):
         self.wordlanguage = 'en'
