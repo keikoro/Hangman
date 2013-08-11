@@ -430,43 +430,6 @@ class MainGrid(GridLayout):
         col = AnchorLayout()
         return col
 
-    # def settings_popup(self, bla):
-    #     description = Label(text='Here you can change the settings\n'
-    #         'of the game', height='100sp')
-    #     voiceon = ToggleButton(group="voice", state="down",
-    #         text='text-to-speech', size_hint_y=None, height='50sp')
-    #     voiceoff = ToggleButton(group="voice", text='text-only',
-    #         size_hint_y=None, height='50sp')
-    #     lang_en = ToggleButton(group="language", state="down",
-    #         text='English words', size_hint_y=None, height='50sp')
-    #     lang_de = ToggleButton(group="language", text='German words',
-    #         size_hint_y=None, height='50sp')
-    #     closebutton = Button(text='Apply settings',
-    #         size_hint_y=None, height='50sp')
-
-    #     content = BoxLayout(orientation='vertical')
-    #     # content = GridLayout(cols=2)
-
-    #     content.add_widget(description)
-    #     content.add_widget(voiceon)
-    #     content.add_widget(voiceoff)
-    #     content.add_widget(lang_en)
-    #     content.add_widget(lang_de)
-    #     content.add_widget(closebutton)
-
-    #     self.popup = Popup(content=content, title='Hangman settings',
-    #                   size_hint=(None, None), size=('300dp', '400dp'))
-
-    #     closebutton.bind(on_release=self.close_popup)
-    #     voiceon.bind(on_release=self.turn_voice_on)
-    #     voiceoff.bind(on_release=self.turn_voice_off)
-    #     lang_en.bind(on_release=self.pick_lang_en)
-    #     lang_de.bind(on_release=self.pick_lang_de)
-
-    #     self.popup.open()
-    #     col = AnchorLayout()
-    #     return col
-
     def pick_lang_en(self, bla):
         self.wordlanguage = 'en'
         print("language: ", self.wordlanguage)
