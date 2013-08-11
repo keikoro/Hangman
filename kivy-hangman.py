@@ -379,21 +379,6 @@ class MainGrid(GridLayout):
         print("The word to guess is: ", self.theword)
 
     def settings_popup(self):
-        # btnclose = Button(text='Close this popup', size_hint_y=None,
-        #     height='50sp')
-        # content = BoxLayout(orientation='vertical')
-        # content.add_widget(Label(text='This is the info text'))
-        # content.add_widget(btnclose)
-        # popup = Popup(content=content, title='This is the popup\'s title',
-        #               size_hint=(None, None), size=('300dp', '300dp'))
-        # btnclose.bind(on_release=popup.dismiss)
-        # button = Button(text='Open popup', size_hint=(None, None),
-        #                 size=('150sp', '70dp'),
-        #                 on_release=popup.open)
-        # popup.open()
-        # col = AnchorLayout()
-        # col.add_widget(button)
-        # return col
         description = Label(text='Here you can change the settings\n'
             'of the game', height='100sp')
         voiceon = ToggleButton(group="voice", state="down",
