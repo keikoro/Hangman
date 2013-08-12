@@ -186,9 +186,6 @@ class GridHangman(GridLayout):
         self.add_widget(self.hangman)
         self.hangman.bind(on_press=change_img)
 
-        #self.x += 1
-        # buttons.bind(on_press = self.t1.insert_text(str(item)))
-
         self.wrongletters = Label(text='')
         self.add_widget(self.wrongletters)
 
