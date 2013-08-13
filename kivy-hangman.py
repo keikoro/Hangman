@@ -209,12 +209,6 @@ class GridUserInput(GridLayout):
         self.add_widget(self.okbutton)
         self.okbutton.bind(on_press=self.okclick)
 
-
-
-
-
-
-
     def okclick(self, value):
         """Start actual program when user starts guessing letters."""
 
@@ -230,15 +224,19 @@ class GridUserInput(GridLayout):
 
                 print(self.pickedletter) # prints out current value of input field
 
-                if self.pickedletter in self.parent.parent.incorrectguesses:    # letter was already guessed
+                # letter was already guessed
+                if self.pickedletter in self.parent.parent.incorrectguesses:
                     self.parent.parent.triesleft.emptylabel.text = "bla"
 
-                    print("You already guessed the letter '{}'!".format(self.pickedletter.upper()))
+                    print("You already guessed the "
+                        "letter '{}'!".format(self.pickedletter.upper()))
 
                 self.parent.parent.word_to_guess.text = ''.join(
                     self.parent.parent.placeholderword)
                 self.parent.drawblock.wrongletters.text += self.pickedletter
                 self.userinput.text = ''
+
+                print(self.parent.parent.theword.lower())
 
                 if self.pickedletter in self.parent.parent.theword.lower():
                     print("letter exists!")
@@ -250,6 +248,9 @@ class GridUserInput(GridLayout):
                         letterposition += 1
                     self.parent.parent.correctguesses += self.pickedletter
                     print(self.parent.parent.correctguesses)
+                else:
+                    print(self.pickedletter, " is wrong")
+                    self.parent.parent.incorrectguesses.append(self.pickedletter)
 
 
                 self.parent.parent.possibletries -= 1
