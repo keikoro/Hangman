@@ -29,7 +29,6 @@ from kivy.clock import Clock
 # class ImageButton(ButtonBehavior, Image):
 #     pass
 
-
 def callback_pos(instance, value):
     """Give back the value of a certain position."""
     print('The widget', instance, 'moved to', value)
@@ -222,6 +221,7 @@ class GridUserInput(GridLayout):
                 if len(self.pickedletter) > 0:
                         self.pickedletter = self.pickedletter[0]
 
+                # this print works
                 print(self.pickedletter) # prints out current value of input field
 
                 # letter was already guessed
@@ -239,6 +239,7 @@ class GridUserInput(GridLayout):
                 print(self.parent.parent.theword.lower())
 
                 if self.pickedletter in self.parent.parent.theword.lower():
+                    # this doesn't work! always prints when it shouldn't always!
                     print("letter exists!")
                     letterposition = 0
                     for letterexists in self.parent.parent.theword.lower():
@@ -270,9 +271,6 @@ class GridUserInput(GridLayout):
                 self.parent.parent.triesleft.tries.text = thistext
 
         # wrong letters
-
-
-
 
 
     def on_text(self, memaddress, content):
