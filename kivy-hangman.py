@@ -222,7 +222,7 @@ class GridUserInput(GridLayout):
                         self.pickedletter = self.pickedletter[0]
 
                 # this print works
-                print(self.pickedletter) # prints out current value of input field
+                print("this is the picked letter: ", self.pickedletter) # prints out current value of input field
 
                 # letter was already guessed
                 if self.pickedletter in self.parent.parent.incorrectguesses:
@@ -238,7 +238,7 @@ class GridUserInput(GridLayout):
 
                 print(self.parent.parent.theword.lower())
 
-                if self.pickedletter in self.parent.parent.theword.lower():
+                if self.pickedletter not in self.parent.parent.theword.lower():
                     # this doesn't work! always prints when it shouldn't always!
                     print("letter exists!")
                     letterposition = 0
@@ -252,6 +252,7 @@ class GridUserInput(GridLayout):
                 else:
                     print(self.pickedletter, " is wrong")
                     self.parent.parent.incorrectguesses.append(self.pickedletter)
+                    print("incorrect guesses are: ", self.parent.parent.incorrectguesses)
 
 
                 self.parent.parent.possibletries -= 1
@@ -274,8 +275,9 @@ class GridUserInput(GridLayout):
 
 
     def on_text(self, memaddress, content):
-        print(content) # prints out current value of input field
+        # print(content) # prints out current value of input field (= the letter)
         self.pickedletter = content
+        return self.pickedletter
 
 class GridTriesLeft(GridLayout):
     """Shows how many tries are left."""
@@ -328,7 +330,7 @@ class MainGrid(GridLayout):
         self.placeholderchar = '_ '
         self.placeholdercharvoiced = 'blank'
         self.tryword = 'tries'
-        self.incorrectguesses = ''   # string for incorrectly guessed letters
+        self.incorrectguesses = []   # string for incorrectly guessed letters
         self.correctguesses = ''
 
         # extended alphabet chars (cannot be used in Python 2!)
