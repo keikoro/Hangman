@@ -40,15 +40,6 @@ def callback_pos(instance, value):
 def on_enter(instance, value):
     print('User pressed enter in', instance, ' and typed ', value)
 
-# def onLetterInput(instance, value):
-#     print('The widget', instance, 'have:', value)
-
-def change_img(instance, value):
-    """Change image on image click."""
-
-    print(value)
-    print("Bild wurde geklickt")
-
 def print_it(instance, value):
     """Print Hangman based on position of Hangman grid."""
 
@@ -67,7 +58,7 @@ def print_it(instance, value):
         Rectangle(pos=(myvalue, myvalue), size=(myvalue/2, myvalue/2))
 
 def createMyWords(language, validletters='abcdefghijklmnopqrstuvwxyz',
-        additionals=''):
+ additionals=''):
     """Return a list of guessable words.
 
     Ideally, these words originate from an included dictionary file
@@ -112,7 +103,6 @@ def createMyWords(language, validletters='abcdefghijklmnopqrstuvwxyz',
     finally:
         return mywords
 
-
 def analyseWords(mywords, additionals=''):
     """Analyse mywords and return all used characters.
 
@@ -143,180 +133,10 @@ def analyseWords(mywords, additionals=''):
         occurencestring += pair[0] # use 1st element of each pair
     return list(occurencestring.lower())
 
-def startGuessing(thisobject):
-    """Start actual program when user starts guessing letters."""
-
-    # main loop
-    print("startGuessing value: ", thisobject)
-
-    possibletries = thisobject.parent.parent.possibletries
-    if possibletries > 0:
-
-        if self.pickedletter.isalpha():
-
-            # TODO lower picked letter
-
-            if len(self.pickedletter) > 0:
-                    self.pickedletter = self.pickedletter[0]
-
-            # this print works
-            print("this is the picked letter: ", self.pickedletter) # prints out current value of input field
-
-            # letter was already guessed
-            if self.pickedletter in self.parent.parent.incorrectguesses:
-                self.parent.parent.triesleft.emptylabel.text = "bla"
-
-                print("You already guessed the "
-                    "letter '{}'!".format(self.pickedletter.upper()))
-
-            self.parent.parent.word_to_guess.text = ''.join(
-                self.parent.parent.placeholderword)
-            self.parent.drawblock.wrongletters.text += self.pickedletter
-            self.userinput.text = ''
-
-            print(self.parent.parent.theword.lower())
-
-            if self.pickedletter not in self.parent.parent.theword.lower():
-                # this doesn't work! always prints when it shouldn't always!
-                print("letter exists!")
-                letterposition = 0
-                for letterexists in self.parent.parent.theword.lower():
-                    if letterexists == self.pickedletter:
-                        self.parent.parent.placeholderword[letterposition] = (
-                            self.parent.parent.theword.upper()[letterposition])
-                    letterposition += 1
-                self.parent.parent.correctguesses += self.pickedletter
-                print(self.parent.parent.correctguesses)
-            else:
-                print(self.pickedletter, " is wrong")
-                self.parent.parent.incorrectguesses.append(self.pickedletter)
-                print("incorrect guesses are: ", self.parent.parent.incorrectguesses)
-
-
-            self.parent.parent.possibletries -= 1
-
-            if self.parent.parent.possibletries == 1:
-                self.parent.parent.tryword = 'try'
-
-            if self.parent.parent.possibletries > 0:
-                thistext = "{} {} left".format(
-                    self.parent.parent.possibletries,
-                self.parent.parent.tryword)
-            else:
-                thistext = "Game over. :( "
-
-            self.parent.drawblock.hangman.source = self.parent.imageliste[
-                self.parent.parent.possibletries]
-            self.parent.parent.triesleft.tries.text = thistext
-
-    # wrong letters
-
-
-def onLetterInput(bla, content):
-    # print(content) # prints out current value of input field (= the letter)
-    pickedletter = content
-    return pickedletter
-
-
 class HangmanApp(App):
     """Main app."""
     def build(self):
-        # return Label(text='Hello world')
         return MainGrid()
-
-class MiniGrid(GridLayout): # only needed as 'template' right now
-    def __init__(self, **kwargs):
-        super(MiniGrid, self).__init__(**kwargs)
-        self.cols = 2
-        self.buttoninfo = Button(text='Info', font_size=14)
-        self.add_widget(self.buttoninfo)
-        self.buttonexit = Button(text='Exit game', font_size=14)
-        self.add_widget(self.buttonexit)
-
-class GridHangmanRow(GridLayout):
-    """2nd level grid for Hangman graphic and user input."""
-    def __init__(self, **kwargs):
-        super(GridHangmanRow, self).__init__(**kwargs)
-        self.cols = 2
-
-        self.imageliste = glob.glob('images/*.png')
-
-        self.drawblock = GridHangman()
-        self.add_widget(self.drawblock)
-
-        self.guessblock = GridUserInput()
-        self.add_widget(self.guessblock)
-
-class GridHangman(GridLayout):
-    """3rd level grid for Hangman graphic."""
-    def __init__(self, **kwargs):
-        super(GridHangman, self).__init__(**kwargs)
-        self.rows = 2
-        self.row_force_default=True
-        self.row_default_height=180
-
-        self.imgsource = 'images/hangman-1-11.png'
-        self.hangman = Image(source=self.imgsource, size=(500,500))
-        self.add_widget(self.hangman)
-        self.hangman.bind(on_press=change_img)
-
-        self.wrongletters = Label(text='')
-        self.add_widget(self.wrongletters)
-
-        self.bind(pos=callback_pos)
-
-class GridUserInput(GridLayout):
-    """3rd level grid for user input and OK button.
-
-    Features and input field for the letter the user wants to guess and a
-    button to confirm the input."""
-    def __init__(self, **kwargs):
-        super(GridUserInput, self).__init__(**kwargs)
-        self.rows = 2
-
-        self.userinput = TextInput(text='', multiline=False)
-        self.add_widget(self.userinput)
-        self.userinput.bind(text=onLetterInput)
-
-        self.onLetterConfirm = Button(text='OK', font_size=14)
-        self.add_widget(self.onLetterConfirm)
-        self.onLetterConfirm.bind(on_press=startGuessing(self))
-
-class GridTriesLeft(GridLayout):
-    """Shows how many tries are left."""
-    def __init__(self, **kwargs):
-        super(GridTriesLeft, self).__init__(**kwargs)
-        self.cols = 2
-
-        self.tries = Label(text="11 tries left")
-        self.add_widget(self.tries)
-        self.emptylabel = Label(text="")
-        self.add_widget(self.emptylabel)
-
-class GridInfoExit(GridLayout):
-    """2nd level grid for row with Info button and Exit button."""
-    def __init__(self, **kwargs):
-        super(GridInfoExit, self).__init__(**kwargs)
-        self.cols = 2
-        self.settingsbutton = Button(text='Settings', font_size=14)
-        self.add_widget(self.settingsbutton)
-        self.settingsbutton.bind(on_press=self.callback)
-
-        self.exitbutton = Button(text='Exit game', font_size=14)
-        self.add_widget(self.exitbutton)
-        self.exitbutton.bind(on_release=self.debug)
-
-        # self.settingsbutton.trigger_action(duration=1)
-
-    def callback(self, value):
-        print("this is the info button")
-        self.parent.settings_popup()
-        #print(self.userinput.text)
-
-    def debug(self, value):
-        print("voice: ", self.parent.voice, ", language: ",
-            self.parent.wordlanguage)
-        # super.stop()
 
 class MainGrid(GridLayout):
     """1st level grid. The main grid of the app.
@@ -360,16 +180,16 @@ class MainGrid(GridLayout):
         self.add_widget(self.word_to_guess)
 
         # needs two cols
-        self.hangmanrow = GridHangmanRow()
-        self.add_widget(self.hangmanrow)
+        self.hangmaninput = HangmanInputBlock()
+        self.add_widget(self.hangmaninput)
 
         # needs 2 cols
-        self.triesleft = GridTriesLeft()
+        self.triesleft = TriesLeft()
         self.add_widget(self.triesleft)
 
         # needs 2 cols
-        self.exitrow = GridInfoExit()
-        self.add_widget(self.exitrow)
+        self.settingsexit = SettingsExitBlock()
+        self.add_widget(self.settingsexit)
 
         # just checking for correct output
         # TODO remove at end
@@ -454,6 +274,191 @@ class MainGrid(GridLayout):
         print("this is the word: ", self.theword)
         print(self.placeholderword)
 
+class HangmanInputBlock(GridLayout):
+    """2nd level grid for Hangman graphic and user input."""
+    def __init__(self, **kwargs):
+        super(HangmanInputBlock, self).__init__(**kwargs)
+        self.cols = 2
+        self.imageliste = glob.glob('images/*.png')
+
+        self.graphicsblock = HangmanGraphics()
+        self.add_widget(self.graphicsblock)
+
+        self.userinput = UserInputBlock()
+        self.add_widget(self.userinput)
+
+class HangmanGraphics(GridLayout):
+    """3rd level grid for Hangman graphic."""
+    def __init__(self, **kwargs):
+        super(HangmanGraphics, self).__init__(**kwargs)
+        self.rows = 2
+        self.row_force_default=True
+        self.row_default_height=180
+        self.imgsource = 'images/hangman-1-dead.png'
+
+        hangmanpic = Image(source=self.imgsource, size=(600,600))
+        self.add_widget(hangmanpic)
+
+        self.displaywrongletters = Label(text='wrong letters go here')
+        self.add_widget(self.displaywrongletters)
+
+
+#         # self.row_force_default=True
+#         # self.row_default_height=180
+#         self.imgsource = 'images/hangman-1-11.png'
+
+#         self.hangmanpic = Image(source=self.imgsource, size=(500,500))
+#         self.add_widget(self.hangmanpic)
+
+#         self.displaywrongletters = Label(text='hallo')
+#         self.add_widget(self.displaywrongletters)
+
+#         self.bind(pos=callback_pos)
+
+class UserInputBlock(GridLayout):
+    """3rd level grid for user input and OK button.
+
+    Features and input field for the letter the user wants to guess and a
+    button to confirm the input."""
+    def __init__(self, **kwargs):
+        super(UserInputBlock, self).__init__(**kwargs)
+        self.rows = 2
+        self.pickedletter = ''
+
+
+        self.userinput = TextInput(text='hello', multiline=False, focus=True)
+        self.add_widget(self.userinput)
+        self.userinput.bind(text=self.onLetterInput)
+        self.userinput.bind(on_text_validate=self.on_enter)
+
+        self.onLetterConfirm = Button(text='OK', font_size=14)
+        self.add_widget(self.onLetterConfirm)
+        self.onLetterConfirm.bind(on_press=self.defocus)
+
+        # self.onLetterConfirm.bind(on_press=self.startGuessing)
+
+    def onLetterInput(arg1, arg2, content):
+        print("the letter is: ", content) # prints out current value of input field (= the letter)
+        pickedletter = content
+        return pickedletter
+
+    def on_enter(instance, value):
+        print('User pressed enter in', instance)
+
+    def defocus(self, instance):
+        """Take focus away from textinput field."""
+        self.userinput.focus = False
+
+    def startGuessing(self, bla):
+        """Start actual program when user starts guessing letters."""
+
+        # main loop
+
+        self.possibletries = self.parent.parent.possibletries
+        # self.pickedletter = self.parent.parent.pickedletter
+
+        print("possibletries: ", self.possibletries)
+
+        if self.possibletries > 0:
+            pass
+            # if self.pickedletter.isalpha():
+            #     print("pickedletter: ", self.pickedletter)
+
+        # if self.possibletries > 0:
+
+        #     if self.pickedletter.isalpha():
+
+        #         # TODO lower picked letter
+
+        #         if len(self.pickedletter) > 0:
+        #                 self.pickedletter = self.pickedletter[0]
+
+        #         # this print works
+        #         print("this is the picked letter: ", self.pickedletter) # prints out current value of input field
+
+        #         # letter was already guessed
+        #         if self.pickedletter in self.parent.parent.incorrectguesses:
+        #             self.parent.parent.triesleft.emptylabel.text = "bla"
+
+        #             print("You already guessed the "
+        #                 "letter '{}'!".format(self.pickedletter.upper()))
+
+        #         self.parent.parent.word_to_guess.text = ''.join(
+        #             self.parent.parent.placeholderword)
+        #         self.parent.graphicsblock.wrongletters.text += self.pickedletter
+        #         self.userinput.text = ''
+
+        #         print(self.parent.parent.theword.lower())
+
+        #         if self.pickedletter not in self.parent.parent.theword.lower():
+        #             # this doesn't work! always prints when it shouldn't always!
+        #             print("letter exists!")
+        #             letterposition = 0
+        #             for letterexists in self.parent.parent.theword.lower():
+        #                 if letterexists == self.pickedletter:
+        #                     self.parent.parent.placeholderword[letterposition] = (
+        #                         self.parent.parent.theword.upper()[letterposition])
+        #                 letterposition += 1
+        #             self.parent.parent.correctguesses += self.pickedletter
+        #             print(self.parent.parent.correctguesses)
+        #         else:
+        #             print(self.pickedletter, " is wrong")
+        #             self.parent.parent.incorrectguesses.append(self.pickedletter)
+        #             print("incorrect guesses are: ", self.parent.parent.incorrectguesses)
+
+
+        #         self.parent.parent.possibletries -= 1
+
+        #         if self.parent.parent.possibletries == 1:
+        #             self.parent.parent.tryword = 'try'
+
+        #         if self.parent.parent.possibletries > 0:
+        #             thistext = "{} {} left".format(
+        #                 self.parent.parent.possibletries,
+        #             self.parent.parent.tryword)
+        #         else:
+        #             thistext = "Game over. :( "
+
+        #         self.parent.graphicsblock.hangman.source = self.parent.imageliste[
+        #             self.parent.parent.possibletries]
+        #         self.parent.parent.triesleft.tries.text = thistext
+
+        # wrong letters
+
+
+class TriesLeft(GridLayout):
+    """Shows how many tries are left."""
+    def __init__(self, **kwargs):
+        super(TriesLeft, self).__init__(**kwargs)
+        self.cols = 2
+
+        self.tries = Label(text="11 tries left")
+        self.add_widget(self.tries)
+
+        self.emptylabel = Label(text="")
+        self.add_widget(self.emptylabel)
+
+class SettingsExitBlock(GridLayout):
+    """2nd level grid for row with Info button and Exit button."""
+    def __init__(self, **kwargs):
+        super(SettingsExitBlock, self).__init__(**kwargs)
+        self.cols = 2
+
+        self.settingsbutton = Button(text='Settings', font_size=14)
+        self.add_widget(self.settingsbutton)
+        self.settingsbutton.bind(on_press=self.callback)
+
+        self.exitbutton = Button(text='Exit game', font_size=14)
+        self.add_widget(self.exitbutton)
+        self.exitbutton.bind(on_release=self.debug)
+
+    def callback(self, value):
+        print("this is the info button")
+        self.parent.settings_popup()
+
+    def debug(self, value):
+        print("voice: ", self.parent.voice, ", language: ",
+            self.parent.wordlanguage)
 
 if __name__ == '__main__':
     m = HangmanApp().run()
