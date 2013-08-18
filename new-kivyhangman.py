@@ -169,19 +169,23 @@ class MainGrid(GridLayout):
         self.title = TitleBlock()
         self.add_widget(self.title)
 
-        # the word to be guessed
-        self.word_to_guess = Label(text="{}".format(self.placeholderword_str))
-        self.add_widget(self.word_to_guess)
+        # placeholder word
+        self.guessword = PlaceholderWordBlock()
+        self.add_widget(self.guessword)
+        self.guessword.blankword.text = self.placeholderword_str
 
-        # needs two cols
-        self.hangmaninput = HangmanInputBlock()
-        self.add_widget(self.hangmaninput)
+        self.alabel = Label(text="empty labellll")
+        self.add_widget(self.alabel)
 
-        # needs 2 cols
-        self.triesleft = TriesLeft()
-        self.add_widget(self.triesleft)
+        # hangman goes here
+        self.userinput = InputBlock()
+        self.add_widget(self.userinput)
+        self.userinput.height = 20
 
-        # needs 2 cols
+        self.message = MessageBlock()
+        self.add_widget(self.message)
+
+        # settings and exit button
         self.settingsexit = SettingsExitBlock()
         self.add_widget(self.settingsexit)
 
@@ -277,18 +281,51 @@ class TitleBlock(GridLayout):
         self.title = Label(text='Let\'s play Hangman!\nGuess the word:')
         self.add_widget(self.title)
 
-class HangmanInputBlock(GridLayout):
+class PlaceholderWordBlock(GridLayout):
     """2nd level grid for Hangman graphic and user input."""
     def __init__(self, **kwargs):
-        super(HangmanInputBlock, self).__init__(**kwargs)
+        super(PlaceholderWordBlock, self).__init__(**kwargs)
         self.cols = 2
-        self.imageliste = glob.glob('images/*.png')
+        self.row_default_height=300
 
-        self.graphicsblock = HangmanGraphics()
+        self.graphicsblock = HangmanBlock()
         self.add_widget(self.graphicsblock)
 
-        self.userinput = UserInputBlock()
+        # the word to be guessed
+        self.blankword = Label(text="")
+        self.add_widget(self.blankword)
+
+
+class InputBlock(GridLayout):
+    """2nd level grid for Hangman graphic and user input."""
+    def __init__(self, **kwargs):
+        super(InputBlock, self).__init__(**kwargs)
+        self.cols = 2
+
+        self.tries = Label(text="11 tries left")
+        self.add_widget(self.tries)
+
+        self.userinput = UserInput()
         self.add_widget(self.userinput)
+
+
+class HangmanBlock(GridLayout):
+    """3rd level grid for Hangman graphic."""
+    def __init__(self, **kwargs):
+        super(HangmanBlock, self).__init__(**kwargs)
+        self.rows = 2
+        # self.row_force_default=True
+        # self.row_default_height=180
+        self.imgsource = 'images/hangman-1-dead.png'
+        self.imageliste = glob.glob('images/*.png')
+
+        self.hangmanpic = Image(source=self.imgsource, size=(600,600))
+        self.add_widget(self.hangmanpic)
+
+        self.displaywrongletters = Label(text='wrong letters go here')
+        self.add_widget(self.displaywrongletters)
+
+        self.bind(pos=callback_pos)
 
 class HangmanGraphics(GridLayout):
     """3rd level grid for Hangman graphic."""
@@ -307,13 +344,13 @@ class HangmanGraphics(GridLayout):
 
         self.bind(pos=callback_pos)
 
-class UserInputBlock(GridLayout):
+class UserInput(GridLayout):
     """3rd level grid for user text input and confirmation button.
 
     Input field for the letter the user wants to guess and a button to
     confirm the input."""
     def __init__(self, **kwargs):
-        super(UserInputBlock, self).__init__(**kwargs)
+        super(UserInput, self).__init__(**kwargs)
         self.rows = 2
 
         self.userinput = TextInput(text='', multiline=False, focus=True)
@@ -602,16 +639,13 @@ class UserInputBlock(GridLayout):
 
         # wrong letters
 
-class TriesLeft(GridLayout):
+class MessageBlock(GridLayout):
     """Shows how many tries are left."""
     def __init__(self, **kwargs):
-        super(TriesLeft, self).__init__(**kwargs)
-        self.cols = 2
+        super(MessageBlock, self).__init__(**kwargs)
+        self.cols = 1
 
-        self.tries = Label(text="11 tries left")
-        self.add_widget(self.tries)
-
-        self.emptylabel = Label(text='empty')
+        self.emptylabel = Label(text='This is the message block')
         self.add_widget(self.emptylabel)
 
 class SettingsExitBlock(GridLayout):
@@ -619,6 +653,7 @@ class SettingsExitBlock(GridLayout):
     def __init__(self, **kwargs):
         super(SettingsExitBlock, self).__init__(**kwargs)
         self.cols = 2
+        self.row_default_height=50
 
         self.settingsbutton = Button(text='Settings', font_size=14)
         self.add_widget(self.settingsbutton)
