@@ -1,4 +1,6 @@
 _notes/
+_old/
+_todo/
 kivy/
 *.txt
 test*
