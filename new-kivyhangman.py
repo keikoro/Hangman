@@ -34,12 +34,6 @@ def callback_pos(instance, value):
     print('The widget', instance, 'moved to', value)
     return value
 
-# def callback(instance):
-#     print('The button {} is being pressed'.format(instance.text))
-
-def on_enter(instance, value):
-    print('User pressed enter in', instance, ' and typed ', value)
-
 def print_it(instance, value):
     """Print Hangman based on position of Hangman grid."""
 
@@ -172,7 +166,7 @@ class MainGrid(GridLayout):
         self.placeholderword_str = ''.join(self.placeholderword)
 
         # title widget
-        self.title = Label(text='Let\'s play Hangman!\nGuess the word:')
+        self.title = TitleBlock()
         self.add_widget(self.title)
 
         # the word to be guessed
@@ -274,6 +268,15 @@ class MainGrid(GridLayout):
         print("this is the word: ", self.theword)
         print(self.placeholderword)
 
+class TitleBlock(GridLayout):
+    """2nd level grid for Hangman graphic and user input."""
+    def __init__(self, **kwargs):
+        super(TitleBlock, self).__init__(**kwargs)
+        self.cols = 1
+
+        self.title = Label(text='Let\'s play Hangman!\nGuess the word:')
+        self.add_widget(self.title)
+
 class HangmanInputBlock(GridLayout):
     """2nd level grid for Hangman graphic and user input."""
     def __init__(self, **kwargs):
@@ -296,82 +299,256 @@ class HangmanGraphics(GridLayout):
         self.row_default_height=180
         self.imgsource = 'images/hangman-1-dead.png'
 
-        hangmanpic = Image(source=self.imgsource, size=(600,600))
-        self.add_widget(hangmanpic)
+        self.hangmanpic = Image(source=self.imgsource, size=(600,600))
+        self.add_widget(self.hangmanpic)
 
         self.displaywrongletters = Label(text='wrong letters go here')
         self.add_widget(self.displaywrongletters)
 
-
-#         # self.row_force_default=True
-#         # self.row_default_height=180
-#         self.imgsource = 'images/hangman-1-11.png'
-
-#         self.hangmanpic = Image(source=self.imgsource, size=(500,500))
-#         self.add_widget(self.hangmanpic)
-
-#         self.displaywrongletters = Label(text='hallo')
-#         self.add_widget(self.displaywrongletters)
-
-#         self.bind(pos=callback_pos)
+        self.bind(pos=callback_pos)
 
 class UserInputBlock(GridLayout):
-    """3rd level grid for user input and OK button.
+    """3rd level grid for user text input and confirmation button.
 
-    Features and input field for the letter the user wants to guess and a
-    button to confirm the input."""
+    Input field for the letter the user wants to guess and a button to
+    confirm the input."""
     def __init__(self, **kwargs):
         super(UserInputBlock, self).__init__(**kwargs)
         self.rows = 2
-        self.pickedletter = ''
 
-
-        self.userinput = TextInput(text='hello', multiline=False, focus=True)
+        self.userinput = TextInput(text='', multiline=False, focus=True)
         self.add_widget(self.userinput)
         self.userinput.bind(text=self.onLetterInput)
-        self.userinput.bind(on_text_validate=self.on_enter)
 
-        self.onLetterConfirm = Button(text='OK', font_size=14)
+        self.onLetterConfirm = Button(text="OK", font_size=14)
         self.add_widget(self.onLetterConfirm)
         self.onLetterConfirm.bind(on_press=self.defocus)
+        self.onLetterConfirm.bind(on_press=self.startGuessing)
 
-        # self.onLetterConfirm.bind(on_press=self.startGuessing)
-
-    def onLetterInput(arg1, arg2, content):
-        print("the letter is: ", content) # prints out current value of input field (= the letter)
-        pickedletter = content
-        return pickedletter
-
-    def on_enter(instance, value):
-        print('User pressed enter in', instance)
+    def onLetterInput(self, instance, value):
+        # print("the letter is: ", content)
+        self.theinput = value.lower().encode("utf-8")
+        return self.theinput
 
     def defocus(self, instance):
         """Take focus away from textinput field."""
         self.userinput.focus = False
 
-    def startGuessing(self, bla):
+    def startGuessing(self, instance):
         """Start actual program when user starts guessing letters."""
 
         # main loop
-
         self.possibletries = self.parent.parent.possibletries
-        # self.pickedletter = self.parent.parent.pickedletter
 
-        print("possibletries: ", self.possibletries)
+        if self.theinput and self.possibletries > 0:
+            print("possibletries: ", self.possibletries) # TODO remove laterz
+            print("the word is: ", self.parent.parent.theword) # TODO remove laterz
+            self.parent.parent.triesleft.emptylabel.text = self.parent.parent.theword # TODO remove laterz
 
-        if self.possibletries > 0:
-            pass
-            # if self.pickedletter.isalpha():
-            #     print("pickedletter: ", self.pickedletter)
+            self.pickedletter = self.theinput
+            self.userinput.text = ''
 
-        # if self.possibletries > 0:
+            if self.pickedletter and self.pickedletter.isalpha():
+                if len(self.pickedletter) > 0:
+                        self.pickedletter = self.pickedletter[0]
 
-        #     if self.pickedletter.isalpha():
+                print("pickedletter: ", self.pickedletter)
+                print("incorrect guesses: ", self.parent.parent.incorrectguesses)
 
-        #         # TODO lower picked letter
+                if self.pickedletter in self.parent.parent.incorrectguesses:
+                    print("already in incorrect guesses!")
+                else:
+                    print("not yet in incorrect guesses!")
 
-        #         if len(self.pickedletter) > 0:
-        #                 self.pickedletter = self.pickedletter[0]
+                if self.pickedletter in self.parent.parent.theword:
+                    print("correct guess")
+                else:
+                    print("incorrect guess :(")
+                    self.parent.parent.incorrectguesses.append(self.pickedletter)
+                    print("incorrect guesses: ", self.parent.parent.incorrectguesses)
+            else:
+                self.parent.parent.triesleft.emptylabel.text = "Sorry, but {} isn't a valid guess! Try again.".format(self.pickedletter)
+
+    # # main loop
+    # while possibletries > 0:
+    #     output("Please pick a letter: ", blankchar=placeholderchar,
+    #         blankcharvoiced=placeholdercharvoiced, software=voicesoftware,
+    #         voice=sound, ending='')
+    #     # lowercasing picked letter
+    #     # for easier handling of extended characters (ä, ß etc.)
+    #     pickedletter = flexibleInput().lower()
+
+    #     if pickedletter == '???':
+    #         occurencestringpretty = ''
+    #         for char in str(occurencelist):
+    #             if char not in "'[]":
+    #                 occurencestringpretty += char
+    #         output("Clever you! The most common letters are: {}"
+    #             .format(occurencestringpretty.upper()),
+    #             blankchar=placeholderchar,
+    #             blankcharvoiced=placeholdercharvoiced,
+    #             software=voicesoftware, voice=sound)
+    #         continue
+
+    #     if len(pickedletter) > 0:
+    #         # match full word if word length matches
+    #         if len(pickedletter) == len(theword):
+    #             fullguesses -= 1
+    #             if fullguesses == 1:
+    #                 timesword = 'time'
+    #             if fullguesses >= 0:
+    #                 if pickedletter == theword.lower():
+    #                     placeholderword = theword.lower()
+    #                     output("\nYour guess was spot on!",
+    #                         blankchar=placeholderchar,
+    #                         blankcharvoiced=placeholdercharvoiced,
+    #                         software=voicesoftware, voice=sound,
+    #                         ending='')
+    #                     pickedword = True
+    #                 else:
+    #                     if fullguesses > 0:
+    #                         output("Sorry, your guess was wrong. "
+    #                             "You may guess the full word {} more {}."
+    #                             .format(fullguesses, timesword),
+    #                             blankchar=placeholderchar,
+    #                             blankcharvoiced=placeholdercharvoiced,
+    #                             software=voicesoftware, voice=sound)
+    #                     else:
+    #                         output("\nGame over. :( ",
+    #                             blankchar=placeholderchar,
+    #                             blankcharvoiced=placeholdercharvoiced,
+    #                             software=voicesoftware, voice=sound)
+    #                         break
+    #             else:
+    #                 break
+    #         else:
+    #             pickedletter = pickedletter[0]
+    #     if pickedletter == '?':
+    #         output("You could try guessing the letter '{}'."
+    #             .format(showHint(occurencelist)), blankchar=placeholderchar,
+    #             blankcharvoiced=placeholdercharvoiced,
+    #             software=voicesoftware, voice=sound)
+    #         continue
+    #     if extendedalpha and (pickedletter in extendedalpha):
+    #         if pickedletter not in extendedalphaspecial:
+    #             output("Sorry, but '{}' isn't a valid guess! Try again."
+    #                 .format(pickedletter.upper()), blankchar=placeholderchar,
+    #                 blankcharvoiced=placeholdercharvoiced,
+    #                 software=voicesoftware, voice=sound)
+    #         else:
+    #             output("Sorry, but '{}' isn't a valid guess! Try again."
+    #                 .format(pickedletter), blankchar=placeholderchar,
+    #                 blankcharvoiced=placeholdercharvoiced,
+    #                 software=voicesoftware, voice=sound)
+    #         continue
+    #     if not pickedletter.isalpha():  # disallow digits, special chars
+    #         output("Sorry, but you didn't type a letter! Try again."
+    #             .format(pickedletter), blankchar=placeholderchar,
+    #             blankcharvoiced=placeholdercharvoiced,
+    #             software=voicesoftware, voice=sound)
+    #         continue
+    #     if pickedletter in incorrectguesses:    # letter was already guessed
+    #         output("You already guessed the letter '{}'!"
+    #             .format(pickedletter.upper()), blankchar=placeholderchar,
+    #             blankcharvoiced=placeholdercharvoiced,
+    #             software=voicesoftware, voice=sound)
+    #         continue
+    #     if pickedletter in correctguesses:
+    #         output("You already successfully picked '{}'!"
+    #             .format(pickedletter.upper()), blankchar=placeholderchar,
+    #             blankcharvoiced=placeholdercharvoiced,
+    #             software=voicesoftware, voice=sound)
+    #         continue
+
+    #     # correct guess
+    #     if pickedletter in theword.lower() and pickedword is not True:
+    #         letterposition = 0
+    #         for letterexists in theword.lower():
+    #             if letterexists == pickedletter:
+    #                 placeholderword[letterposition] = (
+    #                     theword.upper()[letterposition])
+    #             letterposition += 1
+    #         output("You guessed correctly, well done!",
+    #             blankchar=placeholderchar,
+    #             blankcharvoiced=placeholdercharvoiced,
+    #             software=voicesoftware,
+    #             voice=sound)
+    #         correctguesses += pickedletter
+    #     # incorrect guess
+    #     elif len(pickedletter) == 1:
+    #         incorrectguesses += pickedletter
+    #         possibletries -= 1
+    #         output("Sorry, '{}' is an incorrect guess!"
+    #             .format(pickedletter.upper()), blankchar=placeholderchar,
+    #             blankcharvoiced=placeholdercharvoiced,
+    #             software=voicesoftware, voice=sound)
+
+    #         print(hangman(possibletries))   # print hangman
+
+    #         if (incorrectguesses != '') and (possibletries > 0):
+    #             if possibletries == 1:
+    #                 tryword = 'try'
+    #             output(incorrectguesses.upper(), ending='\n\n', spell=False,
+    #                 blankchar=placeholderchar,
+    #                 blankcharvoiced=placeholdercharvoiced,
+    #                 software=voicesoftware, voice=False)
+    #             output("Incorrectly guessed letters so far: ",
+    #                 blankchar=placeholderchar,
+    #                 blankcharvoiced=placeholdercharvoiced,
+    #                 software=voicesoftware, spell=False,
+    #                 voice=sound, ending='', outputtext=False)
+    #             output(incorrectguesses.upper(), ending='', spell=True,
+    #                 blankchar=placeholderchar,
+    #                 blankcharvoiced=placeholdercharvoiced,
+    #                 software=voicesoftware,
+    #                 voice=sound, outputtext=False)
+    #             output("You have {} {} left."
+    #                 .format(possibletries,tryword),
+    #                 blankchar=placeholderchar,
+    #                 blankcharvoiced=placeholdercharvoiced,
+    #                 software=voicesoftware, voice=sound)
+    #     # ----- end guessing
+
+    #     # remove pickedletter from hint list
+    #     if pickedletter in occurencelist:
+    #         occurencelist.remove(pickedletter)
+    #     if not placeholderchar in placeholderword:
+    #         # if pickedword is not True:
+    #         #     output("\n")
+    #         output("\nWe have a winner! Thanks for playing. :)",
+    #             blankchar=placeholderchar,
+    #             blankcharvoiced=placeholdercharvoiced,
+    #             software=voicesoftware, voice=sound)
+    #         break
+    #     if placeholderword == list(placeholderchar*len(theword)):
+    #         output(stringtogether(placeholderword),
+    #             blankchar=placeholderchar,
+    #             blankcharvoiced=placeholdercharvoiced,
+    #             software=voicesoftware, voice=False)    # show whole blank word
+    #         if sound:
+    #             try:
+    #                 output("The word you're looking for has {} letters"
+    #                     .format(len(theword)), software=voicesoftware,
+    #                     outputtext=False)
+    #             except:
+    #                 print(t2s_errormsg)
+    #     if possibletries > 0 and placeholderword != list(placeholderchar*len(theword)):
+    #         output("The word is: ", ending='', blankchar=placeholderchar,
+    #             blankcharvoiced=placeholdercharvoiced,
+    #             software=voicesoftware, voice=sound)
+    #         output(stringtogether(placeholderword), spell=True,
+    #             blankchar=placeholderchar,
+    #             blankcharvoiced=placeholdercharvoiced,
+    #             software=voicesoftware,
+    #             voice=sound)
+    # else:
+    #     output("\nGame over. :( ", blankchar=placeholderchar,
+    #         blankcharvoiced=placeholdercharvoiced,
+    #         software=voicesoftware, voice=sound)
+    # output("The word you were looking for was: {}.".format(randomword),
+    #     blankchar=placeholderchar, blankcharvoiced=placeholdercharvoiced,
+    #     software=voicesoftware, voice=sound)
+
 
         #         # this print works
         #         print("this is the picked letter: ", self.pickedletter) # prints out current value of input field
@@ -425,7 +602,6 @@ class UserInputBlock(GridLayout):
 
         # wrong letters
 
-
 class TriesLeft(GridLayout):
     """Shows how many tries are left."""
     def __init__(self, **kwargs):
@@ -435,7 +611,7 @@ class TriesLeft(GridLayout):
         self.tries = Label(text="11 tries left")
         self.add_widget(self.tries)
 
-        self.emptylabel = Label(text="")
+        self.emptylabel = Label(text='empty')
         self.add_widget(self.emptylabel)
 
 class SettingsExitBlock(GridLayout):
@@ -450,14 +626,14 @@ class SettingsExitBlock(GridLayout):
 
         self.exitbutton = Button(text='Exit game', font_size=14)
         self.add_widget(self.exitbutton)
-        self.exitbutton.bind(on_release=self.debug)
+        self.exitbutton.bind(on_press=self.debug)
 
     def callback(self, value):
         print("this is the info button")
         self.parent.settings_popup()
 
     def debug(self, value):
-        print("voice: ", self.parent.voice, ", language: ",
+        print("debug msg... voice: ", self.parent.voice,", language: ",
             self.parent.wordlanguage)
 
 if __name__ == '__main__':
