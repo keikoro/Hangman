@@ -27,12 +27,13 @@ class AppBody(FloatLayout):
     """Body of the app."""
     def __init__(self, **kwargs):
         super(AppBody, self).__init__(**kwargs)
-        thisheight = Window.height
-        thiswidth = Window.width
-        thisposition = Window.position
+        initialheight = Window.height
+        initialwidth = Window.width
 
         newheight = self.bind(height=self.callback_pos)
         self.bind(width=self.callback_pos)
+
+        print("new height: ", newheight)
 
         print("the height is: ", str(thisheight), "the width is: ", str(thiswidth), "position is: ", str(thisposition))
 
